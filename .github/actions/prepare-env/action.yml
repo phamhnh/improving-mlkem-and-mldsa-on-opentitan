@@ -6,9 +6,6 @@ name: Prepare environment
 description: Install dependencies and prepare environment needed for OpenTitan
 
 inputs:
-  service_account_json:
-    description: Service account JSON for Google Cloud access
-    default: ''
   verilator-version:
     description: Verilator version to install
     required: true
@@ -25,9 +22,14 @@ inputs:
     description: Path at which to install Verible
     required: true
     default: /tools/verible
-  configure-bazel:
-    description: Configure Bazel to use remote cache
-    required: true
+  skip-verilator:
+    required: false
+    default: false
+  skip-verible:
+    required: false
+    default: false
+  skip-junit:
+    required: false
     default: true
 
 runs:
@@ -39,31 +41,17 @@ runs:
         grep '^[^#]' apt-requirements.txt | xargs sudo apt install -y
       shell: bash
 
-    - uses: astral-sh/setup-uv@v5
+    - uses: actions/setup-python@v5
       with:
-        version: '0.6.1'
-        enable-cache: true
-        cache-dependency-glob: |
-          pyproject.toml
-          python-requirements.txt
-
-    - name: Install Python
-      shell: bash
-      run: |
-        uv python install 3.10
-        # Create a virtual environment for UV
-        uv venv ~/.local/share/venv
-        echo "$HOME/.local/share/venv/bin" >> "$GITHUB_PATH"
-        echo "VIRTUAL_ENV=$HOME/.local/share/venv" >> "$GITHUB_ENV"
+        python-version: '3.10'
+        cache: 'pip' # caching pip dependencies
 
     - name: Install Python dependencies
       shell: bash
-      run: |
-        uv pip install -r python-requirements.txt --require-hashes
-        # We installed uv from setup-uv action, so uninstall from venv to prevent conflict
-        uv pip uninstall uv
+      run: pip install -r python-requirements.txt --require-hashes
 
     - name: Install Verilator
+      if: inputs.skip_verilator == 'false'
       run: |
         VERILATOR_TAR="verilator-v${{ inputs.verilator-version }}.tar.gz"
         VERILATOR_URL="https://storage.googleapis.com/verilator-builds/${VERILATOR_TAR}"
@@ -73,6 +61,7 @@ runs:
       shell: bash
 
     - name: Install Verible
+      if: inputs.skip_verible == 'false'
       run: |
         VERIBLE_TAR="verible-${{ inputs.verible-version }}-linux-static-x86_64.tar.gz"
         VERIBLE_URL="https://github.com/chipsalliance/verible/releases/download/${{ inputs.verible-version }}/${VERIBLE_TAR}"
@@ -83,51 +72,13 @@ runs:
         echo "${{ inputs.verible-path }}/bin" >> "$GITHUB_PATH"
       shell: bash
 
-    # Log into Google Cloud using service account JSON.
-    # This can't be Workload Identity Federation because Bazel performance using WIF is terrible.
-    # This needs access to secrets and thus doesn't work for pull request.
-    - uses: google-github-actions/auth@v2
-      id: google_auth
-      if: github.event_name != 'pull_request'
-      with:
-        credentials_json: '${{ inputs.service_account_json }}'
-
-    # The above action creates a credential file in workspace and it doesn't provide a way to configure
-    # it. This influences with a few scripts that assume clean workspace, and introduce security risk
-    # that it may be exposed when uploading to buckets.
-    - name: Move Google credentials out from workspace
-      if: github.event_name != 'pull_request'
-      run: |
-        SOURCE=${{ steps.google_auth.outputs.credentials_file_path }}
-        TARGET=${{ runner.temp }}/$(basename "$SOURCE")
-        mv $SOURCE $TARGET
-        echo "CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=$TARGET" >> $GITHUB_ENV
-        echo "GOOGLE_APPLICATION_CREDENTIALS=$TARGET" >> $GITHUB_ENV
-        echo "GOOGLE_GHA_CREDS_PATH=$TARGET" >> $GITHUB_ENV
-      shell: bash
-
-    - uses: google-github-actions/setup-gcloud@v2
-      if: github.event_name != 'pull_request'
-
     - name: Configure ~/.bazelrc
-      if: inputs.configure-bazel == 'true'
       run: |
         cp ci/.bazelrc ~/.bazelrc
-        # Inject the OS version into a parameter used in the action key computation to
-        # avoid collisions between different operating systems in the caches.
-        # See #14695 for more information.
-        echo "build --remote_default_exec_properties=OSVersion=\"$(lsb_release -ds)\"" >> ~/.bazelrc
-
-        if ${{ github.event_name != 'pull_request' }}; then
-          echo "Will upload to the cache." >&2
-          echo "build --google_default_credentials" >> ~/.bazelrc
-        else
-          echo "Download from cache only." >&2
-          echo "build --remote_upload_local_results=false" >> ~/.bazelrc
-        fi
       shell: bash
 
     - name: Install merge-junit
+      if: inputs.skip_junit == 'false'
       run: |
         MERGE_JUNIT_PATH="/tools/merge-junit"
         MERGE_JUNIT_TAR="merge-junit-v0.2.1-x86_64-unknown-linux-musl.tar.gz"
