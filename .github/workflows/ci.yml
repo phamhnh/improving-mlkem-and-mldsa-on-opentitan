@@ -90,6 +90,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: bazel-cache
-          key: bazel
+          # Keep separate cache entries for different revisions of the OTBN
+          # simulator. This prevents cache misses from concurrent PRs with
+          # different simulator versions.
+          key: ${{ hashFiles('hw/ip/otbn/dv/otbnsim') }}
       - name: Execute tests
         run: ./bazelisk.sh test --disk_cache=bazel-cache --test_tag_filters=-nightly //sw/otbn/crypto/...
