@@ -1,6 +1,9 @@
 # Copyright lowRISC contributors (OpenTitan project).
 # Licensed under the Apache License, Version 2.0, see LICENSE for details.
 # SPDX-License-Identifier: Apache-2.0
+# Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192).
+# Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors.
+
 
 from typing import Dict, Iterator, List, Optional, Tuple
 
@@ -95,15 +98,16 @@ class OTBNSim:
 
     def _on_stall(self,
                   verbose: bool,
-                  fetch_next: bool) -> List[Trace]:
+                  fetch_next: bool,
+                  no_count: bool = False) -> List[Trace]:
         '''This is run on a stall cycle'''
         self.state.stop_if_pending_halt()
         changes = self.state.changes()
         self.state.commit(sim_stalled=True)
         if fetch_next:
             self._next_insn = self._fetch(self.state.pc)
-        if self.stats is not None and not self.state.wiping():
-            self.stats.record_stall()
+        if self.stats is not None and not self.state.wiping() and not no_count:
+            self.stats.record_stall(self.state)
         if verbose:
             self._print_trace(self.state.pc, '(stall)', changes)
 
@@ -116,10 +120,13 @@ class OTBNSim:
         assert self._execute_generator is None
         self.state.post_insn(self.loop_warps.get(self.state.pc, {}))
 
+        halting = self.state.stop_if_pending_halt()
         if self.stats is not None:
             self.stats.record_insn(insn, self.state)
+            if insn.has_fetch_stall or halting:
+                # Count a stall towards the fetch stalling instruction
+                self.stats.record_stall(self.state)
 
-        halting = self.state.stop_if_pending_halt()
         changes = self.state.changes()
 
         # Program counter before commit
@@ -300,11 +307,15 @@ class OTBNSim:
         assert self.state.init_sec_wipe_is_done()
 
         self.state.wsrs.URND.step()
+        self.state.wsrs.KMAC_MSG.step()
 
         insn = self._next_insn
         if insn is None:
             self.state.take_injected_err_bits()
-            return (None, self._on_stall(verbose, fetch_next=True))
+            # Don't count the stall for the stats here because fetch stalls are
+            # caused by the previous instruction. It has already been counted
+            # in `_on_retire`.
+            return (None, self._on_stall(verbose, fetch_next=True, no_count=True))
 
         # If there is an RMA request, we treat it a bit like a fatal error, and
         # abort any instruction that's currently running
@@ -509,10 +520,10 @@ class OTBNSim:
 
                 self.state.set_fsm_state(next_state)
 
-        return (None, self._on_stall(verbose, fetch_next=False))
+        return (None, self._on_stall(verbose, fetch_next=False, no_count=True))
 
-    def dump_data(self) -> bytes:
-        return self.state.dmem.dump_le_words()
+    def dump_data(self, include_validity: bool = True) -> bytes:
+        return self.state.dmem.dump_le_words(include_validity=include_validity)
 
     def _print_trace(self, pc: int, disasm: str, changes: List[Trace]) -> None:
         '''Print a trace of the current instruction'''

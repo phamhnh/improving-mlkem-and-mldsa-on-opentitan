@@ -1,6 +1,9 @@
 # Copyright lowRISC contributors (OpenTitan project).
 # Licensed under the Apache License, Version 2.0, see LICENSE for details.
 # SPDX-License-Identifier: Apache-2.0
+# Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192).
+# Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors.
+
 
 import struct
 from typing import Dict, List, Sequence, Optional
@@ -130,7 +133,7 @@ class Dmem:
         else:
             self._load_4byte_le_words(data)
 
-    def dump_le_words(self) -> bytes:
+    def dump_le_words(self, include_validity: bool = True) -> bytes:
         '''Return the contents of memory as bytes.
 
         The bytes are formatted as little-endian 32-bit words. These
@@ -138,15 +141,23 @@ class Dmem:
 
         '''
         ret = b''
+        pack_format = '<BI'
+        if include_validity is False:
+            pack_format = '<I'
         for idx, u32 in enumerate(self.data):
             # If there's a pending store, apply it. This matches the RTL, where
             # we only observe the memory after that store has landed.
             u32 = self.pending.get(idx, u32)
-
-            if u32 is None:
-                ret += struct.pack('<BI', 0, 0)
+            if include_validity:
+                if u32 is None:
+                    ret += struct.pack(pack_format, 0, 0)
+                else:
+                    ret += struct.pack(pack_format, 1, u32)
             else:
-                ret += struct.pack('<BI', 1, u32)
+                if u32 is None:
+                    ret += struct.pack(pack_format, 0)
+                else:
+                    ret += struct.pack(pack_format, u32)
 
         return ret
 

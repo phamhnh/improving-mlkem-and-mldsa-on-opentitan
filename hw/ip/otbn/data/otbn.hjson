@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 {
   name:               "otbn",
   human_name:         "OpenTitan Big Number Accelerator",
@@ -217,6 +219,15 @@
       name:    "keymgr_key"
       act:     "rcv"
       package: "keymgr_pkg"
+    },
+
+    // KMAC interface
+    { name:    "kmac_data"
+      package: "kmac_pkg"
+      struct:  "app"
+      act:     "req"
+      type:    "req_rsp"
+
     },
   ],
   features: [
@@ -741,12 +752,12 @@
 
     // Give IMEM and DMEM 16 KiB address space, each, to allow for easy expansion
     // of the actual IMEM and DMEM sizes without changing the address map.
-    { skipto: "0x4000" }
+    { skipto: "0x8000" }
 
     // Imem size (given as `items` below) must be a power of two.
     { window: {
         name: "IMEM",
-        items: "2048", // 8 kB
+        items: "8192", // 32 kB
         swaccess: "rw",
         data-intg-passthru: "true",
         byte-write: "false",
@@ -764,13 +775,12 @@
       }
     }
 
-    { skipto: "0x8000" }
+    { skipto: "0x12000" }
 
     // Dmem size (given as `items` below) must be a power of two.
     { window: {
         name: "DMEM",
-        items: "768", // 3 kB visible over the bus (1 kB scratch)
-        unusual: "true", // Needed to avoid an error because of the non-power-of-two size
+        items: "32768", // 32768 * 32bit = 128KiB, all visible over bus
         swaccess: "rw",
         data-intg-passthru: "true",
         byte-write: "false",
@@ -792,3 +802,4 @@
     }
   ]
 }
+
