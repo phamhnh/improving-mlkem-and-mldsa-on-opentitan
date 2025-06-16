@@ -19,6 +19,7 @@ use opentitanlib::io::uart::Uart;
 use opentitanlib::test_utils::init::InitializeTest;
 use opentitanlib::test_utils::rpc::{ConsoleRecv, ConsoleSend};
 use opentitanlib::uart::console::UartConsole;
+use pentest_lib::filter_response_common;
 
 #[derive(Debug, Parser)]
 struct Opts {
@@ -40,17 +41,14 @@ struct FiIbexTestCase {
     // Input only needed for the "Init" subcommand.
     #[serde(default)]
     input: String,
-    expected_output: String,
+    expected_output: Vec<String>,
 }
 
 fn filter_response(response: serde_json::Value) -> serde_json::Map<String, serde_json::Value> {
-    let mut map: serde_json::Map<String, serde_json::Value> = response.as_object().unwrap().clone();
-    // Depending on the device configuration, alerts can sometimes fire.
-    map.remove("alerts");
-    map.remove("ast_alerts");
-    map.remove("err_status");
-    // Device ID is different for each device.
-    map.remove("device_id");
+    // Filter common items.
+    let response_common_filtered = filter_response_common(response.clone());
+    // Filter test-specifc items.
+    let mut map: serde_json::Map<String, serde_json::Value> = response_common_filtered.clone();
     // Register file dump could change.
     map.remove("registers");
     map
@@ -80,25 +78,33 @@ fn run_fi_ibex_testcase(
         input.send(uart)?;
     }
 
-    // Get test output & filter.
-    let output = serde_json::Value::recv(uart, opts.timeout, false)?;
-    let output_received = filter_response(output.clone());
+    // Check test outputs
+    if !test_case.expected_output.is_empty() {
+        for exp_output in test_case.expected_output.iter() {
+            // Get test output & filter.
+            let output = serde_json::Value::recv(uart, opts.timeout, false)?;
+            // Only check non empty JSON responses.
+            if output.as_object().is_some() {
+                let output_received = filter_response(output.clone());
 
-    // Filter expected output.
-    let exp_output: serde_json::Value =
-        serde_json::from_str(test_case.expected_output.as_str()).unwrap();
-    let output_expected = filter_response(exp_output.clone());
+                // Filter expected output.
+                let exp_output: serde_json::Value =
+                    serde_json::from_str(exp_output.as_str()).unwrap();
+                let output_expected = filter_response(exp_output.clone());
 
-    // Check received with expected output.
-    if output_expected != output_received {
-        log::info!(
-            "FAILED {} test #{}: expected = '{}', actual = '{}'",
-            test_case.command,
-            test_case.test_case_id,
-            exp_output,
-            output
-        );
-        *fail_counter += 1;
+                // Check received with expected output.
+                if output_expected != output_received {
+                    log::info!(
+                        "FAILED {} test #{}: expected = '{}', actual = '{}'",
+                        test_case.command,
+                        test_case.test_case_id,
+                        exp_output,
+                        output
+                    );
+                    *fail_counter += 1;
+                }
+            }
+        }
     }
 
     Ok(())
@@ -112,7 +118,6 @@ fn test_fi_ibex(opts: &Opts, transport: &TransportWrapper) -> Result<()> {
     let mut test_counter = 0u32;
     let mut fail_counter = 0u32;
     let test_vector_files = &opts.fi_ibex_json;
-    // File wird noch nicht richtig geparsed.
     for file in test_vector_files {
         let raw_json = fs::read_to_string(file)?;
         let fi_ibex_tests: Vec<FiIbexTestCase> = serde_json::from_str(&raw_json)?;

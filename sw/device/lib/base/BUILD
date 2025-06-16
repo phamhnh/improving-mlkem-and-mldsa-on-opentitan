@@ -16,6 +16,11 @@ load("//rules:doxygen.bzl", "doxygen_gather_all_package_cc")
 
 package(default_visibility = ["//visibility:public"])
 
+filegroup(
+    name = "doc_files",
+    srcs = glob(["**/*.md"]),
+)
+
 dual_cc_library(
     name = "crc32",
     srcs = dual_inputs(
@@ -38,6 +43,12 @@ dual_cc_library(
             ":macros",
         ],
     ),
+)
+
+# Make the non-mock version of CRC32 visible outside of this package.
+alias(
+    name = "crc32_device_library",
+    actual = dual_cc_device_library_of(":crc32"),
 )
 
 cc_test(
