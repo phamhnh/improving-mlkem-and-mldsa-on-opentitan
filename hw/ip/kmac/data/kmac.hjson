@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 {
   name:               "kmac",
@@ -125,7 +127,7 @@
     }
     { name:    "NumAppIntf"
       type:    "int"
-      default: "3"
+      default: "4"
       desc:    "Number of application interfaces"
       local:   "false"
       expose:  "true"
@@ -136,7 +138,7 @@
                            '''
       type:                "kmac_pkg::app_config_t"
       unpacked_dimensions: "[KmacNumAppIntf]"
-      default:             "'{kmac_pkg::AppCfgKeyMgr, kmac_pkg::AppCfgLcCtrl, kmac_pkg::AppCfgRomCtrl}"
+      default:             "'{kmac_pkg::AppCfgKeyMgr, kmac_pkg::AppCfgLcCtrl, kmac_pkg::AppCfgRomCtrl, kmac_pkg::AppCfgDynamic}"
       local:               "false"
       expose:              "true"
     }

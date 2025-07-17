@@ -1174,9 +1174,9 @@ class WSRFile:
         ret += self.KeyS0.changes()
         ret += self.KeyS1.changes()
         # Commented out until we implement the KMAC interface.
-        # ret += self.KMAC_MSG.changes()
-        # ret += self.KMAC_CFG.changes()
-        # ret += self.KMAC_DIGEST.changes()
+        ret += self.KMAC_MSG.changes()
+        ret += self.KMAC_CFG.changes()
+        ret += self.KMAC_DIGEST.changes()
         return ret
 
     def set_sideload_keys(self,

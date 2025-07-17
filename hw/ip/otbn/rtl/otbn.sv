@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `include "prim_assert.sv"
 `include "prim_fifo_assert.svh"
@@ -72,7 +74,11 @@ module otbn
   output otp_ctrl_pkg::otbn_otp_key_req_t otbn_otp_key_o,
   input  otp_ctrl_pkg::otbn_otp_key_rsp_t otbn_otp_key_i,
 
-  input keymgr_pkg::otbn_key_req_t keymgr_key_i
+  input keymgr_pkg::otbn_key_req_t keymgr_key_i,
+
+  // KMAC interface
+  input  kmac_pkg::app_rsp_t kmac_data_i,
+  output kmac_pkg::app_req_t kmac_data_o
 );
 
   import prim_mubi_pkg::*;
@@ -1080,6 +1086,12 @@ module otbn
     .edn_i      ( edn_urnd_i    )
   );
 
+  // KMAC Interface ============================================================
+  kmac_pkg::app_req_t kmac_req;
+  kmac_pkg::app_rsp_t kmac_rsp;
+
+  assign kmac_data_o = kmac_req;
+  assign kmac_rsp    = kmac_data_i;
 
   // OTBN Core =================================================================
 
@@ -1154,7 +1166,10 @@ module otbn
     .software_errs_fatal_i       (software_errs_fatal_q),
 
     .sideload_key_shares_i       (keymgr_key_i.key),
-    .sideload_key_shares_valid_i ({2{keymgr_key_i.valid}})
+    .sideload_key_shares_valid_i ({2{keymgr_key_i.valid}}),
+
+    .kmac_app_req_o              (kmac_req),
+    .kmac_app_rsp_i              (kmac_rsp)
   );
 
   always_ff @(posedge clk_i or negedge rst_n) begin

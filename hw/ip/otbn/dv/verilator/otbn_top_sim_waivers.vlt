@@ -1,11 +1,21 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `verilator_config
 
 lint_off -rule WIDTH -file "*/otbn_top_sim.sv" -match "*'ImemStartAddr' generates 32 bits*"
 lint_off -rule WIDTH -file "*/otbn_top_sim.sv" -match "*'stack_wr_ptr_q' generates 4 bits*"
+lint_off -rule UNUSED -file "*/otbn_top_sim.sv" -match "*kmac*"
+lint_off -rule UNDRIVEN -file "*/otbn_predecode.sv" -match "Signal is not driven: 'mulv_predec_bignum_o'"
+lint_off -rule UNUSED -file "*/rtl/kmac_entropy.sv" -match "Signal is not used: 'perm_test'"
+lint_off -rule UNUSED -file "*/rtl/sha3pad.sv" -match "Signal is not used: 'start_valid'"
+lint_off -rule UNUSED -file "*/rtl/sha3pad.sv" -match "Signal is not used: 'process_valid'"
+lint_off -rule UNUSED -file "*/rtl/sha3pad.sv" -match "Signal is not used: 'absorb_valid'"
+lint_off -rule UNUSED -file "*/rtl/sha3pad.sv" -match "Signal is not driven, nor used: 'absorb_valid'"
+lint_off -rule UNUSED -file "*/rtl/sha3pad.sv" -match "Signal is not used: 'done_valid'"
 
 // Mark some signals in the loop controller as public. These are used
 // by the OtbnTopApplyLoopWarp() function in otbn_top_sim.cc

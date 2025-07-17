@@ -2,6 +2,8 @@ CAPI=2:
 # Copyright lowRISC contributors (OpenTitan project).
 # Licensed under the Apache License, Version 2.0, see LICENSE for details.
 # SPDX-License-Identifier: Apache-2.0
+# Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192).
+# Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors.
 name: "lowrisc:ip:otbn:0.1"
 description: "OpenTitan Big Number Accelerator (OTBN)"
 
@@ -22,6 +24,7 @@ filesets:
       - lowrisc:ip:edn_pkg
       - lowrisc:ip:otbn_pkg
       - lowrisc:prim:onehot_check
+      - lowrisc:ip:kmac_pkg
     files:
       - rtl/otbn_controller.sv
       - rtl/otbn_decoder.sv

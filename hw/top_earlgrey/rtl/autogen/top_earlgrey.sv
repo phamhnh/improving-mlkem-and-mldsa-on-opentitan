@@ -90,9 +90,9 @@ module top_earlgrey #(
   parameter bit KmacSwKeyMasked = 0,
   parameter int SecKmacCmdDelay = 0,
   parameter bit SecKmacIdleAcceptSwMsg = 0,
-  parameter int KmacNumAppIntf = 3,
+  parameter int KmacNumAppIntf = 4,
   parameter kmac_pkg::app_config_t KmacAppCfg[KmacNumAppIntf] =
-      '{kmac_pkg::AppCfgKeyMgr, kmac_pkg::AppCfgLcCtrl, kmac_pkg::AppCfgRomCtrl},
+      '{kmac_pkg::AppCfgKeyMgr, kmac_pkg::AppCfgLcCtrl, kmac_pkg::AppCfgRomCtrl, kmac_pkg::AppCfgDynamic},
   // parameters for otbn
   parameter bit OtbnStub = 0,
   parameter otbn_pkg::regfile_e OtbnRegFile = otbn_pkg::RegFileFF,
@@ -2500,6 +2500,8 @@ module top_earlgrey #(
       .lc_rma_req_i(lc_ctrl_lc_flash_rma_req),
       .lc_rma_ack_o(lc_ctrl_lc_flash_rma_ack[1]),
       .keymgr_key_i(keymgr_otbn_key),
+      .kmac_data_o(kmac_app_req[3]),
+      .kmac_data_i(kmac_app_rsp[3]),
       .tl_i(otbn_tl_req),
       .tl_o(otbn_tl_rsp),
 

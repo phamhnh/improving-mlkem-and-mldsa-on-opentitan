@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 //
 // KMAC/SHA3
 
@@ -29,8 +31,8 @@ module kmac
 
   // Accept SW message when idle and before receiving a START command. Useful for SCA only.
   parameter bit SecIdleAcceptSwMsg          = 1'b0,
-  parameter int unsigned NumAppIntf         = 3,
-  parameter app_config_t AppCfg[NumAppIntf] = '{AppCfgKeyMgr, AppCfgLcCtrl, AppCfgRomCtrl},
+  parameter int unsigned NumAppIntf         = 4,
+  parameter app_config_t AppCfg[NumAppIntf] = '{AppCfgKeyMgr, AppCfgLcCtrl, AppCfgRomCtrl, AppCfgDynamic},
 
   parameter lfsr_perm_t RndCnstLfsrPerm = RndCnstLfsrPermDefault,
   parameter lfsr_seed_t RndCnstLfsrSeed = RndCnstLfsrSeedDefault,
@@ -151,10 +153,11 @@ module kmac
 
   // SHA3 core control signals and its response.
   // Sequence: start --> process(multiple) --> get absorbed event --> {run -->} done
-  logic sha3_start, sha3_run, unused_sha3_squeeze;
+  logic sha3_start, sha3_run;
   prim_mubi_pkg::mubi4_t sha3_done;
   prim_mubi_pkg::mubi4_t sha3_done_d;
   prim_mubi_pkg::mubi4_t sha3_absorbed;
+  prim_mubi_pkg::mubi4_t sha3_squeezing;
 
   // Indicate one block processed
   logic sha3_block_processed;
@@ -961,7 +964,7 @@ module kmac
     .lc_escalate_en_i (lc_escalate_en[2]),
 
     .absorbed_o  (sha3_absorbed),
-    .squeezing_o (unused_sha3_squeeze),
+    .squeezing_o (sha3_squeezing),
 
     .block_processed_o (sha3_block_processed),
 
@@ -1104,8 +1107,9 @@ module kmac
     // Configuration: Sideloaded Key
     .keymgr_key_en_i      (reg2hw.cfg_shadowed.sideload.q),
 
-    .absorbed_i (sha3_absorbed), // from SHA3
-    .absorbed_o (app_absorbed),  // to SW
+    .absorbed_i  (sha3_absorbed),  // from SHA3
+    .squeezing_i (sha3_squeezing), // from SHA3
+    .absorbed_o  (app_absorbed),   // to SW
 
     .app_active_o(app_active),
 

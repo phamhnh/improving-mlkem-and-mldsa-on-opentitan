@@ -90,6 +90,7 @@ module kmac_core
   // Maximum Hamming weight: 4
   //
   localparam int StateWidth = 6;
+  /* verilator lint_off VARHIDDEN */
   typedef enum logic [StateWidth-1:0] {
     StKmacIdle = 6'b011000,
 
@@ -110,6 +111,7 @@ module kmac_core
     // Terminal Error
     StTerminalError = 6'b100000
   } kmac_st_e ;
+  /* verilator lint_on VARHIDDEN */
 
   /////////////
   // Signals //

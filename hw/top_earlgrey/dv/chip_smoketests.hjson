@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 {
   # This auxiliary chip sim cfg specification focuses on chip level smoke tests.
   # Please see chip_sim_cfg.hjson for full setup details.
@@ -60,6 +62,12 @@
       name: chip_sw_otbn_smoketest
       uvm_test_seq: chip_sw_base_vseq
       sw_images: ["//sw/device/tests:otbn_smoketest:1:new_rules"]
+      en_run_modes: ["sw_test_mode_test_rom"]
+    }
+    {
+      name: chip_sw_otbn_kmac_smoketest
+      uvm_test_seq: chip_sw_base_vseq
+      sw_images: ["//sw/device/tests:otbn_kmac_smoketest:1:new_rules"]
       en_run_modes: ["sw_test_mode_test_rom"]
     }
     {

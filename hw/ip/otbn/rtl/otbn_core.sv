@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `include "prim_assert.sv"
 
@@ -95,7 +97,10 @@ module otbn_core
   input logic software_errs_fatal_i,
 
   input logic [1:0]                       sideload_key_shares_valid_i,
-  input logic [1:0][SideloadKeyWidth-1:0] sideload_key_shares_i
+  input logic [1:0][SideloadKeyWidth-1:0] sideload_key_shares_i,
+
+  output kmac_pkg::app_req_t      kmac_app_req_o,
+  input  kmac_pkg::app_rsp_t      kmac_app_rsp_i
 );
   import prim_mubi_pkg::*;
 
@@ -249,6 +254,9 @@ module otbn_core
   logic        insn_cnt_clear_int;
   logic [31:0] insn_cnt;
 
+  logic kmac_msg_write_ready;
+  logic kmac_digest_valid;
+
   logic secure_wipe_req, secure_wipe_ack;
 
   logic sec_wipe_wdr_d, sec_wipe_wdr_q;
@@ -259,6 +267,7 @@ module otbn_core
 
   logic sec_wipe_acc_urnd;
   logic sec_wipe_mod_urnd;
+  logic sec_wipe_kmac_regs_urnd;
   logic sec_wipe_zero;
   logic sec_wipe_err;
 
@@ -319,6 +328,7 @@ module otbn_core
 
     .sec_wipe_acc_urnd_o(sec_wipe_acc_urnd),
     .sec_wipe_mod_urnd_o(sec_wipe_mod_urnd),
+    .sec_wipe_kmac_regs_urnd_o  (sec_wipe_kmac_regs_urnd),
     .sec_wipe_zero_o    (sec_wipe_zero),
 
     .ispr_init_o         (ispr_init),
@@ -550,6 +560,10 @@ module otbn_core
     .rnd_valid_i       (rnd_valid),
 
     .urnd_reseed_err_i(urnd_reseed_err),
+
+    // KMAC interface
+    .kmac_msg_write_ready_i(kmac_msg_write_ready),
+    .kmac_digest_valid_i   (kmac_digest_valid),
 
     // Secure wipe
     .secure_wipe_req_o     (secure_wipe_req),
@@ -851,6 +865,7 @@ module otbn_core
     .reg_intg_violation_err_o(alu_bignum_reg_intg_violation_err),
 
     .sec_wipe_mod_urnd_i(sec_wipe_mod_urnd),
+    .sec_wipe_kmac_regs_urnd_i(sec_wipe_kmac_regs_urnd),
     .sec_wipe_running_i (secure_wipe_running_o),
     .sec_wipe_err_o     (alu_bignum_sec_wipe_err),
 
@@ -863,7 +878,13 @@ module otbn_core
     .sideload_key_shares_i,
 
     .alu_predec_error_o(alu_bignum_predec_error),
-    .ispr_predec_error_o(ispr_predec_error)
+    .ispr_predec_error_o(ispr_predec_error),
+
+    .kmac_msg_write_ready_o (kmac_msg_write_ready),
+    .kmac_digest_valid_o    (kmac_digest_valid),
+
+    .kmac_app_rsp_i,
+    .kmac_app_req_o
   );
 
   otbn_mac_bignum u_otbn_mac_bignum (

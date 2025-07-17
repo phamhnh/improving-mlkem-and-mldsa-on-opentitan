@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `include "prim_assert.sv"
 
@@ -479,6 +481,10 @@ module otbn_predecode
         CsrFlags, CsrFg0, CsrFg1:           ispr_addr = IsprFlags;
         CsrMod0, CsrMod1, CsrMod2, CsrMod3,
         CsrMod4, CsrMod5, CsrMod6, CsrMod7: ispr_addr = IsprMod;
+        CsrKmacCfg: ispr_addr = IsprKmacCfg;
+        CsrKmacMsg0, CsrKmacMsg1, CsrKmacMsg2, CsrKmacMsg3, CsrKmacMsg4, CsrKmacMsg5, CsrKmacMsg6, CsrKmacMsg7: ispr_addr = IsprKmacMsg;
+        CsrKmacStatus: ispr_addr = IsprKmacStatus;
+        CsrKmacDigestW0, CsrKmacDigestW1, CsrKmacDigestW2, CsrKmacDigestW3, CsrKmacDigestW4, CsrKmacDigestW5, CsrKmacDigestW6, CsrKmacDigestW7: ispr_addr = IsprKmacDigest;
         CsrRnd:                             ispr_addr = IsprRnd;
         CsrUrnd:                            ispr_addr = IsprUrnd;
         default: ;
@@ -486,6 +492,9 @@ module otbn_predecode
     end else begin
       unique case (wsr_addr)
         WsrMod:    ispr_addr = IsprMod;
+        WsrKmacCfg:    ispr_addr = IsprKmacCfg;
+        WsrKmacMsg:    ispr_addr = IsprKmacMsg;
+        WsrKmacDigest: ispr_addr = IsprKmacDigest;
         WsrRnd:    ispr_addr = IsprRnd;
         WsrUrnd:   ispr_addr = IsprUrnd;
         WsrAcc:    ispr_addr = IsprAcc;

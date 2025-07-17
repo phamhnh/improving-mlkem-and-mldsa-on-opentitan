@@ -68,3 +68,10 @@ otbn_binary(
         "calc_montgomery_consts.s",
     ],
 )
+
+otbn_binary(
+    name = "kmac_test",
+    srcs = [
+        "kmac_test.s",
+    ],
+)

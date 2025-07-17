@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 //
 // SHA3 core is a fully functional SHA3/SHAKE/cSHAKE hashing module.
 //
@@ -51,7 +53,7 @@ module sha3
   input prim_mubi_pkg::mubi4_t done_i,    // see sha3pad for details
 
   output prim_mubi_pkg::mubi4_t absorbed_o,
-  output logic                  squeezing_o,
+  output prim_mubi_pkg::mubi4_t squeezing_o,
 
   // Indicate of one block processed. KMAC main state tracks the progression
   // based on this signal.
@@ -200,7 +202,7 @@ module sha3
   end
 
   // Squeezing output
-  assign squeezing_o = squeezing;
+  assign squeezing_o = squeezing ? prim_mubi_pkg::MuBi4True : prim_mubi_pkg::MuBi4False;
 
   // processing
   always_ff @(posedge clk_i or negedge rst_ni) begin

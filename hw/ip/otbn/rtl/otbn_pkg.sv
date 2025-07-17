@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `include "prim_assert.sv"
 
@@ -323,6 +325,24 @@ package otbn_pkg;
     CsrMod6        = 12'h7D6,
     CsrMod7        = 12'h7D7,
     CsrRndPrefetch = 12'h7D8,
+    CsrKmacCfg     = 12'h7D9,
+    CsrKmacMsg0    = 12'h7DA,
+    CsrKmacMsg1    = 12'h7DB,
+    CsrKmacMsg2    = 12'h7DC,
+    CsrKmacMsg3    = 12'h7DD,
+    CsrKmacMsg4    = 12'h7DE,
+    CsrKmacMsg5    = 12'h7DF,
+    CsrKmacMsg6    = 12'h7E0,
+    CsrKmacMsg7    = 12'h7E1,
+    CsrKmacStatus  = 12'h7E2,
+    CsrKmacDigestW0 = 12'h7E3,
+    CsrKmacDigestW1 = 12'h7E4,
+    CsrKmacDigestW2 = 12'h7E5,
+    CsrKmacDigestW3 = 12'h7E6,
+    CsrKmacDigestW4 = 12'h7E7,
+    CsrKmacDigestW5 = 12'h7E8,
+    CsrKmacDigestW6 = 12'h7E9,
+    CsrKmacDigestW7 = 12'h7EA,
 
     // 0xFC0-0xFFF Custom read-only
     CsrRnd         = 12'hFC0,
@@ -330,7 +350,7 @@ package otbn_pkg;
   } csr_e;
 
   // Wide Special Purpose Registers (WSRs)
-  parameter int NWsr = 8; // Number of WSRs
+  parameter int NWsr = 11; // Number of WSRs
   parameter int WsrNumWidth = $clog2(NWsr);
   typedef enum logic [WsrNumWidth-1:0] {
     WsrMod    = 'd0,
@@ -340,13 +360,16 @@ package otbn_pkg;
     WsrKeyS0L = 'd4,
     WsrKeyS0H = 'd5,
     WsrKeyS1L = 'd6,
-    WsrKeyS1H = 'd7
+    WsrKeyS1H = 'd7,
+    WsrKmacCfg    = 'd8,
+    WsrKmacMsg    = 'd9,
+    WsrKmacDigest = 'd10
   } wsr_e;
 
   // Internal Special Purpose Registers (ISPRs)
   // CSRs and WSRs have some overlap into what they map into. ISPRs are the actual registers in the
   // design which CSRs and WSRs are mapped on to.
-  parameter int NIspr = 9;
+  parameter int NIspr = 13;
   parameter int IsprNumWidth = $clog2(NIspr);
   typedef enum logic [IsprNumWidth-1:0] {
     IsprMod    = 'd0,
@@ -357,7 +380,11 @@ package otbn_pkg;
     IsprKeyS0L = 'd5,
     IsprKeyS0H = 'd6,
     IsprKeyS1L = 'd7,
-    IsprKeyS1H = 'd8
+    IsprKeyS1H = 'd8,
+    IsprKmacCfg     = 'd9,
+    IsprKmacMsg     = 'd10,
+    IsprKmacStatus  = 'd11,
+    IsprKmacDigest  = 'd12
   } ispr_e;
 
   typedef logic [$clog2(NFlagGroups)-1:0] flag_group_t;

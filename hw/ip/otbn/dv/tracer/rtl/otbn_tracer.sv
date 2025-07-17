@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `ifndef SYNTHESIS
 
@@ -90,6 +92,10 @@ module otbn_tracer (
       IsprRnd: return "RND";
       IsprFlags: return "FLAGS";
       IsprUrnd: return "URND";
+      IsprKmacCfg: return "KMAC_CFG";
+      IsprKmacMsg: return "KMAC_MSG";
+      IsprKmacStatus: return "KMAC_STATUS";
+      IsprKmacDigest: return "KMAC_DIGEST";
       default: return "UNKNOWN_ISPR";
     endcase
   endfunction

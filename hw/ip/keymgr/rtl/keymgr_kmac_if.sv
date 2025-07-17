@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 //
 // Key manager interface to kmac
 //
@@ -343,6 +345,8 @@ module keymgr_kmac_if
   assign kmac_data_o.valid = valid;
   assign kmac_data_o.last  = last;
   assign kmac_data_o.strb  = strb;
+  assign kmac_data_o.hold  = 1'b0;
+  assign kmac_data_o.next  = 1'b0;
 
   // kmac done is asserted outside of expected window
   // SEC_CM: KMAC_IF_DONE.CTRL.CONSISTENCY

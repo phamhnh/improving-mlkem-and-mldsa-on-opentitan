@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `ifndef SYNTHESIS
 
@@ -255,6 +257,8 @@ interface otbn_trace_if
 
 
   assign ispr_write[IsprMod] = |u_otbn_alu_bignum.mod_wr_en & ~ispr_init;
+  assign ispr_write[IsprKmacCfg] = |u_otbn_alu_bignum.kmac_cfg_wr_en & ~ispr_init;
+  assign ispr_write[IsprKmacMsg] = |u_otbn_alu_bignum.kmac_msg_wr_en & ~ispr_init;
 
   for (genvar i_word = 0; i_word < BaseWordsPerWLEN; i_word++) begin : g_mod_and_acc_words
     assign ispr_write_data[IsprMod][i_word*32+:32] =
@@ -263,11 +267,30 @@ interface otbn_trace_if
     assign ispr_read_data[IsprMod][i_word*32+:32] = u_otbn_alu_bignum.mod_intg_q[i_word*39+:32];
     assign ispr_write_data[IsprAcc][i_word*32+:32] = u_otbn_mac_bignum.acc_intg_d[i_word*39+:32];
   end
+  for (genvar i_word = 0; i_word < BaseWordsPerWLEN; i_word++) begin : g_kmac_msg_and_digest_words
+    assign ispr_write_data[IsprKmacMsg][i_word*32+:32] =
+      u_otbn_alu_bignum.kmac_msg_wr_en[i_word] ? u_otbn_alu_bignum.kmac_msg_intg_d[i_word*39+:32] :
+                                                 u_otbn_alu_bignum.kmac_msg_intg_q[i_word*39+:32];
+    assign ispr_read_data[IsprKmacMsg][i_word*32+:32] = u_otbn_alu_bignum.kmac_msg_intg_q[i_word*39+:32];
+    assign ispr_read_data[IsprKmacDigest][i_word*32+:32] = u_otbn_alu_bignum.kmac_digest_intg_q[i_word*39+:32];
+  end
+
+  assign ispr_write_data[IsprKmacCfg][BaseWordsPerWLEN*32-1:32] = {(224){1'b0}};
+  assign ispr_write_data[IsprKmacCfg][31:0] =
+    u_otbn_alu_bignum.kmac_cfg_wr_en ? u_otbn_alu_bignum.kmac_cfg_intg_d[31:0] :
+                                       u_otbn_alu_bignum.kmac_cfg_intg_q[31:0];
+  assign ispr_read_data[IsprKmacCfg] = {{(224){1'b0}}, u_otbn_alu_bignum.kmac_cfg_intg_q[31:0]};
+  assign ispr_read_data[IsprKmacStatus] = {{(224){1'b0}}, u_otbn_alu_bignum.kmac_status_intg_q[31:0]};
 
   assign ispr_read[IsprMod] =
     (any_ispr_read & (ispr_addr == IsprMod)) |
     (insn_fetch_resp_valid &
      (alu_bignum_operation.op inside {AluOpBignumAddm, AluOpBignumSubm}));
+
+  assign ispr_read[IsprKmacMsg] = (any_ispr_read & (ispr_addr == IsprKmacMsg));
+  assign ispr_read[IsprKmacCfg] = (any_ispr_read & (ispr_addr == IsprKmacCfg));
+  assign ispr_read[IsprKmacStatus] = (any_ispr_read & (ispr_addr == IsprKmacStatus));
+  assign ispr_read[IsprKmacDigest] = (any_ispr_read & (ispr_addr == IsprKmacDigest));
 
   assign ispr_write[IsprAcc] = u_otbn_mac_bignum.acc_en & ~ispr_init;
 
@@ -282,6 +305,10 @@ interface otbn_trace_if
   assign ispr_write_data[IsprRnd] = '0;
   assign ispr_write[IsprUrnd] = 1'b0;
   assign ispr_write_data[IsprUrnd] = '0;
+  assign ispr_write[IsprKmacStatus] = 1'b0;
+  assign ispr_write_data[IsprKmacStatus] = '0;
+  assign ispr_write[IsprKmacDigest] = 1'b0;
+  assign ispr_write_data[IsprKmacDigest] = '0;
 
   assign ispr_read[IsprRnd] = any_ispr_read & (ispr_addr == IsprRnd) & rnd_req & rnd_valid;
   assign ispr_read_data[IsprRnd] = rnd_data;

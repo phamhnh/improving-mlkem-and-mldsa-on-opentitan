@@ -220,6 +220,14 @@
       act:     "rcv"
       package: "keymgr_pkg"
     },
+
+    // KMAC interface
+    { name:    "kmac_data"
+      package: "kmac_pkg"
+      struct:  "app"
+      act:     "req"
+      type:    "req_rsp"
+    },
   ],
   features: [
     {

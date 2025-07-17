@@ -2,6 +2,9 @@ CAPI=2:
 # Copyright lowRISC contributors (OpenTitan project).
 # Licensed under the Apache License, Version 2.0, see LICENSE for details.
 # SPDX-License-Identifier: Apache-2.0
+# Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192).
+# Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors.
+
 name: "lowrisc:ip:kmac:0.1"
 description: "Keccak Message Authentication Code (KMAC) and SHA3"
 filesets:
@@ -34,6 +37,11 @@ filesets:
       - rtl/kmac_entropy.sv
       - rtl/kmac_errchk.sv
       - rtl/kmac.sv
+    file_type: systemVerilogSource
+
+  files_rtl_tb:
+    files:
+      - dv/sv/kmac_tb.sv
     file_type: systemVerilogSource
 
   files_verilator_waiver:
@@ -99,3 +107,10 @@ targets:
     default_tool: icarus
     parameters:
       - SYNTHESIS=true
+
+  sim:
+    default_tool: verilator
+    filesets_append:
+      - files_rtl
+      - files_rtl_tb
+    toplevel: tb_kmac

@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 //
 // kmac_pkg
 
@@ -204,7 +206,11 @@ package kmac_pkg;
     // In KMAC mode, the secret key always comes from sideload.
     // KMAC mode needs uniformly distributed entropy. The request will be
     // silently discarded in Reset state.
-    AppKMAC   = 2
+    AppKMAC   = 2,
+
+    // In the configurable mode, the hash function (SHA3, SHAKE, cSHAKE)
+    // is chosen according to the first transmitted word.
+    AppConfigDynamic = 3
   } app_mode_e;
 
   // Predefined encoded_string
@@ -256,36 +262,45 @@ package kmac_pkg;
     Prefix: NSPrefixW'({EncodedStringRomCtrl, EncodedStringEmpty})
   };
 
+  parameter app_config_t AppCfgDynamic = '{
+    Mode: AppConfigDynamic,
+    KeccakStrength: sha3_pkg::L256,   // Ignored
+    PrefixMode: 1'b0,     // No prefix
+    Prefix: NSPrefixW'({1'b0})
+  };
+
   // Exporting the app internal mux selection enum into the package. So that DV
   // can use this enum in its scoreboard.
   // Encoding generated with:
-  // $ ./util/design/sparse-fsm-encode.py -d 3 -m 4 -n 5 \
-  //      -s 713832113 --language=sv
+  // $ ./util/design/sparse-fsm-encode.py -d 3 -m 5 -n 6 \
+  //     -s 713832113 --language=sv
   //
   // Hamming distance histogram:
   //
   //  0: --
   //  1: --
   //  2: --
-  //  3: |||||||||||||||||||| (66.67%)
-  //  4: |||||||||| (33.33%)
-  //  5: --
+  //  3: |||||||||||||||||||| (50.00%)
+  //  4: |||||||||||||||| (40.00%)
+  //  5: |||| (10.00%)
+  //  6: --
   //
   // Minimum Hamming distance: 3
-  // Maximum Hamming distance: 4
+  // Maximum Hamming distance: 5
   // Minimum Hamming weight: 1
   // Maximum Hamming weight: 4
   //
-  localparam int AppMuxWidth = 5;
+  localparam int AppMuxWidth = 6;
   typedef enum logic [AppMuxWidth-1:0] {
-    SelNone   = 5'b10100,
-    SelApp    = 5'b11001,
-    SelOutLen = 5'b00010,
-    SelSw     = 5'b01111
+    SelNone          = 6'b101000,
+    SelApp           = 6'b110010,
+    SelDynamicAppCfg = 6'b000100,
+    SelOutLen        = 6'b001111,
+    SelSw            = 6'b110101
   } app_mux_sel_e ;
 
 // Encoding generated with:
-  // $ ./util/design/sparse-fsm-encode.py -d 3 -m 14 -n 10 \
+  // $ ./util/design/sparse-fsm-encode.py -d 3 -m 17 -n 11 \
   //     -s 2454278799 --language=sv
   //
   // Hamming distance histogram:
@@ -293,23 +308,24 @@ package kmac_pkg;
   //  0: --
   //  1: --
   //  2: --
-  //  3: |||||||||| (14.29%)
-  //  4: |||||||||||||||||||| (27.47%)
-  //  5: ||||||||||||| (18.68%)
-  //  6: |||||||||||||||| (21.98%)
-  //  7: |||||||| (10.99%)
-  //  8: |||| (6.59%)
-  //  9: --
+  //  3: ||||||| (8.09%)
+  //  4: |||||||||||||||||||| (20.59%)
+  //  5: |||||||||||||||||||| (20.59%)
+  //  6: ||||||||||||||||||| (19.85%)
+  //  7: |||||||||||||||||||| (20.59%)
+  //  8: ||||||| (8.09%)
+  //  9: || (2.21%)
   // 10: --
+  // 11: --
   //
   // Minimum Hamming distance: 3
-  // Maximum Hamming distance: 8
-  // Minimum Hamming weight: 3
-  // Maximum Hamming weight: 8
+  // Maximum Hamming distance: 9
+  // Minimum Hamming weight: 1
+  // Maximum Hamming weight: 9
   //
-  localparam int AppStateWidth = 10;
+  localparam int AppStateWidth = 11;
   typedef enum logic [AppStateWidth-1:0] {
-    StIdle = 10'b1010111110,
+    StIdle  = 11'b10101111100,
 
     // Application operation.
     //
@@ -326,33 +342,37 @@ package kmac_pkg;
 
     // In StAppCfg state, it latches the cfg from AppCfg parameter to determine
     // the kmac_mode, sha3_mode, keccak strength.
-    StAppCfg = 10'b1010101101,
-
-    StAppMsg = 10'b1110001011,
+    StAppCfg         = 11'b10101011010,
+    StAppDynamicCfg  = 11'b11100010110, // For KMAC-OTBN interface
+    StAppMsg         = 11'b10100110001,
 
     // In StKeyOutLen, this module pushes encoded outlen to the MSG_FIFO.
     // Assume the length is 256 bit, the data will be 48'h 02_0100
-    StAppOutLen  = 10'b1010011000,
-    StAppProcess = 10'b1110110010,
-    StAppWait    = 10'b1001010000,
+    StAppOutLen  = 11'b10101001001,
+    StAppProcess = 11'b11101100100,
+    StAppWait    = 11'b10010100000,
+
+    // For KMAC-OTBN interface
+    StAppManualRun    = 11'b00101110110,
+    StAppShiftDigest  = 11'b01110111111,
 
     // SW Controlled
     // If start request comes from SW first, until the operation ends, all
     // requests from KeyMgr will be discarded.
-    StSw = 10'b0010111011,
+    StSw  = 11'b00000000001,
 
     // Error KeyNotValid
     // When KeyMgr operates, the secret key is not ready yet.
-    StKeyMgrErrKeyNotValid = 10'b0111011111,
+    StKeyMgrErrKeyNotValid = 11'b00110111100,
 
-    StError = 10'b1110010111,
-    StErrorAwaitSw = 10'b0110001100,
-    StErrorAwaitApp = 10'b1011100000,
-    StErrorWaitAbsorbed = 10'b0010100100,
-    StErrorServiceRejected = 10'b1101000111,
+    StError = 11'b11100101111,
+    StErrorAwaitSw = 11'b01100011001,
+    StErrorAwaitApp = 11'b10111000000,
+    StErrorWaitAbsorbed = 11'b11010001110,
+    StErrorServiceRejected = 11'b10010000101,
 
     // This state is used for terminal errors
-    StTerminalError = 10'b0101110110
+    StTerminalError = 11'b01011101100
   } st_e;
 
   // MsgWidth : 64
@@ -365,6 +385,8 @@ package kmac_pkg;
     logic [MsgWidth-1:0] data;
     logic [MsgStrbW-1:0] strb;
     logic last;
+    logic hold;
+    logic next;
   } app_req_t;
 
   typedef struct packed {
@@ -382,7 +404,9 @@ package kmac_pkg;
     valid: 1'b 0,
     data: '0,
     strb: '0,
-    last: 1'b 0
+    last: 1'b 0,
+    hold: 1'b 0,
+    next: 1'b 0
   };
   parameter app_rsp_t APP_RSP_DEFAULT = '{
     ready: 1'b1,
@@ -449,7 +473,10 @@ package kmac_pkg;
     ErrPackerIntegrity = 8'h C2,
 
     // Error due to the counter integrity check failure inside MsgFifo.Fifo
-    ErrMsgFifoIntegrity = 8'h C3
+    ErrMsgFifoIntegrity = 8'h C3,
+
+    // Error in the packer that is connected for the app intf to OTBN
+    ErrAppIntfPacker = 8'h C4
   } err_code_e;
 
   typedef struct packed {
