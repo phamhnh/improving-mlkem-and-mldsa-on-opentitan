@@ -926,12 +926,22 @@ module otbn_alu_bignum
   // Shifter //
   /////////////
 
-  logic [WLEN-1:0]   shifter_in_upper, shifter_in_lower, shifter_in_lower_reverse;
-  logic [WLEN*2-1:0] shifter_in;
-  logic [WLEN*2-1:0] shifter_out;
-  logic [WLEN-1:0]   shifter_out_lower_reverse, shifter_res, unused_shifter_out_upper;
+  logic [WLEN-1:0]   shifter_bignum_in_upper, shifter_bignum_in_lower, shifter_bignum_in_lower_reverse;
+  logic [WLEN*2-1:0] shifter_bignum_in;
+  logic [WLEN*2-1:0] shifter_bignum_out;
+  logic [WLEN-1:0]   shifter_bignum_out_lower_reverse, shifter_res, unused_shifter_out_upper;
   logic [WLEN-1:0]   shifter_operand_a_blanked;
   logic [WLEN-1:0]   shifter_operand_b_blanked;
+  logic [WLEN-1:0]   shifter_bignum_res;
+  logic [15:0]       shifter_vec_in [15:0];
+  logic [15:0]       shifter_vec_in_orig [15:0];
+  logic [15:0]       shifter_vec_in_reverse [15:0];
+  logic [15:0]       shifter_vec_out [15:0];
+  logic [31:0]       shifter_vec_tmp [15:0];
+  logic [31:0]       shifter_vec_tmp_shifted [15:0];
+  logic [15:0]       shifter_vec_out_reverse [15:0];
+  logic [WLEN-1:0]   shifter_vec_res;
+  logic              shifter_selvector_i;
 
   // SEC_CM: DATA_REG_SW.SCA
   prim_blanker #(.Width(WLEN)) u_shifter_operand_a_blanker (
@@ -947,76 +957,276 @@ module otbn_alu_bignum
     .out_o(shifter_operand_b_blanked)
   );
 
+  // BIGNUM SHIFTER
   // Operand A is only used for BN.RSHI, otherwise the upper input is 0. For all instructions other
   // than BN.RHSI alu_predec_bignum_i.shifter_a_en will be 0, resulting in 0 for the upper input.
-  assign shifter_in_upper = shifter_operand_a_blanked;
-  assign shifter_in_lower = shifter_operand_b_blanked;
+  assign shifter_bignum_in_upper = shifter_operand_a_blanked;
+  assign shifter_bignum_in_lower = shifter_operand_b_blanked;
 
-  for (genvar i = 0; i < WLEN; i++) begin : g_shifter_in_lower_reverse
-    assign shifter_in_lower_reverse[i] = shifter_in_lower[WLEN-i-1];
+  for (genvar i = 0; i < WLEN; i++) begin : g_shifter_bignum_in_lower_reverse
+    assign shifter_bignum_in_lower_reverse[i] = shifter_bignum_in_lower[WLEN-i-1];
   end
 
-  assign shifter_in = {shifter_in_upper,
-      alu_predec_bignum_i.shift_right ? shifter_in_lower : shifter_in_lower_reverse};
+  assign shifter_bignum_in = {shifter_bignum_in_upper,
+      alu_predec_bignum_i.shift_right ? shifter_bignum_in_lower : shifter_bignum_in_lower_reverse};
 
-  assign shifter_out = shifter_in >> alu_predec_bignum_i.shift_amt;
+  assign shifter_bignum_out = shifter_bignum_in >> alu_predec_bignum_i.shift_amt;
 
-  for (genvar i = 0; i < WLEN; i++) begin : g_shifter_out_lower_reverse
-    assign shifter_out_lower_reverse[i] = shifter_out[WLEN-i-1];
+  for (genvar i = 0; i < WLEN; i++) begin : g_shifter_bignum_out_lower_reverse
+    assign shifter_bignum_out_lower_reverse[i] = shifter_bignum_out[WLEN-i-1];
   end
 
-  assign shifter_res =
-      alu_predec_bignum_i.shift_right ? shifter_out[WLEN-1:0] : shifter_out_lower_reverse;
+  assign shifter_bignum_res =
+      alu_predec_bignum_i.shift_right ? shifter_bignum_out[WLEN-1:0] : shifter_bignum_out_lower_reverse;
 
+  // VECTOR SHIFTER
+  assign shifter_selvector_i = operation_i.vector_type[0];
+  // split into 16-bit chunks for vectorized shift
+  for (genvar i=0; i<16; ++i) begin : g_shifter_vec
+    assign shifter_vec_in_orig[i] = shifter_operand_b_blanked[i*16+:16];
+    for (genvar j=0; j<WLEN/16; ++j) begin : g_shifter_vec_reverse_input
+      assign shifter_vec_in_reverse[i][j] = shifter_vec_in_orig[i][WLEN/16-j-1];
+    end
+    assign shifter_vec_in[i] =
+        alu_predec_bignum_i.shift_right ? shifter_vec_in_orig[i] : shifter_selvector_i ?
+            shifter_vec_in_reverse[i] : (i % 2 == 1) ?
+                shifter_vec_in_reverse[i-1] : shifter_vec_in_reverse[i+1];
+
+    // Shifter below either shifts as 16 or 32 bit vectors
+    assign shifter_vec_tmp[i] = {shifter_vec_in[i+1], shifter_vec_in[i]};
+    assign shifter_vec_tmp_shifted[i] = shifter_vec_tmp[i] >> alu_predec_bignum_i.shift_amt;
+    assign shifter_vec_out[i] =
+        (shifter_selvector_i | (i % 2 == 1)) ?
+            (shifter_vec_in[i] >> alu_predec_bignum_i.shift_amt) : shifter_vec_tmp_shifted[i][15:0];
+
+    for (genvar j=0; j<WLEN/16; ++j) begin : g_shifter_vec_reverse_output
+      assign shifter_vec_out_reverse[i][j] =
+          shifter_selvector_i ? shifter_vec_out[i][WLEN/16-j-1] : (i % 2 == 1) ?
+              shifter_vec_out[i-1][WLEN/16-j-1] : shifter_vec_out[i+1][WLEN/16-j-1];
+    end
+    assign shifter_vec_res[i*16+:16] =
+        alu_predec_bignum_i.shift_right ? shifter_vec_out[i] : shifter_vec_out_reverse[i];
+  end
+
+  // SHIFTER RESULT
+  assign shifter_res = (operation_i.op == otbn_pkg::AluOpBignumShv) ? shifter_vec_res : shifter_bignum_res;
   // Only the lower WLEN bits of the shift result are returned.
-  assign unused_shifter_out_upper = shifter_out[WLEN*2-1:WLEN];
+  assign unused_shifter_out_upper = shifter_bignum_out[WLEN*2-1:WLEN];
+
+  ///////////////
+  // Transpose //
+  ///////////////
+
+  logic [WLEN/16-1:0] trn_op0_16h [15:0];
+  logic [WLEN/8-1:0]  trn_op0_8s  [7:0];
+  logic [WLEN/4-1:0]  trn_op0_4d  [3:0];
+  logic [WLEN/2-1:0]  trn_op0_2q  [1:0];
+
+  logic [WLEN/16-1:0] trn_op1_16h [15:0];
+  logic [WLEN/8-1:0]  trn_op1_8s  [7:0];
+  logic [WLEN/4-1:0]  trn_op1_4d  [3:0];
+  logic [WLEN/2-1:0]  trn_op1_2q  [1:0];
+
+  logic [WLEN-1:0]    trn_res;
+
+  for (genvar i=0; i<16; ++i) begin : g_trn_16h
+    assign trn_op0_16h[i] = operation_i.operand_a[i*16+:16];
+    assign trn_op1_16h[i] = operation_i.operand_b[i*16+:16];
+  end
+
+  for (genvar i=0; i<8; ++i) begin : g_trn_8s
+    assign trn_op0_8s[i] = operation_i.operand_a[i*32+:32];
+    assign trn_op1_8s[i] = operation_i.operand_b[i*32+:32];
+  end
+
+  for (genvar i=0; i<4; ++i) begin : g_trn_4d
+    assign trn_op0_4d[i] = operation_i.operand_a[i*64+:64];
+    assign trn_op1_4d[i] = operation_i.operand_b[i*64+:64];
+  end
+
+  for (genvar i=0; i<2; ++i) begin : g_trn_2q
+    assign trn_op0_2q[i] = operation_i.operand_a[i*128+:128];
+    assign trn_op1_2q[i] = operation_i.operand_b[i*128+:128];
+  end
+
+  always_comb begin
+    case (operation_i.trn_type)
+      trn1_16h: begin
+        for (int i=0; i<8; ++i) begin
+          trn_res[i*32+:32] = {trn_op1_16h[2*i],trn_op0_16h[2*i]};
+        end
+      end
+
+      trn1_8s: begin
+        for (int i=0; i<4; ++i) begin
+          trn_res[i*64+:64] = {trn_op1_8s[2*i],trn_op0_8s[2*i]};
+        end        
+      end   
+
+      trn1_4d: begin
+        for (int i=0; i<2; ++i) begin
+          trn_res[i*128+:128] = {trn_op1_4d[2*i],trn_op0_4d[2*i]};
+        end           
+      end  
+
+      trn1_2q: begin
+        for (int i=0; i<1; ++i) begin
+          trn_res[i*256+:256] = {trn_op1_2q[2*i],trn_op0_2q[2*i]};
+        end  
+      end
+
+      trn2_16h: begin
+        for (int i=0; i<8; ++i) begin
+          trn_res[i*32+:32] = {trn_op1_16h[2*i+1],trn_op0_16h[2*i+1]};
+        end
+      end
+
+      trn2_8s: begin
+        for (int i=0; i<4; ++i) begin
+          trn_res[i*64+:64] = {trn_op1_8s[2*i+1],trn_op0_8s[2*i+1]};
+        end        
+      end  
+
+      trn2_4d: begin
+        for (int i=0; i<2; ++i) begin
+          trn_res[i*128+:128] = {trn_op1_4d[2*i+1],trn_op0_4d[2*i+1]};
+        end          
+      end     
+
+      trn2_2q: begin
+        for (int i=0; i<1; ++i) begin
+          trn_res[i*256+:256] = {trn_op1_2q[2*i+1],trn_op0_2q[2*i+1]};
+        end 
+      end
+
+      default: begin
+        for (int i=0; i<8; ++i) begin
+          trn_res[i*32+:32] = {trn_op1_16h[2*i],trn_op0_16h[2*i]};
+        end
+      end
+    endcase
+  end
 
   //////////////////
   // Adders X & Y //
   //////////////////
 
-  logic [WLEN:0]   adder_x_op_a_blanked, adder_x_op_b, adder_x_op_b_blanked;
   logic            adder_x_carry_in;
+  logic            adder_x_carry_in_blanked;
   logic            adder_x_op_b_invert;
-  logic [WLEN+1:0] adder_x_res;
+  logic [WLEN:0]   adder_x_res;
 
-  logic [WLEN:0]   adder_y_op_a, adder_y_op_b;
   logic            adder_y_carry_in;
   logic            adder_y_op_b_invert;
-  logic [WLEN-1:0] adder_y_op_a_blanked;
   logic [WLEN-1:0] adder_y_op_shifter_res_blanked;
 
   logic [WLEN-1:0] shift_mod_mux_out;
   logic [WLEN-1:0] x_res_operand_a_mux_out;
 
+  // Split 256-bit addition into 16 x 16-bit additions
+  logic [15:0] adder_x_op_a [15:0];
+  logic [15:0] adder_x_op_b [15:0];
+
+  logic [16:0] adder_x_op_a_blanked [15:0];
+  logic [16:0] adder_x_op_b_blanked [15:0];
+
+  logic [15:0] adder_y_op_a_blanked [15:0];
+  logic [16:0] adder_y_op_a [15:0];
+  logic [16:0] adder_y_op_b [15:0];
+
+  logic [15:0] adder_x_vcarry_in;
+  logic [15:0] adder_y_vcarry_in;
+
+  logic [15:0] adder_x_sum [15:0];
+  logic [15:0] adder_y_sum [15:0];
+
+  logic [15:0] adder_x_carry_out;
+  logic [15:0] adder_y_carry_out;
+
+  logic [15:0] adder_x_carry2mux;
+  logic [15:0] adder_y_carry2mux;
+
+  logic [15:0] adder_x_carry_in_unused;
+  logic [15:0] adder_y_carry_in_unused;
+
+  logic        adder_selvector_i;
+  logic        adder_vector_i;
+  assign       adder_selvector_i = operation_i.vector_type[0];
+  assign       adder_vector_i = operation_i.vector_sel;
+
   // SEC_CM: DATA_REG_SW.SCA
-  prim_blanker #(.Width(WLEN+1)) u_adder_x_op_a_blanked (
-    .in_i ({operation_i.operand_a, 1'b1}),
+  prim_blanker #(.Width(1)) u_adder_op_b_blanked (
+    .in_i (adder_x_carry_in),
     .en_i (alu_predec_bignum_i.adder_x_en),
-    .out_o(adder_x_op_a_blanked)
+    .out_o(adder_x_carry_in_blanked)
   );
 
-  assign adder_x_op_b = {adder_x_op_b_invert ? ~operation_i.operand_b : operation_i.operand_b,
-                         adder_x_carry_in};
+  for (genvar i=0; i<16; ++i) begin
+    // Depending on mode, select carry input for the 16-bit adders
+    assign adder_x_vcarry_in[i] =
+        adder_vector_i ?
+            (adder_selvector_i ? adder_x_carry_in_blanked : ((i%2==0) ? adder_x_carry_in_blanked : adder_x_carry_out[i-1])) :
+            ((i==0) ? adder_x_carry_in_blanked : adder_x_carry_out[i-1]);
 
-  // SEC_CM: DATA_REG_SW.SCA
-  prim_blanker #(.Width(WLEN+1)) u_adder_x_op_b_blanked (
-    .in_i (adder_x_op_b),
-    .en_i (alu_predec_bignum_i.adder_x_en),
-    .out_o(adder_x_op_b_blanked)
-  );
+    assign adder_x_op_a[i] = operation_i.operand_a[i*16+:16];
 
-  assign adder_x_res = adder_x_op_a_blanked + adder_x_op_b_blanked;
+    // SEC_CM: DATA_REG_SW.SCA
+    prim_blanker #(.Width(17)) u_adder_op_a_blanked (
+      .in_i ({adder_x_op_a[i], 1'b1}),
+      .en_i (alu_predec_bignum_i.adder_x_en),
+      .out_o(adder_x_op_a_blanked[i])
+    );
 
-  // SEC_CM: DATA_REG_SW.SCA
-  prim_blanker #(.Width(WLEN)) u_adder_y_op_a_blanked (
-    .in_i (operation_i.operand_a),
-    .en_i (alu_predec_bignum_i.adder_y_op_a_en),
-    .out_o(adder_y_op_a_blanked)
-  );
+    assign adder_x_op_b[i] =
+        adder_x_op_b_invert ? ~operation_i.operand_b[i*16+:16] : operation_i.operand_b[i*16+:16];
 
-  assign x_res_operand_a_mux_out =
-      alu_predec_bignum_i.x_res_operand_a_sel ? adder_x_res[WLEN:1] : adder_y_op_a_blanked;
+    // SEC_CM: DATA_REG_SW.SCA
+    prim_blanker #(.Width(16)) u_adder_op_b_blanked (
+      .in_i (adder_x_op_b[i]),
+      .en_i (alu_predec_bignum_i.adder_x_en),
+      .out_o(adder_x_op_b_blanked[i][16:1])
+    );
+    assign adder_x_op_b_blanked[i][0] = adder_x_vcarry_in[i];
+
+    assign {adder_x_carry_out[i],adder_x_sum[i],adder_x_carry_in_unused[i]} =
+        adder_x_op_a_blanked[i] + adder_x_op_b_blanked[i];
+
+    // Combine all sums to 256-bit vector
+    assign adder_x_res[1+i*16+:16] = adder_x_sum[i][15:0];
+  end
+
+  /* verilator lint_on UNOPTFLAT */
+  assign adder_x_res[0] = 'b0;
+  for (genvar i=0; i<16; ++i) begin
+    assign adder_y_vcarry_in[i] =
+        adder_vector_i ?
+            (adder_selvector_i ? adder_y_carry_in : ((i%2==0) ? adder_y_carry_in : adder_y_carry_out[i-1])) :
+            ((i==0) ? adder_y_carry_in : adder_y_carry_out[i-1]);
+
+
+    // SEC_CM: DATA_REG_SW.SCA
+    prim_blanker #(.Width(16)) u_adder_y_op_a_blanked (
+      .in_i (operation_i.operand_a[i*16+:16]),
+      .en_i (alu_predec_bignum_i.adder_y_op_a_en),
+      .out_o(adder_y_op_a_blanked[i])
+    );
+
+    assign x_res_operand_a_mux_out[i*16+:16] =
+        alu_predec_bignum_i.x_res_operand_a_sel ? adder_x_sum[i][15:0] : adder_y_op_a_blanked[i];
+
+    assign adder_y_op_a[i] = {x_res_operand_a_mux_out[i*16+:16], 1'b1};
+    assign adder_y_op_b[i] =
+        {adder_y_op_b_invert ? ~shift_mod_mux_out[i*16+:16] : shift_mod_mux_out[i*16+:16], adder_y_vcarry_in[i]};
+
+    assign {adder_y_carry_out[i],adder_y_sum[i],adder_y_carry_in_unused[i]} =
+        adder_y_op_a[i] + adder_y_op_b[i];
+
+    // Combine all sums to 256-bit vector
+    assign adder_y_res[1+i*16+:16] = adder_y_sum[i][15:0];
+  end
+
+  assign adder_y_res[WLEN+1] = adder_y_carry_out[15];
+  assign adder_y_res[0]      = 'b0;
 
   // SEC_CM: DATA_REG_SW.SCA
   prim_blanker #(.Width(WLEN)) u_adder_y_op_shifter_blanked (
@@ -1024,15 +1234,17 @@ module otbn_alu_bignum
     .en_i (alu_predec_bignum_i.adder_y_op_shifter_en),
     .out_o(adder_y_op_shifter_res_blanked)
   );
+  for (genvar i=0; i<16; ++i) begin
+    assign shift_mod_mux_out[i*16+:16] =
+        alu_predec_bignum_i.shift_mod_sel ?
+            adder_y_op_shifter_res_blanked[i*16+:16] :
+            (adder_vector_i ? (adder_selvector_i ? mod_no_intg_q[15:0] : mod_no_intg_q[(i%2)*16+:16]) : mod_no_intg_q[i*16+:16]);
 
-  assign shift_mod_mux_out =
-      alu_predec_bignum_i.shift_mod_sel ? adder_y_op_shifter_res_blanked : mod_no_intg_q;
-
-  assign adder_y_op_a = {x_res_operand_a_mux_out, 1'b1};
-  assign adder_y_op_b = {adder_y_op_b_invert ? ~shift_mod_mux_out : shift_mod_mux_out,
-                         adder_y_carry_in};
-
-  assign adder_y_res = adder_y_op_a + adder_y_op_b;
+    assign adder_x_carry2mux[i] =
+        adder_selvector_i ? adder_x_carry_out[i] : ((i%2==0) ? adder_x_carry_out[i+1] : adder_x_carry_out[i]);
+    assign adder_y_carry2mux[i] =
+        adder_selvector_i ? adder_y_carry_out[i] : ((i%2==0) ? adder_y_carry_out[i+1] : adder_y_carry_out[i]);
+  end
 
   // The LSb of the adder results are unused.
   logic unused_adder_x_res_lsb, unused_adder_y_res_lsb;
@@ -1054,6 +1266,10 @@ module otbn_alu_bignum
   logic expected_logic_shifter_en;
   logic [3:0] expected_logic_res_sel;
 
+  alu_vector_type_t expected_vector_type;
+  alu_trn_type_t    expected_trn_type;
+  logic             expected_vector_sel;
+
   always_comb begin
     adder_x_carry_in          = 1'b0;
     adder_x_op_b_invert       = 1'b0;
@@ -1061,6 +1277,10 @@ module otbn_alu_bignum
     adder_y_op_b_invert       = 1'b0;
     adder_update_flags_en_raw = 1'b0;
     logic_update_flags_en_raw = 1'b0;
+
+    expected_vector_type      = alu_8s;
+    expected_trn_type         = alu_trn_type_t'('0);
+    expected_vector_sel       = 1'b0;
 
     expected_adder_x_en             = 1'b0;
     expected_x_res_operand_a_sel    = 1'b0;
@@ -1116,6 +1336,40 @@ module otbn_alu_bignum
         expected_x_res_operand_a_sel = 1'b1;
         expected_shift_mod_sel       = 1'b0;
       end
+      AluOpBignumAddv: begin
+        // X computes A + B
+        // Y computes adder_x_res - mod = adder_x_res + ~mod + 1
+        // Shifter ignored
+        // Output mux chooses result based on top bit of X result (whether mod subtraction in
+        // Y should be applied or not)
+        adder_x_carry_in    = 1'b0;
+        adder_x_op_b_invert = 1'b0;
+        adder_y_carry_in    = 1'b1;
+        adder_y_op_b_invert = 1'b1;
+
+        expected_adder_x_en          = 1'b1;
+        expected_x_res_operand_a_sel = 1'b1;
+        expected_shift_mod_sel       = 1'b0;
+        expected_vector_type         = operation_i.vector_type;
+        expected_vector_sel          = operation_i.vector_sel;
+      end
+      AluOpBignumAddvm: begin
+        // X computes A + B
+        // Y computes adder_x_res - mod = adder_x_res + ~mod + 1
+        // Shifter ignored
+        // Output mux chooses result based on top bit of X result (whether mod subtraction in
+        // Y should be applied or not)
+        adder_x_carry_in    = 1'b0;
+        adder_x_op_b_invert = 1'b0;
+        adder_y_carry_in    = 1'b1;
+        adder_y_op_b_invert = 1'b1;
+
+        expected_adder_x_en          = 1'b1;
+        expected_x_res_operand_a_sel = 1'b1;
+        expected_shift_mod_sel       = 1'b0;
+        expected_vector_type         = operation_i.vector_type;
+        expected_vector_sel          = operation_i.vector_sel;
+      end
       AluOpBignumSub: begin
         // Shifter computes B [>>|<<] shift_amt
         // Y computes A - shifter_res = A + ~shifter_res + 1
@@ -1157,6 +1411,40 @@ module otbn_alu_bignum
         expected_x_res_operand_a_sel = 1'b1;
         expected_shift_mod_sel       = 1'b0;
       end
+      AluOpBignumSubv: begin
+        // X computes A - B = A + ~B + 1
+        // Y computes adder_x_res + mod
+        // Shifter ignored
+        // Output mux chooses result based on top bit of X result (whether subtraction in Y should
+        // be applied or not)
+        adder_x_carry_in    = 1'b1;
+        adder_x_op_b_invert = 1'b1;
+        adder_y_carry_in    = 1'b0;
+        adder_y_op_b_invert = 1'b0;
+
+        expected_adder_x_en          = 1'b1;
+        expected_x_res_operand_a_sel = 1'b1;
+        expected_shift_mod_sel       = 1'b0;
+        expected_vector_type         = operation_i.vector_type;
+        expected_vector_sel          = operation_i.vector_sel;
+      end
+      AluOpBignumSubvm: begin
+        // X computes A - B = A + ~B + 1
+        // Y computes adder_x_res + mod
+        // Shifter ignored
+        // Output mux chooses result based on top bit of X result (whether subtraction in Y should
+        // be applied or not)
+        adder_x_carry_in    = 1'b1;
+        adder_x_op_b_invert = 1'b1;
+        adder_y_carry_in    = 1'b0;
+        adder_y_op_b_invert = 1'b0;
+
+        expected_adder_x_en          = 1'b1;
+        expected_x_res_operand_a_sel = 1'b1;
+        expected_shift_mod_sel       = 1'b0;
+        expected_vector_type         = operation_i.vector_type;
+        expected_vector_sel          = operation_i.vector_sel;
+      end
       AluOpBignumRshi: begin
         // Shifter computes {A, B} >> shift_amt
         // X, Y ignored
@@ -1186,6 +1474,17 @@ module otbn_alu_bignum
         expected_logic_res_sel[AluOpLogicAnd] = operation_i.op == AluOpBignumAnd;
         expected_logic_res_sel[AluOpLogicNot] = operation_i.op == AluOpBignumNot;
       end
+      AluOpBignumShv: begin
+        expected_vector_type            = operation_i.vector_type;
+        expected_vector_sel             = operation_i.vector_sel;
+        expected_shifter_b_en           = 1'b1;
+        expected_shift_right            = operation_i.shift_right;
+        expected_logic_shifter_en       = 1'b1;
+        expected_logic_res_sel          = '0;
+      end
+      AluOpBignumTrn: begin
+        expected_trn_type = operation_i.trn_type;
+      end
       // No operation, do nothing.
       AluOpBignumNone: ;
       default: ;
@@ -1204,6 +1503,9 @@ module otbn_alu_bignum
       expected_shifter_a_en != alu_predec_bignum_i.shifter_a_en,
       expected_shifter_b_en != alu_predec_bignum_i.shifter_b_en,
       expected_shift_right != alu_predec_bignum_i.shift_right,
+      expected_vector_type != alu_predec_bignum_i.vector_type,
+      expected_trn_type != alu_predec_bignum_i.trn_type,
+      expected_vector_sel != alu_predec_bignum_i.vector_sel,
       expected_shift_amt != alu_predec_bignum_i.shift_amt,
       expected_shift_mod_sel != alu_predec_bignum_i.shift_mod_sel,
       expected_logic_a_en != alu_predec_bignum_i.logic_a_en,
@@ -1288,10 +1590,27 @@ module otbn_alu_bignum
         // `adder_y_res` is always used: either as condition in the following `if` statement or, if
         // the `if` statement short-circuits, in the body of the `if` statement.
         adder_y_res_used = 1'b1;
-        if (adder_x_res[WLEN+1] || adder_y_res[WLEN+1]) begin
+        if (adder_x_carry_out[15] || adder_y_res[WLEN+1]) begin
           operation_result_o = adder_y_res[WLEN:1];
         end else begin
           operation_result_o = adder_x_res[WLEN:1];
+        end
+      end
+
+      AluOpBignumAddv: begin
+        operation_result_o = adder_x_res[WLEN:1];
+      end
+
+      AluOpBignumAddvm: begin
+        // `adder_y_res` is always used: either as condition in the following `if` statement or, if
+        // the `if` statement short-circuits, in the body of the `if` statement.
+        adder_y_res_used = 1'b1;
+        for (int i=0; i<16; ++i) begin
+          if (adder_x_carry2mux[i] || adder_y_carry2mux[i]) begin
+            operation_result_o[16*i+:16] = adder_y_sum[i];
+          end else begin
+            operation_result_o[16*i+:16] = adder_x_sum[i];
+          end
         end
       end
 
@@ -1299,7 +1618,7 @@ module otbn_alu_bignum
       // * If X generates carry a - b >= 0 - Select X result
       // * Otherwise select Y result
       AluOpBignumSubm: begin
-        if (adder_x_res[WLEN+1]) begin
+        if (adder_x_carry_out[15]) begin
           operation_result_o = adder_x_res[WLEN:1];
           adder_y_res_used = 1'b0;
         end else begin
@@ -1308,8 +1627,28 @@ module otbn_alu_bignum
         end
       end
 
-      AluOpBignumRshi: begin
+      AluOpBignumSubv: begin
+        operation_result_o = adder_x_res[WLEN:1];
+      end
+
+      AluOpBignumSubvm: begin
+        adder_y_res_used = 1'b1;
+        for (int i=0; i<16; ++i) begin
+          if (adder_x_carry2mux[i]) begin
+            operation_result_o[16*i+:16] = adder_x_sum[i];
+          end else begin
+            operation_result_o[16*i+:16] = adder_y_sum[i];
+          end          
+        end
+      end
+
+      AluOpBignumRshi,AluOpBignumShv: begin
         operation_result_o = shifter_res[WLEN-1:0];
+        adder_y_res_used = 1'b0;
+      end
+
+      AluOpBignumTrn: begin
+        operation_result_o = trn_res;
         adder_y_res_used = 1'b0;
       end
 

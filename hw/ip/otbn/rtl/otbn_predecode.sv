@@ -62,6 +62,10 @@ module otbn_predecode
   logic alu_bignum_logic_shifter_en;
   logic [3:0] alu_bignum_logic_res_sel;
 
+  alu_vector_type_t alu_bignum_vector_type;
+  logic             alu_bignum_vector_sel;
+  alu_trn_type_t    alu_bignum_trn_type;
+
   flag_group_t flag_group;
   logic [NFlagGroups-1:0] flag_group_sel;
   flags_t flag_sel;
@@ -122,9 +126,12 @@ module otbn_predecode
   logic [$clog2(WLEN)-1:0] shift_amt_a_type_bignum;
   // Shift amount for BN.RSHI
   logic [$clog2(WLEN)-1:0] shift_amt_s_type_bignum;
+  // Shift amount for BN.SHV
+  logic [$clog2(WLEN)-1:0] shift_amt_v_type_bignum;
 
   assign shift_amt_a_type_bignum = {imem_rdata_i[29:25], 3'b0};
   assign shift_amt_s_type_bignum = {imem_rdata_i[31:25], imem_rdata_i[14]};
+  assign shift_amt_v_type_bignum = {3'b0, imem_rdata_i[29:25]};
 
   assign flag_group     = imem_rdata_i[31];
   assign flag_group_sel = {(flag_group == 1'b1), (flag_group == 1'b0)};
@@ -158,6 +165,9 @@ module otbn_predecode
     alu_bignum_logic_a_en            = 1'b0;
     alu_bignum_logic_shifter_en      = 1'b0;
     alu_bignum_logic_res_sel         = '0;
+    alu_bignum_vector_type           = alu_vector_type_t'('0);
+    alu_bignum_vector_sel            = 1'b0;
+    alu_bignum_trn_type              = alu_trn_type_t'('0);
 
     flags_adder_update = '0;
     flags_logic_update = '0;
@@ -326,6 +336,8 @@ module otbn_predecode
               alu_bignum_adder_x_en          = 1'b1;
               alu_bignum_x_res_operand_a_sel = 1'b1;
               alu_bignum_shift_mod_sel       = 1'b0;
+              alu_bignum_vector_type         = alu_vector_type_t'(imem_rdata_i[27:26]);
+              alu_bignum_vector_sel          = imem_rdata_i[25];
             end
             default: ;
           endcase
@@ -468,6 +480,32 @@ module otbn_predecode
           end
         end
 
+        ////////////////////////////////////////////
+        //                 BN.SHV                 //
+        ////////////////////////////////////////////
+
+        InsnOpcodeBignumShiftv: begin
+          rf_we_bignum                = 1'b1;
+          rf_ren_b_bignum             = 1'b1;
+          alu_bignum_shifter_b_en     = 1'b1;
+          alu_bignum_vector_type      = alu_vector_type_t'({2'b01, imem_rdata_i[16]});
+          alu_bignum_shift_right      = imem_rdata_i[30];
+          alu_bignum_shift_amt        = shift_amt_v_type_bignum;
+          alu_bignum_logic_shifter_en = 1'b1;
+          alu_bignum_vector_sel       = 1'b1;
+        end
+
+        ////////////////////////////////////////////
+        //                 BN.TRN                 //
+        ////////////////////////////////////////////
+
+        InsnOpcodeBignumTrn: begin
+          rf_ren_a_bignum          = 1'b1;
+          rf_ren_b_bignum          = 1'b1;
+          rf_we_bignum             = 1'b1;
+          alu_bignum_trn_type      = alu_trn_type_t'(imem_rdata_i[27:25]);
+        end
+
         default: ;
       endcase
     end
@@ -514,6 +552,9 @@ module otbn_predecode
   assign alu_predec_bignum_o.shifter_a_en          = alu_bignum_shifter_a_en;
   assign alu_predec_bignum_o.shifter_b_en          = alu_bignum_shifter_b_en;
   assign alu_predec_bignum_o.shift_right           = alu_bignum_shift_right;
+  assign alu_predec_bignum_o.vector_type           = alu_bignum_vector_type;
+  assign alu_predec_bignum_o.vector_sel            = alu_bignum_vector_sel;
+  assign alu_predec_bignum_o.trn_type              = alu_bignum_trn_type;
   assign alu_predec_bignum_o.shift_amt             = alu_bignum_shift_amt;
   assign alu_predec_bignum_o.shift_mod_sel         = alu_bignum_shift_mod_sel;
   assign alu_predec_bignum_o.logic_a_en            = alu_bignum_logic_a_en;

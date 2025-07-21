@@ -1020,6 +1020,9 @@ module otbn_controller
   assign alu_bignum_operation_o.op          = insn_dec_bignum_i.alu_op;
   assign alu_bignum_operation_o.shift_right = insn_dec_bignum_i.alu_shift_right;
   assign alu_bignum_operation_o.shift_amt   = insn_dec_bignum_i.alu_shift_amt;
+  assign alu_bignum_operation_o.vector_type = insn_dec_bignum_i.vector_type;
+  assign alu_bignum_operation_o.vector_sel  = insn_dec_bignum_i.vector_sel;
+  assign alu_bignum_operation_o.trn_type    = insn_dec_bignum_i.alu_trn_type;
   assign alu_bignum_operation_o.flag_group  = insn_dec_bignum_i.alu_flag_group;
   assign alu_bignum_operation_o.sel_flag    = insn_dec_bignum_i.alu_sel_flag;
   assign alu_bignum_operation_o.alu_flag_en = insn_dec_bignum_i.alu_flag_en & insn_valid_i;

@@ -1,6 +1,8 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+// Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192)
+// Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `include "prim_assert.sv"
 
@@ -109,17 +111,25 @@ module otbn_decoder
 
   assign imm_i_type_bignum = {{(WLEN-10){1'b0}}, insn[29:20]};
 
-  // Shift amount for ALU instructions other than BN.RSHI
+  // Shift amount for ALU instructions other than BN.RSHI and BN.SHV
   logic [$clog2(WLEN)-1:0] shift_amt_a_type_bignum;
   // Shift amount for BN.RSHI
   logic [$clog2(WLEN)-1:0] shift_amt_s_type_bignum;
+  // Shift amount for BN.SHV
+  logic [$clog2(WLEN)-1:0] shift_amt_v_type_bignum;
 
   assign shift_amt_a_type_bignum = {insn[29:25], 3'b0};
   assign shift_amt_s_type_bignum = {insn[31:25], insn[14]};
+  assign shift_amt_v_type_bignum = {3'b0, insn[29:25]};
 
   logic alu_shift_right_bignum;
 
   assign alu_shift_right_bignum = insn[30];
+
+  alu_vector_type_t alu_vector_type_bignum;
+  logic             alu_vector_sel_bignum;
+  alu_trn_type_t    alu_trn_type_bignum;
+  assign            alu_trn_type_bignum = alu_trn_type_t'(insn[27:25]);
 
   flag_group_t alu_flag_group_bignum;
 
@@ -194,6 +204,7 @@ module otbn_decoder
     unique case (shift_amt_mux_sel_bignum)
       ShamtSelBignumA:    alu_shift_amt_bignum = shift_amt_a_type_bignum;
       ShamtSelBignumS:    alu_shift_amt_bignum = shift_amt_s_type_bignum;
+      ShamtSelBignumV:    alu_shift_amt_bignum = shift_amt_v_type_bignum;
       ShamtSelBignumZero: alu_shift_amt_bignum = '0;
       default:            alu_shift_amt_bignum = shift_amt_a_type_bignum;
     endcase
@@ -238,6 +249,9 @@ module otbn_decoder
     alu_flag_en:         alu_flag_en_bignum,
     mac_flag_en:         mac_flag_en_bignum,
     alu_op:              alu_operator_bignum,
+    vector_type:         alu_vector_type_bignum,
+    vector_sel:          alu_vector_sel_bignum,
+    alu_trn_type:        alu_trn_type_bignum,
     alu_op_b_sel:        alu_op_b_mux_sel_bignum,
     mac_op_a_qw_sel:     mac_op_a_qw_sel_bignum,
     mac_op_b_qw_sel:     mac_op_b_qw_sel_bignum,
@@ -310,6 +324,8 @@ module otbn_decoder
     sel_insn_bignum        = 1'b0;
 
     opcode                 = insn_opcode_e'(insn[6:0]);
+
+    alu_vector_type_bignum = alu_vector_type_t'(insn[27:26]);
 
     unique case (opcode)
       //////////////
@@ -669,6 +685,30 @@ module otbn_decoder
         end
       end
 
+      ////////////////////////////////////////////
+      //                 BN.SHV                 //
+      ////////////////////////////////////////////
+
+      InsnOpcodeBignumShiftv: begin
+        insn_subset            = InsnSubsetBignum;
+        rf_ren_b_bignum        = 1'b1;
+        rf_wdata_sel_bignum    = RfWdSelEx;
+        rf_we_bignum           = 1'b1;
+	      alu_vector_type_bignum = alu_vector_type_t'({2'b01, insn[16]});
+      end
+
+      ////////////////////////////////////////////
+      //                 BN.TRN                 //
+      ////////////////////////////////////////////
+
+      InsnOpcodeBignumTrn: begin
+        insn_subset         = InsnSubsetBignum;
+        rf_ren_a_bignum     = 1'b1;
+        rf_ren_b_bignum     = 1'b1;
+        rf_wdata_sel_bignum = RfWdSelEx;
+        rf_we_bignum        = 1'b1;
+      end
+
       default: illegal_insn = 1'b1;
     endcase
 
@@ -704,6 +744,7 @@ module otbn_decoder
 
     alu_flag_en_bignum       = 1'b0;
     mac_flag_en_bignum       = 1'b0;
+    alu_vector_sel_bignum    = 1'b0;
 
     unique case (opcode_alu)
       //////////////
@@ -839,9 +880,27 @@ module otbn_decoder
           end
           3'b101: begin
             if (insn_alu[30]) begin
-              alu_operator_bignum = AluOpBignumSubm;
+              if (insn_alu[25]) begin
+                if (insn[27]) begin
+                  alu_operator_bignum = AluOpBignumSubvm;
+                end else begin
+                  alu_operator_bignum = AluOpBignumSubv;
+                end
+                alu_vector_sel_bignum = insn[25];
+              end else begin
+                alu_operator_bignum = AluOpBignumSubm;
+              end
             end else begin
-              alu_operator_bignum = AluOpBignumAddm;
+              if (insn_alu[25]) begin
+                if (insn[27]) begin
+                  alu_operator_bignum = AluOpBignumAddvm;
+                end else begin
+                  alu_operator_bignum = AluOpBignumAddv;
+                end
+                alu_vector_sel_bignum = insn[25];
+              end else begin
+                alu_operator_bignum = AluOpBignumAddm;
+              end
             end
           end
           default: ;
@@ -933,6 +992,27 @@ module otbn_decoder
         if (insn[30] == 1'b1 || insn[29] == 1'b1) begin  // BN.MULQACC.WO/BN.MULQACC.SO
           mac_flag_en_bignum = 1'b1;
         end
+      end
+
+      ////////////////////////////////////////////
+      //                 BN.SHV                 //
+      ////////////////////////////////////////////
+
+      InsnOpcodeBignumShiftv: begin
+        shift_amt_mux_sel_bignum = ShamtSelBignumV;
+        alu_operator_bignum      = AluOpBignumShv;
+        alu_op_b_mux_sel_bignum  = OpBSelRegister;
+        alu_flag_en_bignum       = 1'b1;
+        alu_vector_sel_bignum    = 1'b1;
+      end
+
+      ////////////////////////////////////////////
+      //                 BN.TRN                 //
+      ////////////////////////////////////////////
+
+      InsnOpcodeBignumTrn: begin
+        alu_op_b_mux_sel_bignum  = OpBSelRegister;
+        alu_operator_bignum      = AluOpBignumTrn;
       end
 
       default: ;

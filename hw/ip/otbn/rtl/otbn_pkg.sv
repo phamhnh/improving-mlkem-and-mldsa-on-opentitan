@@ -218,7 +218,9 @@ package otbn_pkg;
     InsnOpcodeBignumMisc     = 7'h0B,
     InsnOpcodeBignumArith    = 7'h2B,
     InsnOpcodeBignumMulqacc  = 7'h3B,
-    InsnOpcodeBignumBaseMisc = 7'h7B
+    InsnOpcodeBignumTrn      = 7'h5F,
+    InsnOpcodeBignumBaseMisc = 7'h7B,
+    InsnOpcodeBignumShiftv   = 7'h7F
   } insn_opcode_e;
 
   typedef enum logic [3:0] {
@@ -235,14 +237,18 @@ package otbn_pkg;
     AluOpBaseSll
   } alu_op_base_e;
 
-  typedef enum logic [3:0] {
+  typedef enum logic [4:0] {
     AluOpBignumAdd,
     AluOpBignumAddc,
     AluOpBignumAddm,
+    AluOpBignumAddv,
+    AluOpBignumAddvm,
 
     AluOpBignumSub,
     AluOpBignumSubb,
     AluOpBignumSubm,
+    AluOpBignumSubv,
+    AluOpBignumSubvm,
 
     AluOpBignumRshi,
 
@@ -250,6 +256,9 @@ package otbn_pkg;
     AluOpBignumOr,
     AluOpBignumAnd,
     AluOpBignumNot,
+
+    AluOpBignumShv,
+    AluOpBignumTrn,
 
     AluOpBignumNone
   } alu_op_bignum_e;
@@ -294,6 +303,7 @@ package otbn_pkg;
   typedef enum logic [1:0] {
     ShamtSelBignumA,
     ShamtSelBignumS,
+    ShamtSelBignumV,
     ShamtSelBignumZero
   } shamt_sel_bignum_e;
 
@@ -441,6 +451,24 @@ package otbn_pkg;
     logic                loop_immediate;
   } insn_dec_base_t;
 
+  typedef enum logic[1:0] {
+    alu_8s,     // b000
+    alu_16h,    // b001
+    alu_m8s,    // b010
+    alu_m16s    // b011
+  } alu_vector_type_t;
+
+  typedef enum logic[2:0] {
+    trn1_16h,
+    trn1_8s,
+    trn1_4d,
+    trn1_2q,
+    trn2_16h,
+    trn2_8s,
+    trn2_4d,
+    trn2_2q
+  } alu_trn_type_t;
+
   typedef struct packed {
     logic [WdrAw-1:0]        d;           // Destination register
     logic [WdrAw-1:0]        a;           // First source register
@@ -466,6 +494,11 @@ package otbn_pkg;
     // Shifting only applies to a subset of ALU operations
     logic [$clog2(WLEN)-1:0] alu_shift_amt;   // Shift amount
     logic                    alu_shift_right; // Shift right if set otherwise left
+
+    alu_vector_type_t        vector_type;
+    logic                    vector_sel;
+
+    alu_trn_type_t           alu_trn_type;
 
     flag_group_t             alu_flag_group;
     flag_e                   alu_sel_flag;
@@ -505,6 +538,9 @@ package otbn_pkg;
     logic                    shifter_a_en;
     logic                    shifter_b_en;
     logic                    shift_right;
+    alu_vector_type_t        vector_type;
+    logic                    vector_sel;
+    alu_trn_type_t           trn_type; 
     logic [$clog2(WLEN)-1:0] shift_amt;
     logic                    logic_a_en;
     logic                    logic_shifter_en;
@@ -553,6 +589,9 @@ package otbn_pkg;
     alu_op_bignum_e op;
     logic [WLEN-1:0]         operand_a;
     logic [WLEN-1:0]         operand_b;
+    alu_vector_type_t        vector_type;
+    logic                    vector_sel;
+    alu_trn_type_t           trn_type;
     logic                    shift_right;
     logic [$clog2(WLEN)-1:0] shift_amt;
     flag_group_t             flag_group;
