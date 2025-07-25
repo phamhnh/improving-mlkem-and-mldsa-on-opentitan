@@ -39,10 +39,14 @@ module otbn_mac_bignum
   logic [WLEN-1:0] adder_result;
   logic [1:0]      adder_result_hw_is_zero;
 
+`ifdef BNMULV_VER1
+  logic [WLEN-1:0]   mul_res_shifted;
+`else
   logic [QWLEN-1:0]  mul_op_a;
   logic [QWLEN-1:0]  mul_op_b;
   logic [WLEN/2-1:0] mul_res;
   logic [WLEN-1:0]   mul_res_shifted;
+`endif
 
   logic [ExtWLEN-1:0] acc_intg_d;
   logic [ExtWLEN-1:0] acc_intg_q;
@@ -67,6 +71,7 @@ module otbn_mac_bignum
     .out_o(operand_b_blanked)
   );
 
+`ifndef BNMULV_VER1
   // Extract QWLEN multiply operands from WLEN operand inputs based on chosen quarter word from the
   // instruction (operand_[a|b]_qw_sel).
   always_comb begin
@@ -89,6 +94,7 @@ module otbn_mac_bignum
       default: mul_op_b = '0;
     endcase
   end
+`endif
 
   `ASSERT_KNOWN_IF(OperandAQWSelKnown, operation_i.operand_a_qw_sel, mac_en_i)
   `ASSERT_KNOWN_IF(OperandBQWSelKnown, operation_i.operand_b_qw_sel, mac_en_i)
@@ -100,6 +106,27 @@ module otbn_mac_bignum
   logic unused_ok;
   assign unused_ok = ^(rst_ni);
 
+`ifdef BNMULV_VER1
+  logic [WLEN-1:0] unified_result;
+
+  unified_mul mul (
+    .word_mode         ({operation_i.mulv, operation_i.data_type}), // 00 = 64x64, 11 = 4x32x32, 10 = 16x16x16
+    .word_sel_A        (operation_i.operand_a_qw_sel),
+    .word_sel_B        (operation_i.operand_b_qw_sel),
+    .half_sel          (operation_i.sel),
+    .lane_mode         (operation_i.lane_mode),
+    .lane_word_32      (operation_i.lane_word_32),
+    .lane_word_16      (operation_i.lane_word_16),
+    .A                 (operand_a_blanked),
+    .B                 (operand_b_blanked),
+    .data_type_64_shift(operation_i.pre_acc_shift_imm),
+    .scalar32          (),
+    .scalar16          (),
+    .result            (unified_result)
+  );
+
+  assign mul_res_shifted = unified_result;
+`else
   assign mul_res = mul_op_a * mul_op_b;
 
   // Shift the QWLEN multiply result into a WLEN word before accumulating using the shift amount
@@ -115,6 +142,7 @@ module otbn_mac_bignum
       default: mul_res_shifted = '0;
     endcase
   end
+`endif
 
   `ASSERT_KNOWN_IF(PreAccShiftImmKnown, operation_i.pre_acc_shift_imm, mac_en_i)
 
@@ -142,7 +170,11 @@ module otbn_mac_bignum
   // current operation does not zero the accumulation register.
   logic acc_used;
   assign acc_used = mac_en_i & ~operation_i.zero_acc;
+`ifdef BNMULV_VER1
+  assign operation_intg_violation_err_o = acc_used & |(acc_intg_err[2*BaseWordsPerWLEN-1:0]);
+`else
   assign operation_intg_violation_err_o = acc_used & |(acc_intg_err);
+`endif
 
   // Accumulator logic
 
@@ -158,13 +190,61 @@ module otbn_mac_bignum
   assign adder_op_a = mul_res_shifted;
   assign adder_op_b = acc_blanked;
 
+`ifdef BNMULV_VER1
+  buffer_bit_double adder (
+    .A        (adder_op_a),
+    .B        (adder_op_b),
+    .word_mode({operation_i.mulv, operation_i.data_type}), // 00: scalar, 11: vec64, 10: vec32
+    .cin      (1'b0),
+    .sum      (adder_result),
+    .cout     ()
+  );
+`else
   assign adder_result = adder_op_a + adder_op_b;
+`endif
 
   // Split zero check between the two halves of the result. This is used for flag setting (see
   // below).
   assign adder_result_hw_is_zero[0] = adder_result[WLEN/2-1:0] == 'h0;
   assign adder_result_hw_is_zero[1] = adder_result[WLEN/2+:WLEN/2] == 'h0;
 
+`ifdef BNMULV_VER1
+  always_comb begin
+    case (operation_i.mulv)
+      1'b0 : begin
+        operation_flags_o.L    = adder_result[0];
+        // L is always updated for .WO, and for .SO when writing to the lower half-word
+        operation_flags_en_o.L = operation_i.shift_acc ? ~operation_i.wr_hw_sel_upper : 1'b1;
+      
+        // For .SO M is taken from the top-bit of shifted out half-word, otherwise it is taken from the
+        // top-bit of the full result.
+        operation_flags_o.M    = operation_i.shift_acc ? adder_result[WLEN/2-1] :
+                                                          adder_result[WLEN-1];
+        // M is always updated for .WO, and for .SO when writing to the upper half-word.
+        operation_flags_en_o.M = operation_i.shift_acc ? operation_i.wr_hw_sel_upper : 1'b1;
+      
+        // For .SO Z is calculated from the shifted out half-word, otherwise it is calculated on the full
+        // result.
+        operation_flags_o.Z    = operation_i.shift_acc ? adder_result_hw_is_zero[0] :
+                                                          &adder_result_hw_is_zero;
+      
+        // Z is updated for .WO. For .SO updates are based upon result and half-word:
+        // - When writing to lower half-word always update Z.
+        // - When writing to upper half-word clear Z if result is non-zero otherwise leave it alone.
+        operation_flags_en_o.Z =
+            operation_i.shift_acc & operation_i.wr_hw_sel_upper ? ~adder_result_hw_is_zero[0] : 1'b1;
+      end
+      default: begin
+        operation_flags_o.L    =  1'b0;
+        operation_flags_en_o.L =  1'b0;
+        operation_flags_o.M    = 1'b0;
+        operation_flags_en_o.M =  1'b0;
+        operation_flags_o.Z    =  1'b0;
+        operation_flags_en_o.Z = 1'b0;
+      end
+    endcase
+  end
+`else
   assign operation_flags_o.L    = adder_result[0];
   // L is always updated for .WO, and for .SO when writing to the lower half-word
   assign operation_flags_en_o.L = operation_i.shift_acc ? ~operation_i.wr_hw_sel_upper : 1'b1;
@@ -180,6 +260,7 @@ module otbn_mac_bignum
   // result.
   assign operation_flags_o.Z    = operation_i.shift_acc ? adder_result_hw_is_zero[0] :
                                                           &adder_result_hw_is_zero;
+`endif
 
   // Z is updated for .WO. For .SO updates are based upon result and half-word:
   // - When writing to lower half-word always update Z.
@@ -207,7 +288,7 @@ module otbn_mac_bignum
         if (ispr_acc_wr_en_i) begin
           acc_intg_d = ispr_acc_wr_data_intg_i;
         end else begin
-          acc_no_intg_d = operation_i.shift_acc ? {{QWLEN*2{1'b0}}, adder_result[QWLEN*2+:QWLEN*2]}
+          acc_no_intg_d = operation_i.shift_acc ? {{(QWLEN*2){1'b0}}, adder_result[QWLEN*2+:QWLEN*2]}
                                                 : adder_result;
           acc_intg_d = acc_intg_calc;
         end
@@ -229,9 +310,130 @@ module otbn_mac_bignum
 
   // The operation result is taken directly from the adder, shift_acc only applies to the new value
   // written to the accumulator.
-  assign operation_result_o = adder_result;
+`ifdef BNMULV_VER1
+  logic [WLEN-1:0] pre_cond;
 
+  always_comb begin
+    case (operation_i.mulv)
+      1'b0 : begin
+        pre_cond = adder_result;
+      end
+      default: begin
+        case (operation_i.exec_mode)
+          2'b00 : begin
+            pre_cond = adder_result;
+          end
+          2'b01 : begin
+            case (operation_i.data_type)
+              1'b1 : begin
+                case (operation_i.sel)
+                  1'b0: begin
+                    pre_cond = {operand_a_blanked[224+:32], adder_result[192+:32],
+                                          operand_a_blanked[160+:32], adder_result[128+:32],
+                                          operand_a_blanked[ 96+:32], adder_result[ 64+:32],
+                                          operand_a_blanked[ 32+:32], adder_result[  0+:32]};
+                  end
+                  1'b1: begin
+                    pre_cond = {adder_result[192+:32], operand_a_blanked[192+:32],
+                                          adder_result[128+:32], operand_a_blanked[128+:32],
+                                          adder_result[ 64+:32], operand_a_blanked[ 64+:32],
+                                          adder_result[  0+:32], operand_a_blanked[  0+:32]};
+                  end
+                endcase
+              end
+              1'b0 : begin
+                case (operation_i.sel)
+                  1'b0: begin
+                    pre_cond = {operand_a_blanked[240+:16], adder_result[224+:16],
+                                          operand_a_blanked[208+:16], adder_result[192+:16],
+                                          operand_a_blanked[176+:16], adder_result[160+:16],
+                                          operand_a_blanked[144+:16], adder_result[128+:16],
+                                          operand_a_blanked[112+:16], adder_result[ 96+:16],
+                                          operand_a_blanked[ 80+:16], adder_result[ 64+:16],
+                                          operand_a_blanked[ 48+:16], adder_result[ 32+:16],
+                                          operand_a_blanked[ 16+:16], adder_result[  0+:16]};
+                  end
+                  1'b1: begin
+                    pre_cond = {adder_result[224+:16], operand_a_blanked[224+:16],
+                                          adder_result[192+:16], operand_a_blanked[192+:16],
+                                          adder_result[160+:16], operand_a_blanked[160+:16],
+                                          adder_result[128+:16], operand_a_blanked[128+:16],
+                                          adder_result[ 96+:16], operand_a_blanked[ 96+:16],
+                                          adder_result[ 64+:16], operand_a_blanked[ 64+:16],
+                                          adder_result[ 32+:16], operand_a_blanked[ 32+:16],
+                                          adder_result[  0+:16], operand_a_blanked[  0+:16]};
+                  end
+                endcase
+              end
+              default: begin
+                pre_cond = {WLEN{1'b0}};   // ERROR!
+              end
+            endcase
+          end
+          2'b10, 2'b11 : begin
+            case (operation_i.data_type)
+              1'b1 : begin
+                case (operation_i.sel)
+                  1'b0: begin
+                    pre_cond = {operand_a_blanked[224+:32], adder_result[192+32+:32],
+                                          operand_a_blanked[160+:32], adder_result[128+32+:32],
+                                          operand_a_blanked[ 96+:32], adder_result[ 64+32+:32],
+                                          operand_a_blanked[ 32+:32], adder_result[  0+32+:32]};
+                  end
+                  1'b1: begin
+                    pre_cond = {adder_result[192+32+:32], operand_a_blanked[192+:32],
+                                          adder_result[128+32+:32], operand_a_blanked[128+:32],
+                                          adder_result[ 64+32+:32], operand_a_blanked[ 64+:32],
+                                          adder_result[  0+32+:32], operand_a_blanked[  0+:32]};
+                  end
+                endcase
+              end                                                             
+              1'b0 : begin
+                case (operation_i.sel)
+                  1'b0: begin
+                    pre_cond = {operand_a_blanked[240+:16], adder_result[224+16+:16],
+                                          operand_a_blanked[208+:16], adder_result[192+16+:16],
+                                          operand_a_blanked[176+:16], adder_result[160+16+:16],
+                                          operand_a_blanked[144+:16], adder_result[128+16+:16],
+                                          operand_a_blanked[112+:16], adder_result[ 96+16+:16],
+                                          operand_a_blanked[ 80+:16], adder_result[ 64+16+:16],
+                                          operand_a_blanked[ 48+:16], adder_result[ 32+16+:16],
+                                          operand_a_blanked[ 16+:16], adder_result[  0+16+:16]};
+                  end
+                  1'b1: begin
+                    pre_cond = {adder_result[224+16+:16], operand_a_blanked[224+:16],
+                                          adder_result[192+16+:16], operand_a_blanked[192+:16],
+                                          adder_result[160+16+:16], operand_a_blanked[160+:16],
+                                          adder_result[128+16+:16], operand_a_blanked[128+:16],
+                                          adder_result[ 96+16+:16], operand_a_blanked[ 96+:16],
+                                          adder_result[ 64+16+:16], operand_a_blanked[ 64+:16],
+                                          adder_result[ 32+16+:16], operand_a_blanked[ 32+:16],
+                                          adder_result[  0+16+:16], operand_a_blanked[  0+:16]};
+                  end
+                endcase
+              end
+              default: begin
+                pre_cond = {WLEN{1'b0}};   // ERROR!
+              end
+            endcase
+          end
+          default: begin
+            pre_cond = adder_result[WLEN-1:0];
+          end
+        endcase
+      end
+    endcase
+  end
+  assign operation_result_o = pre_cond;
+`else
+  assign operation_result_o = adder_result;
+`endif
+
+`ifdef BNMULV_VER1
+  assign expected_op_en     = mac_en_i | operation_i.mulv;
+`else
   assign expected_op_en     = mac_en_i;
+`endif
   assign expected_acc_rd_en = ~operation_i.zero_acc & mac_en_i;
 
   // SEC_CM: CTRL.REDUN

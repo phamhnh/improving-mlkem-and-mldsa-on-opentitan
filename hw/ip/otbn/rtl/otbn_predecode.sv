@@ -182,6 +182,10 @@ module otbn_predecode
 
     csr_addr_sel = 1'b0;
 
+  `ifdef BNMULV_VER1
+    insn_rs2 = imem_rdata_i[24:20];
+  `endif
+
     lsu_addr_en_predec_o = 1'b0;
 
     branch_insn = 1'b0;
@@ -480,6 +484,32 @@ module otbn_predecode
           end
         end
 
+`ifdef BNMULV_VER1
+        ///////////////////////////////////////////
+        //            BN.MULV/BN.MULV.L          //
+        ///////////////////////////////////////////
+
+        InsnOpcodeBignumMulv: begin
+          unique case (imem_rdata_i[14:12])
+            3'b110: begin
+              rf_ren_a_bignum  = 1'b1;
+              rf_ren_b_bignum  = 1'b1;
+              mac_bignum_op_en = 1'b1;
+              rf_we_bignum     = 1'b1;
+
+              if (imem_rdata_i[25] == 1'b1) begin  // lane mode
+                insn_rs2 = {{4'b1000}, imem_rdata_i[24]};
+              end
+
+              if (imem_rdata_i[29:28] == 2'b01) begin
+                // zero_acc not set
+                mac_bignum_acc_rd_en = 1'b1;
+              end
+            end
+            default: ;
+          endcase
+        end
+`endif
         ////////////////////////////////////////////
         //                 BN.SHV                 //
         ////////////////////////////////////////////
@@ -572,7 +602,9 @@ module otbn_predecode
   assign mac_predec_bignum_o.acc_rd_en = mac_bignum_acc_rd_en;
 
   assign insn_rs1 = imem_rdata_i[19:15];
+`ifndef BNMULV_VER1
   assign insn_rs2 = imem_rdata_i[24:20];
+`endif
   assign insn_rd  = imem_rdata_i[11:7];
 
   prim_onehot_enc #(

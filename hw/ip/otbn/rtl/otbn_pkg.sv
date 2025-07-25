@@ -218,6 +218,9 @@ package otbn_pkg;
     InsnOpcodeBignumMisc     = 7'h0B,
     InsnOpcodeBignumArith    = 7'h2B,
     InsnOpcodeBignumMulqacc  = 7'h3B,
+`ifdef BNMULV_VER1
+    InsnOpcodeBignumMulv     = 7'h4B,
+`endif
     InsnOpcodeBignumTrn      = 7'h5F,
     InsnOpcodeBignumBaseMisc = 7'h7B,
     InsnOpcodeBignumShiftv   = 7'h7F
@@ -513,6 +516,15 @@ package otbn_pkg;
     logic [1:0]              mac_pre_acc_shift;
     logic                    mac_zero_acc;
     logic                    mac_shift_out;
+`ifdef BNMULV_VER1
+    logic                    mac_mulv;
+    logic                    mac_data_type;
+    logic                    mac_sel;
+    logic                    mac_lane_mode;
+    logic                    mac_lane_word_32;
+    logic                    mac_lane_word_16;
+    logic [1:0]              mac_exec_mode;
+`endif
     logic                    mac_en;
 
     logic                    rf_we;
@@ -609,6 +621,15 @@ package otbn_pkg;
     logic [1:0]      pre_acc_shift_imm;
     logic            zero_acc;
     logic            shift_acc;
+`ifdef BNMULV_VER1
+    logic            mulv;
+    logic            data_type;
+    logic            sel;
+    logic            lane_mode;
+    logic            lane_word_32;
+    logic            lane_word_16;
+    logic [1:0]      exec_mode;
+`endif
   } mac_bignum_operation_t;
 
   // Encoding generated with:

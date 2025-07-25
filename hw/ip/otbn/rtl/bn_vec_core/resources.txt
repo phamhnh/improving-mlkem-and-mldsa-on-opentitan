@@ -1,0 +1,114 @@
+for f in `ls *.sv`; do yosys -p "read_verilog -sv $f; hierarchy -check; proc; opt; fsm; opt; memory; opt; techmap; opt; stat; write_blif top.blif" | grep "=== " -A 13; berkeley-abc -c "read_blif top.blif; strash; if; print_stats;" | tail -n1; done
+=== brent_kung_adder_256_mode0_only ===
+
+   Number of wires:                535
+   Number of wire bits:           5892
+   Number of public wires:          24
+   Number of public wire bits:    5381
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2044
+     $_AND_                       1021
+     $_OR_                         511
+     $_XOR_                        512
+
+brent_kung_adder_256_mode0_only: i/o =  515/  257  lat =    0  nd =  1013  edge =   3250  aig  =  4758  lev = 12
+
+=== brent_kung_adder_256 ===
+
+   Number of wires:                585
+   Number of wire bits:           6066
+   Number of public wires:          24
+   Number of public wire bits:    5381
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2097
+     $_AND_                       1023
+     $_MUX_                         46
+     $_OR_                         514
+     $_XOR_                        514
+brent_kung_adder_256          : i/o =  515/  257  lat =    0  nd =   982  edge =   3243  aig  =  4853  lev = 13
+
+=== csa_adder_256 ===
+
+   Number of wires:               1059
+   Number of wire bits:           3497
+   Number of public wires:          47
+   Number of public wire bits:    1460
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2743
+     $_AND_                       1264
+     $_MUX_                        289
+     $_NOT_                          2
+     $_OR_                         419
+csa_adder_256                 : i/o =  515/  257  lat =    0  nd =  1244  edge =   4138  aig  =  6526  lev = 22
+
+=== ref_add ===
+
+   Number of wires:               1255
+   Number of wire bits:           3557
+   Number of public wires:           7
+   Number of public wire bits:    1029
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2778
+     $_AND_                       1508
+     $_OR_                         502
+     $_XOR_                        768
+
+ref_add                       : i/o =  515/  257  lat =    0  nd =  1495  edge =   4588  aig  =  6347  lev = 16
+
+=== ref_vec_add ===
+
+   Number of wires:               1405
+   Number of wire bits:          11385
+   Number of public wires:          31
+   Number of public wire bits:    1565
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               4297
+     $_AND_                       1977
+     $_MUX_                        768
+     $_OR_                         425
+     $_XOR_                       1127
+
+ref_vec_add                   : i/o =  515/  257  lat =    0  nd =  2281  edge =   7106  aig  = 10553  lev = 29
+
+=== sklansky_adder_256_mode0_only ===
+
+   Number of wires:               1304
+   Number of wire bits:           6915
+   Number of public wires:          25
+   Number of public wire bits:    5636
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               4349
+     $_AND_                       2558
+     $_OR_                        1279
+     $_XOR_                        512
+
+sklansky_adder_256_mode0_only : i/o =  515/  257  lat =    0  nd =  2145  edge =   7186  aig  =  7539  lev = 8
+
+=== sklansky_adder_256 ===
+
+   Number of wires:               2543
+   Number of wire bits:           8158
+   Number of public wires:          25
+   Number of public wire bits:    5636
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               5580
+     $_AND_                       2534
+     $_MUX_                       1265
+     $_OR_                        1267
+     $_XOR_                        514
+sklansky_adder_256            : i/o =  515/  257  lat =    0  nd =  2380  edge =   8203  aig  = 10769  lev = 9
+
