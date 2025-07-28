@@ -1,0 +1,6 @@
+[submodule "sw/device/tests/pq-crystals/dilithium_opentitan"]
+	path = sw/device/tests/pq-crystals/dilithium_opentitan
+	url = https://github.com/phamhnh/dilithium_opentitan.git
+[submodule "sw/device/tests/pq-crystals/kyber_opentitan"]
+	path = sw/device/tests/pq-crystals/kyber_opentitan
+	url = https://github.com/phamhnh/kyber_opentitan.git
