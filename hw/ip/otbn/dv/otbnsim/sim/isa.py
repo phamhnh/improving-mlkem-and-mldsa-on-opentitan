@@ -5,6 +5,7 @@
 # Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors.
 
 
+import os
 import sys
 from typing import Dict, Iterator, Optional, Tuple
 
@@ -17,12 +18,19 @@ from .state import OTBNState
 # declaring the classes. The point is that an OTBNInsn below is an instance of
 # a particular Insn object from shared.insn_yaml, so we want a class variable
 # on the OTBNInsn that points at the corresponding Insn.
-try:
-    INSNS_FILE = load_insns_yaml()
-except RuntimeError as err:
-    sys.stderr.write('{}\n'.format(err))
-    sys.exit(1)
 
+def get_insns_file():
+    ''' Get the correct INSNS_FILE from the correct yaml file depending on the
+    environment variable BNMULV_VER set either by the user or by standalone.py
+    '''
+    try:
+        bnmulv_version_id = os.environ.get('BNMULV_VER', '0')
+        insns_file = load_insns_yaml(bnmulv_version_id)
+    except RuntimeError as err:
+        sys.stderr.write('{}\n'.format(err))
+        sys.exit(1)
+
+    return insns_file
 
 def insn_for_mnemonic(mnemonic: str, num_operands: int) -> Insn:
     '''Look up the named instruction in the loaded YAML data.
@@ -34,7 +42,8 @@ def insn_for_mnemonic(mnemonic: str, num_operands: int) -> Insn:
     on this way).
 
     '''
-    insn = INSNS_FILE.mnemonic_to_insn.get(mnemonic)
+    insns_file = get_insns_file()
+    insn = insns_file.mnemonic_to_insn.get(mnemonic)
     if insn is None:
         sys.stderr.write('Failed to find an instruction for mnemonic {!r} in '
                          'insns.yml.\n'

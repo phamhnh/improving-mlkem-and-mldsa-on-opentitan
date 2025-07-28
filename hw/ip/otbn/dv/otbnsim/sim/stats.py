@@ -4,6 +4,7 @@
 # Modified by Authors of "Towards ML-KEM & ML-DSA on OpenTitan" (https://eprint.iacr.org/2024/1192).
 # Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors.
 
+import os
 from collections import Counter, defaultdict
 from typing import Dict, List, Optional, Tuple
 import re
@@ -14,7 +15,16 @@ from elftools.elf.sections import SymbolTableSection  # type: ignore
 from tabulate import tabulate
 from operator import add
 
-from .insn import BEQ, BNE, ECALL, JAL, JALR, LOOP, LOOPI
+bnmulv_version_id = os.environ.get('BNMULV_VER', '0')
+if bnmulv_version_id == '1':
+    from .insn_ver1 import BEQ, BNE, ECALL, JAL, JALR, LOOP, LOOPI
+elif bnmulv_version_id == '2':
+    from .insn_ver2 import BEQ, BNE, ECALL, JAL, JALR, LOOP, LOOPI
+elif bnmulv_version_id == '3':
+    from .insn_ver3 import BEQ, BNE, ECALL, JAL, JALR, LOOP, LOOPI
+else:
+    from .insn import BEQ, BNE, ECALL, JAL, JALR, LOOP, LOOPI
+
 from .isa import OTBNInsn
 from .state import OTBNState
 

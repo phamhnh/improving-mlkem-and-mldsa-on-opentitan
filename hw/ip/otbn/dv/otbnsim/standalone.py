@@ -6,19 +6,21 @@
 # Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors.
 
 
+import os
 import argparse
 import sys
-
-from sim.load_elf import load_elf
-from sim.standalonesim import StandaloneSim
-from sim.stats import ExecutionStatAnalyzer
-
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('elf')
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('--dump-rtl-sim', action="store_true")
+    parser.add_argument(
+        '--bnmulv_version_id',
+        type=str,
+        default='0',
+        help=("specify the version of bnmulv.")
+    )
     parser.add_argument(
         '--dump-dmem',
         metavar="FILE",
@@ -42,6 +44,14 @@ def main() -> int:
     )
 
     args = parser.parse_args()
+
+    # Read --bnmulv_version_id given by user and set the os variable BNMULV_VER.
+    # Since all of the dependencies depends on isa.py, we need to set
+    # the environment variable first before importing them.
+    os.environ['BNMULV_VER'] = args.bnmulv_version_id
+    from sim.stats import ExecutionStatAnalyzer
+    from sim.standalonesim import StandaloneSim
+    from sim.load_elf import load_elf
 
     collect_stats = args.dump_stats is not None
 

@@ -151,6 +151,14 @@ def _otbn_binary(ctx, additional_srcs = []):
 def _run_sim_test(ctx, exp, dexp, additional_srcs = []):
     providers = _otbn_binary(ctx, additional_srcs)
 
+    # Extract --bnmulv_version_id
+    copts = ctx.attr.copts + ctx.fragments.cpp.copts
+    bnmulv_version_id = "--bnmulv_version_id=0"
+    for copt in copts:
+        if "--bnmulv_version_id" in copt:
+            bnmulv_version_id = copt
+            break
+
     # Extract the output .elf file from the output group.
     elf = providers[1].elf.to_list()[0]
 
@@ -169,7 +177,8 @@ def _run_sim_test(ctx, exp, dexp, additional_srcs = []):
     simulator = ctx.executable._simulator
     ctx.actions.write(
         output = ctx.outputs.executable,
-        content = "{} {} {} {}".format(sim_test_wrapper.short_path, exp_content, simulator.short_path, elf.short_path),
+        content = "{} {} {} {} {}".format(sim_test_wrapper.short_path, bnmulv_version_id,
+            exp_content, simulator.short_path, elf.short_path),
     )
 
     # Runfiles include sources, the .elf file, the simulator and test wrapper

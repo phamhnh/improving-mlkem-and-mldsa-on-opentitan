@@ -72,6 +72,10 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('simulator',
                         help='Path to the standalone OTBN simulator.')
+    parser.add_argument('--bnmulv_version_id',
+                        type=str,
+                        default='0',
+                        help=("specify the version of bnmulv."))
     parser.add_argument('--expected_regs',
                         metavar='FILE',
                         type=argparse.FileType('r'),
@@ -98,6 +102,8 @@ def main() -> int:
     with tempfile.NamedTemporaryFile() as regs_file, tempfile.NamedTemporaryFile() as dmem_file:
         cmd = [
             args.simulator,
+            '--bnmulv_version_id',
+            args.bnmulv_version_id,
             "--dump-regs",
             regs_file.name,
             "--dump-dmem",

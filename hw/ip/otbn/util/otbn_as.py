@@ -1259,11 +1259,32 @@ def main(argv: List[str]) -> int:
     files, other_args, flags = parse_positionals(argv)
     files = files or ['--']
     just_translate = '--otbn-translate' in flags
-    if "-D" in other_args[0]:
-        copts = other_args[0]  # -D option is at the beginning of other_args
-        other_args.remove(copts)  # remove -D so that other compilations work
-    else:
-        copts = None
+
+    # Remove duplicates of copts in case "--copt" is given via the command line.
+    # For example, in sw/device/tests/otbn_mlkem512_keypair_test, we must pass
+    # --copt="-DKYBER_K=2" to the command line for pq-crystals/kyber_opentitan,
+    # which makes "-DKYBER_K=2" appears twice in the options passed to otbn_as.
+    # The current otbn_as assumes that there is only one --copt and this --copt
+    # must come in the first position in the command line. The second apparence
+    # of --copt is not recognized by riscv-elf, causing error.
+    seen = set()
+    other_args = [arg for arg in other_args if not (arg in seen or seen.add(arg))]
+    copts = None
+    for arg in other_args:
+        match = re.match(r"^-D(.*)$", arg)
+        if match:
+            copts = arg
+            other_args.remove(arg)
+            break
+
+    # Extract bnmulv_version_id and remove it from the list of options.
+    bnmulv_version_id = '0'
+    for arg in other_args:
+        match = re.match(r"^--bnmulv_version_id=(.*)$", arg)
+        if match:
+            bnmulv_version_id = match.group(1)
+            other_args.remove(arg)
+            break
 
     # files is now a nonempty list of input files. Rather unusually, '--'
     # (rather than '-') denotes standard input.
@@ -1275,7 +1296,7 @@ def main(argv: List[str]) -> int:
             return 1
 
         try:
-            insns_file = load_insns_yaml()
+            insns_file = load_insns_yaml(bnmulv_version_id)
         except RuntimeError as err:
             sys.stderr.write('{}\n'.format(err))
             return 1

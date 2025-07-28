@@ -92,6 +92,18 @@ def transform_disasm_line(line: str, insns_file: InsnsFile) -> str:
 
 def main() -> int:
     args = sys.argv[1:]
+
+    # Search for which version of insns.yml to be used.
+    bnmulv_version_id = '0'
+    for arg in args:
+        match = re.match(r"^--bnmulv_version_id=(.*)$", arg)
+        if match:
+            bnmulv_version_id = match.group(1)
+            # Remove --bnmulv_version_id from the list of correct arguments for
+            # objdump.
+            args.remove(arg)
+            break
+
     has_disasm = snoop_disasm_flags(args)
 
     objdump = find_tool('objdump')
@@ -116,7 +128,7 @@ def main() -> int:
         return 127
 
     try:
-        insns_file = load_insns_yaml()
+        insns_file = load_insns_yaml(bnmulv_version_id)
     except RuntimeError as err:
         sys.stderr.write('{}\n'.format(err))
         return 1
