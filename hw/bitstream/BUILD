@@ -85,6 +85,78 @@ filegroup(
     tags = ["manual"],
 )
 
+filegroup(
+    name = "bitstream_ver1",
+    testonly = True,
+    srcs = select({
+        "bitstream_skip": ["//hw/bitstream/universal:none"],
+        "bitstream_vivado": ["//hw/bitstream/vivado:fpga_cw310_test_rom_ver1"],
+        "bitstream_gcp_splice": ["@bitstreams//:chip_earlgrey_cw310_bitstream"],
+        "//conditions:default": ["@bitstreams//:chip_earlgrey_cw310_bitstream"],
+    }),
+    tags = ["manual"],
+)
+
+filegroup(
+    name = "cw310_mmi_ver1",
+    testonly = True,
+    srcs = select({
+        "bitstream_skip": ["//hw/bitstream/universal:none"],
+        "bitstream_vivado": ["//hw/bitstream/vivado:cw310_mmi_ver1"],
+        "bitstream_gcp_splice": ["@bitstreams//:chip_earlgrey_cw310_mmi"],
+        "//conditions:default": ["@bitstreams//:chip_earlgrey_cw310_mmi"],
+    }),
+    tags = ["manual"],
+)
+
+filegroup(
+    name = "bitstream_ver2",
+    testonly = True,
+    srcs = select({
+        "bitstream_skip": ["//hw/bitstream/universal:none"],
+        "bitstream_vivado": ["//hw/bitstream/vivado:fpga_cw310_test_rom_ver2"],
+        "bitstream_gcp_splice": ["@bitstreams//:chip_earlgrey_cw310_bitstream"],
+        "//conditions:default": ["@bitstreams//:chip_earlgrey_cw310_bitstream"],
+    }),
+    tags = ["manual"],
+)
+
+filegroup(
+    name = "cw310_mmi_ver2",
+    testonly = True,
+    srcs = select({
+        "bitstream_skip": ["//hw/bitstream/universal:none"],
+        "bitstream_vivado": ["//hw/bitstream/vivado:cw310_mmi_ver2"],
+        "bitstream_gcp_splice": ["@bitstreams//:chip_earlgrey_cw310_mmi"],
+        "//conditions:default": ["@bitstreams//:chip_earlgrey_cw310_mmi"],
+    }),
+    tags = ["manual"],
+)
+
+filegroup(
+    name = "bitstream_ver3",
+    testonly = True,
+    srcs = select({
+        "bitstream_skip": ["//hw/bitstream/universal:none"],
+        "bitstream_vivado": ["//hw/bitstream/vivado:fpga_cw310_test_rom_ver3"],
+        "bitstream_gcp_splice": ["@bitstreams//:chip_earlgrey_cw310_bitstream"],
+        "//conditions:default": ["@bitstreams//:chip_earlgrey_cw310_bitstream"],
+    }),
+    tags = ["manual"],
+)
+
+filegroup(
+    name = "cw310_mmi_ver3",
+    testonly = True,
+    srcs = select({
+        "bitstream_skip": ["//hw/bitstream/universal:none"],
+        "bitstream_vivado": ["//hw/bitstream/vivado:cw310_mmi_ver3"],
+        "bitstream_gcp_splice": ["@bitstreams//:chip_earlgrey_cw310_mmi"],
+        "//conditions:default": ["@bitstreams//:chip_earlgrey_cw310_mmi"],
+    }),
+    tags = ["manual"],
+)
+
 # Create manifest fragments for all the cached bitstreams
 bitstream_fragment_from_manifest(
     name = "chip_earlgrey_cw310_cached_fragment",

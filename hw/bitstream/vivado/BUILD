@@ -77,6 +77,132 @@ filegroup(
     tags = ["manual"],
 )
 
+# BNMULV_VER == 1
+fusesoc_build(
+    name = "fpga_cw310_ver1",
+    testonly = True,
+    srcs = [
+        "//hw:rtl_files",
+        _CW310_TESTROM,
+        _OTP_RMA,
+    ],
+    cores = ["//hw:cores"],
+    data = ["//hw/ip/otbn:rtl_files"],
+    flags = [
+        "--BootRomInitFile=" + _CW310_TESTROM_PATH,
+        "--OtpMacroMemInitFile=" + _OTP_RMA_PATH,
+    ],
+    output_groups = {
+        "bitstream": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "lowrisc_systems_chip_earlgrey_cw310_0.1.bit")],
+        "mmi": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "memories.mmi")],
+        "logs": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "lowrisc_systems_chip_earlgrey_cw310_0.1.runs/")],
+    },
+    systems = ["lowrisc:systems:chip_earlgrey_cw310"],
+    tags = ["manual"],
+    target = "synth",
+    bnmulv_version_id = "1",
+)
+
+filegroup(
+    name = "fpga_cw310_test_rom_ver1",
+    testonly = True,
+    srcs = [":fpga_cw310_ver1"],
+    output_group = "bitstream",
+    tags = ["manual"],
+)
+
+filegroup(
+    name = "cw310_mmi_ver1",
+    testonly = True,
+    srcs = [":fpga_cw310_ver1"],
+    output_group = "mmi",
+    tags = ["manual"],
+)
+
+# BNMULV_VER == 2
+fusesoc_build(
+    name = "fpga_cw310_ver2",
+    testonly = True,
+    srcs = [
+        "//hw:rtl_files",
+        _CW310_TESTROM,
+        _OTP_RMA,
+    ],
+    cores = ["//hw:cores"],
+    data = ["//hw/ip/otbn:rtl_files"],
+    flags = [
+        "--BootRomInitFile=" + _CW310_TESTROM_PATH,
+        "--OtpMacroMemInitFile=" + _OTP_RMA_PATH,
+    ],
+    output_groups = {
+        "bitstream": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "lowrisc_systems_chip_earlgrey_cw310_0.1.bit")],
+        "mmi": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "memories.mmi")],
+        "logs": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "lowrisc_systems_chip_earlgrey_cw310_0.1.runs/")],
+    },
+    systems = ["lowrisc:systems:chip_earlgrey_cw310"],
+    tags = ["manual"],
+    target = "synth",
+    bnmulv_version_id = "2",
+)
+
+filegroup(
+    name = "fpga_cw310_test_rom_ver2",
+    testonly = True,
+    srcs = [":fpga_cw310_ver2"],
+    output_group = "bitstream",
+    tags = ["manual"],
+)
+
+filegroup(
+    name = "cw310_mmi_ver2",
+    testonly = True,
+    srcs = [":fpga_cw310_ver2"],
+    output_group = "mmi",
+    tags = ["manual"],
+)
+
+# BNMULV_VER == 3
+fusesoc_build(
+    name = "fpga_cw310_ver3",
+    testonly = True,
+    srcs = [
+        "//hw:rtl_files",
+        _CW310_TESTROM,
+        _OTP_RMA,
+    ],
+    cores = ["//hw:cores"],
+    data = ["//hw/ip/otbn:rtl_files"],
+    flags = [
+        "--BootRomInitFile=" + _CW310_TESTROM_PATH,
+        "--OtpMacroMemInitFile=" + _OTP_RMA_PATH,
+    ],
+    output_groups = {
+        "bitstream": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "lowrisc_systems_chip_earlgrey_cw310_0.1.bit")],
+        "mmi": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "memories.mmi")],
+        "logs": [_FPGA_PATH_TMPL.format("chip_earlgrey_cw310", "lowrisc_systems_chip_earlgrey_cw310_0.1.runs/")],
+    },
+    systems = ["lowrisc:systems:chip_earlgrey_cw310"],
+    tags = ["manual"],
+    target = "synth",
+    bnmulv_version_id = "3",
+)
+
+filegroup(
+    name = "fpga_cw310_test_rom_ver3",
+    testonly = True,
+    srcs = [":fpga_cw310_ver3"],
+    output_group = "bitstream",
+    tags = ["manual"],
+)
+
+filegroup(
+    name = "cw310_mmi_ver3",
+    testonly = True,
+    srcs = [":fpga_cw310_ver3"],
+    output_group = "mmi",
+    tags = ["manual"],
+)
+
 # Standalone CW310 image for use with hyperdebug.
 fusesoc_build(
     name = "fpga_cw310_hyperdebug",
@@ -259,6 +385,39 @@ pkg_files(
         ":fpga_cw310_test_rom",
     ],
     prefix = "earlgrey/fpga_cw310/standard",
+    tags = ["manual"],
+)
+
+pkg_files(
+    name = "standard_ver1",
+    testonly = True,
+    srcs = [
+        ":cw310_mmi_ver1",
+        ":fpga_cw310_test_rom_ver1",
+    ],
+    prefix = "earlgrey/fpga_cw310/standard_ver1",
+    tags = ["manual"],
+)
+
+pkg_files(
+    name = "standard_ver2",
+    testonly = True,
+    srcs = [
+        ":cw310_mmi_ver2",
+        ":fpga_cw310_test_rom_ver2",
+    ],
+    prefix = "earlgrey/fpga_cw310/standard_ver2",
+    tags = ["manual"],
+)
+
+pkg_files(
+    name = "standard_ver3",
+    testonly = True,
+    srcs = [
+        ":cw310_mmi_ver3",
+        ":fpga_cw310_test_rom_ver3",
+    ],
+    prefix = "earlgrey/fpga_cw310/standard_ver3",
     tags = ["manual"],
 )
 

@@ -123,6 +123,132 @@ fpga_cw310(
     rom = "//sw/device/silicon_creator/rom:mask_rom",
 )
 
+fpga_cw310(
+    name = "fpga_cw310_test_rom_ver1",
+    testonly = True,
+    args = [
+        "--rcfile=",
+        "--logging=info",
+        "--interface={interface}",
+    ] + select({
+        "@//ci:lowrisc_fpga_cw310": ["--uarts=/dev/ttyACM_CW310_1,/dev/ttyACM_CW310_0"],
+        "//conditions:default": [],
+    }),
+    base = ":fpga_cw310",
+    base_bitstream = "//hw/bitstream:bitstream_ver1",
+    exec_env = "fpga_cw310_test_rom",
+    mmi = "//hw/bitstream:cw310_mmi_ver1",
+    openocd_adapter_config = "//third_party/openocd:jtag_olimex_cfg",
+    otp = "//hw/top_earlgrey/data/otp:img_rma",
+    param = {
+        "interface": "cw310",
+        "exit_success": DEFAULT_TEST_SUCCESS_MSG,
+        "exit_failure": DEFAULT_TEST_FAILURE_MSG,
+    },
+    rom = "//sw/device/lib/testing/test_rom:test_rom",
+    test_cmd = """
+        --exec="transport init"
+        --exec="fpga load-bitstream {bitstream}"
+        --exec="bootstrap --clear-uart=true {firmware}"
+        --exec="console --non-interactive --exit-success='{exit_success}' --exit-failure='{exit_failure}'"
+        no-op
+    """,
+)
+
+fpga_cw310(
+    name = "fpga_cw310_rom_with_fake_keys_ver1",
+    testonly = True,
+    base = ":fpga_cw310_test_rom_ver1",
+    ecdsa_key = {"//sw/device/silicon_creator/rom/keys/fake/ecdsa:test_key_0_ecdsa_p256": "test_key_0"},
+    exec_env = "fpga_cw310_rom_with_fake_keys",
+    manifest = "//sw/device/silicon_creator/rom_ext:manifest",
+    rom = "//sw/device/silicon_creator/rom:mask_rom",
+)
+
+fpga_cw310(
+    name = "fpga_cw310_test_rom_ver2",
+    testonly = True,
+    args = [
+        "--rcfile=",
+        "--logging=info",
+        "--interface={interface}",
+    ] + select({
+        "@//ci:lowrisc_fpga_cw310": ["--uarts=/dev/ttyACM_CW310_1,/dev/ttyACM_CW310_0"],
+        "//conditions:default": [],
+    }),
+    base = ":fpga_cw310",
+    base_bitstream = "//hw/bitstream:bitstream_ver2",
+    exec_env = "fpga_cw310_test_rom",
+    mmi = "//hw/bitstream:cw310_mmi_ver2",
+    openocd_adapter_config = "//third_party/openocd:jtag_olimex_cfg",
+    otp = "//hw/top_earlgrey/data/otp:img_rma",
+    param = {
+        "interface": "cw310",
+        "exit_success": DEFAULT_TEST_SUCCESS_MSG,
+        "exit_failure": DEFAULT_TEST_FAILURE_MSG,
+    },
+    rom = "//sw/device/lib/testing/test_rom:test_rom",
+    test_cmd = """
+        --exec="transport init"
+        --exec="fpga load-bitstream {bitstream}"
+        --exec="bootstrap --clear-uart=true {firmware}"
+        --exec="console --non-interactive --exit-success='{exit_success}' --exit-failure='{exit_failure}'"
+        no-op
+    """,
+)
+
+fpga_cw310(
+    name = "fpga_cw310_rom_with_fake_keys_ver2",
+    testonly = True,
+    base = ":fpga_cw310_test_rom_ver2",
+    ecdsa_key = {"//sw/device/silicon_creator/rom/keys/fake/ecdsa:test_key_0_ecdsa_p256": "test_key_0"},
+    exec_env = "fpga_cw310_rom_with_fake_keys",
+    manifest = "//sw/device/silicon_creator/rom_ext:manifest",
+    rom = "//sw/device/silicon_creator/rom:mask_rom",
+)
+
+fpga_cw310(
+    name = "fpga_cw310_test_rom_ver3",
+    testonly = True,
+    args = [
+        "--rcfile=",
+        "--logging=info",
+        "--interface={interface}",
+    ] + select({
+        "@//ci:lowrisc_fpga_cw310": ["--uarts=/dev/ttyACM_CW310_1,/dev/ttyACM_CW310_0"],
+        "//conditions:default": [],
+    }),
+    base = ":fpga_cw310",
+    base_bitstream = "//hw/bitstream:bitstream_ver3",
+    exec_env = "fpga_cw310_test_rom",
+    mmi = "//hw/bitstream:cw310_mmi_ver3",
+    openocd_adapter_config = "//third_party/openocd:jtag_olimex_cfg",
+    otp = "//hw/top_earlgrey/data/otp:img_rma",
+    param = {
+        "interface": "cw310",
+        "exit_success": DEFAULT_TEST_SUCCESS_MSG,
+        "exit_failure": DEFAULT_TEST_FAILURE_MSG,
+    },
+    rom = "//sw/device/lib/testing/test_rom:test_rom",
+    test_cmd = """
+        --exec="transport init"
+        --exec="fpga load-bitstream {bitstream}"
+        --exec="bootstrap --clear-uart=true {firmware}"
+        --exec="console --non-interactive --exit-success='{exit_success}' --exit-failure='{exit_failure}'"
+        no-op
+    """,
+)
+
+fpga_cw310(
+    name = "fpga_cw310_rom_with_fake_keys_ver3",
+    testonly = True,
+    base = ":fpga_cw310_test_rom_ver3",
+    ecdsa_key = {"//sw/device/silicon_creator/rom/keys/fake/ecdsa:test_key_0_ecdsa_p256": "test_key_0"},
+    exec_env = "fpga_cw310_rom_with_fake_keys",
+    manifest = "//sw/device/silicon_creator/rom_ext:manifest",
+    rom = "//sw/device/silicon_creator/rom:mask_rom",
+)
+
 sim_qemu(
     name = "sim_qemu_base",
     design = "earlgrey",

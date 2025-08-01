@@ -111,6 +111,13 @@ opentitan_manual_test = _opentitan_manual_test
 EARLGREY_TEST_ENVS = {
     "//hw/top_earlgrey:fpga_cw310_sival_rom_ext": None,
     "//hw/top_earlgrey:fpga_cw310_rom_with_fake_keys": None,
+    "//hw/top_earlgrey:fpga_cw310_rom_with_fake_keys_ver1": None,
+    "//hw/top_earlgrey:fpga_cw310_rom_with_fake_keys_ver2": None,
+    "//hw/top_earlgrey:fpga_cw310_rom_with_fake_keys_ver3": None,
+    "//hw/top_earlgrey:fpga_cw310_test_rom": None,
+    "//hw/top_earlgrey:fpga_cw310_test_rom_ver1": None,
+    "//hw/top_earlgrey:fpga_cw310_test_rom_ver2": None,
+    "//hw/top_earlgrey:fpga_cw310_test_rom_ver3": None,
     "//hw/top_earlgrey:sim_dv": None,
     "//hw/top_earlgrey:sim_verilator": None,
     "//hw/top_earlgrey:sim_verilator_ver1": None,
