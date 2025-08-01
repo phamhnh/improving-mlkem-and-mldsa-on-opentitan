@@ -7787,3 +7787,121 @@ opentitan_test(
         "//sw/device/lib/testing/test_framework:status",
     ],
 )
+
+# ML-KEM on-device tests
+opentitan_test(
+    name = "otbn_mlkem_test",
+    srcs = ["otbn_mlkem_test.c"],
+    exec_env = dicts.add(
+        EARLGREY_TEST_ENVS,
+        EARLGREY_SILICON_OWNER_ROM_EXT_ENVS,
+        {
+            "//hw/top_earlgrey:fpga_cw310_sival": None,
+            "//hw/top_earlgrey:fpga_cw310_sival_rom_ext": None,
+            "//hw/top_earlgrey:silicon_creator": None,
+        },
+    ),
+    verilator = verilator_params(timeout = "long"),
+    deps = [
+         "//hw/top_earlgrey/sw/autogen:top_earlgrey",
+        "//sw/device/lib/dif:otbn",
+        "//sw/device/lib/runtime:ibex",
+        "//sw/device/lib/runtime:log",
+        "//sw/device/lib/testing:entropy_testutils",
+        "//sw/device/lib/testing:otbn_testutils",
+        "//sw/device/lib/testing/test_framework:ottf_main",
+        # ML-KEM Keypair
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_keypair_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_keypair_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_keypair_test_ver3",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_keypair_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_keypair_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_keypair_test_ver3",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_keypair_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_keypair_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_keypair_test_ver3",
+        # ML-KEM Encap
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_encap_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_encap_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_encap_test_ver3",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_encap_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_encap_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_encap_test_ver3",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_encap_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_encap_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_encap_test_ver3",
+        # ML-KEM Decap
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_decap_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_decap_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem512_decap_test_ver3",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_decap_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_decap_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem768_decap_test_ver3",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_decap_test_ver1",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_decap_test_ver2",
+        "//sw/otbn/crypto/tests/mlkem:otbn_mlkem1024_decap_test_ver3",
+        # C libraries
+        "//sw/device/tests/pq-crystals/kyber_opentitan/ref:params",
+        "//sw/device/tests/pq-crystals/kyber_opentitan/ref:kem",
+        "//sw/device/tests/pq-crystals/kyber_opentitan/ref:fips202",
+    ],
+)
+
+# ML-DSA on-device tests
+opentitan_test(
+    name = "otbn_mldsa_test",
+    srcs = ["otbn_mldsa_test.c"],
+    exec_env = dicts.add(
+        EARLGREY_TEST_ENVS,
+        EARLGREY_SILICON_OWNER_ROM_EXT_ENVS,
+        {
+            "//hw/top_earlgrey:fpga_cw310_sival": None,
+            "//hw/top_earlgrey:fpga_cw310_sival_rom_ext": None,
+            "//hw/top_earlgrey:silicon_creator": None,
+        },
+    ),
+    verilator = verilator_params(timeout = "long"),
+    deps = [
+         "//hw/top_earlgrey/sw/autogen:top_earlgrey",
+        "//sw/device/lib/dif:otbn",
+        "//sw/device/lib/runtime:ibex",
+        "//sw/device/lib/runtime:log",
+        "//sw/device/lib/testing:entropy_testutils",
+        "//sw/device/lib/testing:otbn_testutils",
+        "//sw/device/lib/testing/test_framework:ottf_main",
+        # ML-DSA Keypair
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_keypair_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_keypair_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_keypair_test_ver3",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_keypair_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_keypair_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_keypair_test_ver3",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_keypair_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_keypair_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_keypair_test_ver3",
+        # ML-DSA Sign
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_sign_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_sign_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_sign_test_ver3",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_sign_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_sign_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_sign_test_ver3",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_sign_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_sign_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_sign_test_ver3",
+        # ML-DSA Verify
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_verify_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_verify_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa44_verify_test_ver3",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_verify_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_verify_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa65_verify_test_ver3",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_verify_test_ver1",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_verify_test_ver2",
+        "//sw/otbn/crypto/tests/mldsa:otbn_mldsa87_verify_test_ver3",
+        # C libraries
+        "//sw/device/tests/pq-crystals/dilithium_opentitan/lowram:params",
+        "//sw/device/tests/pq-crystals/dilithium_opentitan/lowram:sign",
+        "//sw/device/tests/pq-crystals/dilithium_opentitan/lowram:fips202",
+    ],
+)

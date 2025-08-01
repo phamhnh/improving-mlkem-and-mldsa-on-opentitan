@@ -1260,22 +1260,22 @@ def main(argv: List[str]) -> int:
     files = files or ['--']
     just_translate = '--otbn-translate' in flags
 
-    # Remove duplicates of copts in case "--copt" is given via the command line.
-    # For example, in sw/device/tests/otbn_mlkem512_keypair_test, we must pass
-    # --copt="-DKYBER_K=2" to the command line for pq-crystals/kyber_opentitan,
-    # which makes "-DKYBER_K=2" appears twice in the options passed to otbn_as.
-    # The current otbn_as assumes that there is only one --copt and this --copt
-    # must come in the first position in the command line. The second apparence
-    # of --copt is not recognized by riscv-elf, causing error.
-    seen = set()
-    other_args = [arg for arg in other_args if not (arg in seen or seen.add(arg))]
-    copts = None
+    # Since we can pass many -D options, especially for the FPGA tests in sw/device/tests
+    # we need to decide which -DKYBER_K/DILITHIUM_MODE is for dependencies and which one is for
+    # *_test.c. We also need to remove -DBNMULV_VER passed in during FPGA tests. Thus, we put
+    # all -D options in a separate list. As we know that -D options of sw/device/tests always come
+    # after -D option in dependencies, we keep the first -D as copts and then delete all -Ds in
+    # other_args.
+    define_args = []
     for arg in other_args:
-        match = re.match(r"^-D(.*)$", arg)
-        if match:
-            copts = arg
+        if "-D" in arg:
+            define_args.append(arg)
+    if define_args:
+        copts = define_args[0]
+        for arg in define_args:
             other_args.remove(arg)
-            break
+    else:
+        copts = None
 
     # Extract bnmulv_version_id and remove it from the list of options.
     bnmulv_version_id = '0'

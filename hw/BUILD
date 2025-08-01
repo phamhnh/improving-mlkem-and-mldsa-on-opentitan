@@ -112,9 +112,107 @@ fusesoc_build(
     verilator_options = ":verilator_options",
 )
 
+fusesoc_build(
+    name = "verilator_real_ver1",
+    srcs = [
+        ":dpi_files",
+        ":dv_common_files",
+        ":rtl_files",
+        ":verilator_files",
+    ],
+    cores = [
+        ":cores",
+    ],
+    data = ["//hw/ip/otbn:rtl_files"],
+    make_options = ":make_options",
+    output_groups = {
+        "binary": ["lowrisc_dv_top_earlgrey_chip_verilator_sim_0.1/sim-verilator/Vchip_sim_tb"],
+    },
+    systems = ["lowrisc:dv:chip_verilator_sim"],
+    tags = [
+        "manual",
+        "verilator",
+    ],
+    target = "sim",
+    verilator_options = ":verilator_options",
+    bnmulv_version_id = "1",
+)
+
+
+fusesoc_build(
+    name = "verilator_real_ver2",
+    srcs = [
+        ":dpi_files",
+        ":dv_common_files",
+        ":rtl_files",
+        ":verilator_files",
+    ],
+    cores = [
+        ":cores",
+    ],
+    data = ["//hw/ip/otbn:rtl_files"],
+    make_options = ":make_options",
+    output_groups = {
+        "binary": ["lowrisc_dv_top_earlgrey_chip_verilator_sim_0.1/sim-verilator/Vchip_sim_tb"],
+    },
+    systems = ["lowrisc:dv:chip_verilator_sim"],
+    tags = [
+        "manual",
+        "verilator",
+    ],
+    target = "sim",
+    verilator_options = ":verilator_options",
+    bnmulv_version_id = "2",
+)
+
+
+fusesoc_build(
+    name = "verilator_real_ver3",
+    srcs = [
+        ":dpi_files",
+        ":dv_common_files",
+        ":rtl_files",
+        ":verilator_files",
+    ],
+    cores = [
+        ":cores",
+    ],
+    data = ["//hw/ip/otbn:rtl_files"],
+    make_options = ":make_options",
+    output_groups = {
+        "binary": ["lowrisc_dv_top_earlgrey_chip_verilator_sim_0.1/sim-verilator/Vchip_sim_tb"],
+    },
+    systems = ["lowrisc:dv:chip_verilator_sim"],
+    tags = [
+        "manual",
+        "verilator",
+    ],
+    target = "sim",
+    verilator_options = ":verilator_options",
+    bnmulv_version_id = "3",
+)
+
 filegroup(
     name = "verilator_bin",
     srcs = [":verilator_real"],
+    output_group = "binary",
+)
+
+filegroup(
+    name = "verilator_bin_ver1",
+    srcs = [":verilator_real_ver1"],
+    output_group = "binary",
+)
+
+filegroup(
+    name = "verilator_bin_ver2",
+    srcs = [":verilator_real_ver2"],
+    output_group = "binary",
+)
+
+filegroup(
+    name = "verilator_bin_ver3",
+    srcs = [":verilator_real_ver3"],
     output_group = "binary",
 )
 
@@ -145,6 +243,36 @@ alias(
     actual = select({
         ":disable_verilator_build": ":verilator_stub",
         "//conditions:default": ":verilator_bin",
+    }),
+    tags = ["verilator"],
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "verilator_ver1",
+    actual = select({
+        ":disable_verilator_build": ":verilator_stub",
+        "//conditions:default": ":verilator_bin_ver1",
+    }),
+    tags = ["verilator"],
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "verilator_ver2",
+    actual = select({
+        ":disable_verilator_build": ":verilator_stub",
+        "//conditions:default": ":verilator_bin_ver2",
+    }),
+    tags = ["verilator"],
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "verilator_ver3",
+    actual = select({
+        ":disable_verilator_build": ":verilator_stub",
+        "//conditions:default": ":verilator_bin_ver3",
     }),
     tags = ["verilator"],
     visibility = ["//visibility:public"],
@@ -186,5 +314,26 @@ pkg_files(
     name = "package",
     srcs = ["verilator_bin"],
     prefix = "earlgrey/verilator",
+    visibility = ["//visibility:public"],
+)
+
+pkg_files(
+    name = "package_ver1",
+    srcs = ["verilator_bin_ver1"],
+    prefix = "earlgrey/verilator_ver1",
+    visibility = ["//visibility:public"],
+)
+
+pkg_files(
+    name = "package_ver2",
+    srcs = ["verilator_bin_ver2"],
+    prefix = "earlgrey/verilator_ver2",
+    visibility = ["//visibility:public"],
+)
+
+pkg_files(
+    name = "package_ver3",
+    srcs = ["verilator_bin_ver3"],
+    prefix = "earlgrey/verilator_ver3",
     visibility = ["//visibility:public"],
 )

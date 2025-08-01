@@ -77,6 +77,11 @@ def _fusesoc_build_impl(ctx):
         "--setup",
         "--build",
     ])
+
+    bnmulv_version_id = ctx.attr.bnmulv_version_id
+    if bnmulv_version_id != '':
+        args.add(bnmulv_version_id, format = "--flag=bnmulv_ver%s")
+
     args.add(out_dir, format = "--build-root=%s")
 
     args.add_all(ctx.attr.systems)
@@ -129,6 +134,7 @@ fusesoc_build = rule(
                 directory.
             """,
         ),
+        "bnmulv_version_id": attr.string(doc = "This sets --flag bnmulv_ver* for the RTL"),
         "verilator_options": attr.label(),
         "make_options": attr.label(),
         "_fusesoc": attr.label(

@@ -804,3 +804,595 @@ otbn_sim_test(
         "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
     ],
 )
+
+# Binaries for Verilator tests VER1
+
+otbn_binary(
+    name = "otbn_mldsa44_keypair_test_ver1",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_keypair",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa44_sign_test_ver1",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_sign",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa44_verify_test_ver1",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa44_verify",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_keypair_test_ver1",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_keypair",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_sign_test_ver1",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_sign",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_verify_test_ver1",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa65_verify",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_keypair_test_ver1",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_keypair",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_sign_test_ver1",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_sign",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_verify_test_ver1",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=1",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver1:intt",
+        "//sw/otbn/crypto/mldsa_ver1:ntt",
+        "//sw/otbn/crypto/mldsa_ver1:poly_add",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver1:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver1:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver1:mldsa87_verify",
+        "//sw/otbn/crypto/mldsa_ver1:kmac_send_msg",
+    ],
+)
+
+# Binaries for Verilator tests VER2
+
+otbn_binary(
+    name = "otbn_mldsa44_keypair_test_ver2",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_keypair",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa44_sign_test_ver2",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_sign",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa44_verify_test_ver2",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa44_verify",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_keypair_test_ver2",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_keypair",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_sign_test_ver2",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_sign",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_verify_test_ver2",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa65_verify",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_keypair_test_ver2",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_keypair",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_sign_test_ver2",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_sign",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_verify_test_ver2",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=2",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver2:intt",
+        "//sw/otbn/crypto/mldsa_ver2:ntt",
+        "//sw/otbn/crypto/mldsa_ver2:poly_add",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver2:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver2:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver2:mldsa87_verify",
+        "//sw/otbn/crypto/mldsa_ver2:kmac_send_msg",
+    ],
+)
+
+# Binaries for Verilator tests VER3
+
+otbn_binary(
+    name = "otbn_mldsa44_keypair_test_ver3",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_keypair",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa44_sign_test_ver3",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_sign",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa44_verify_test_ver3",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=2",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa44_verify",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_keypair_test_ver3",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_keypair",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_sign_test_ver3",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_sign",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa65_verify_test_ver3",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=3",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa65_verify",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_keypair_test_ver3",
+    srcs = [
+        "mldsa_keypair_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_keypair",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_sign_test_ver3",
+    srcs = [
+        "mldsa_sign_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_sign",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+
+otbn_binary(
+    name = "otbn_mldsa87_verify_test_ver3",
+    srcs = [
+        "mldsa_verify_test.s",
+    ],
+    copts = [
+        "-DDILITHIUM_MODE=5",
+        "--bnmulv_version_id=3",
+    ],
+    deps = [
+        "//sw/otbn/crypto/mldsa_ver3:intt",
+        "//sw/otbn/crypto/mldsa_ver3:ntt",
+        "//sw/otbn/crypto/mldsa_ver3:poly_add",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_poly",
+        "//sw/otbn/crypto/mldsa_ver3:poly_pointwise",
+        "//sw/otbn/crypto/mldsa_ver3:poly_sub",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_rounding",
+        "//sw/otbn/crypto/mldsa_ver3:mldsa87_verify",
+        "//sw/otbn/crypto/mldsa_ver3:kmac_send_msg",
+    ],
+)
+

@@ -336,6 +336,7 @@ ct:
   .word 0xe98f852f
   .word 0x795652ba
 
+.globl dk
 dk:
     .word 0xcd46fae7
   .word 0xdab4c107

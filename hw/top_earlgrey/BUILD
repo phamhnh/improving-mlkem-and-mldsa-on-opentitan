@@ -550,6 +550,93 @@ sim_verilator(
 )
 
 sim_verilator(
+    name = "sim_verilator_ver1",
+    testonly = True,
+    args = [
+        "--rcfile=",
+        "--logging=info",
+        "--interface=verilator",
+        "--verilator-bin=$(rootpath //hw:verilator_ver1)",
+        "--verilator-rom={rom}",
+        "--verilator-otp={otp}",
+        "--verilator-flash={firmware}",
+    ],
+    base = ":sim_verilator_base",
+    data = [
+        "//hw:fusesoc_ignore",
+        "//hw:verilator_ver1",
+    ],
+    exec_env = "sim_verilator",
+    param = {
+        "exit_success": DEFAULT_TEST_SUCCESS_MSG,
+        "exit_failure": DEFAULT_TEST_FAILURE_MSG,
+    },
+    rom = "//sw/device/lib/testing/test_rom:test_rom",
+    test_cmd = """
+        --exec="console --non-interactive --exit-success='{exit_success}' --exit-failure='{exit_failure}'"
+        no-op
+    """,
+)
+
+sim_verilator(
+    name = "sim_verilator_ver2",
+    testonly = True,
+    args = [
+        "--rcfile=",
+        "--logging=info",
+        "--interface=verilator",
+        "--verilator-bin=$(rootpath //hw:verilator_ver2)",
+        "--verilator-rom={rom}",
+        "--verilator-otp={otp}",
+        "--verilator-flash={firmware}",
+    ],
+    base = ":sim_verilator_base",
+    data = [
+        "//hw:fusesoc_ignore",
+        "//hw:verilator_ver2",
+    ],
+    exec_env = "sim_verilator",
+    param = {
+        "exit_success": DEFAULT_TEST_SUCCESS_MSG,
+        "exit_failure": DEFAULT_TEST_FAILURE_MSG,
+    },
+    rom = "//sw/device/lib/testing/test_rom:test_rom",
+    test_cmd = """
+        --exec="console --non-interactive --exit-success='{exit_success}' --exit-failure='{exit_failure}'"
+        no-op
+    """,
+)
+
+sim_verilator(
+    name = "sim_verilator_ver3",
+    testonly = True,
+    args = [
+        "--rcfile=",
+        "--logging=info",
+        "--interface=verilator",
+        "--verilator-bin=$(rootpath //hw:verilator_ver3)",
+        "--verilator-rom={rom}",
+        "--verilator-otp={otp}",
+        "--verilator-flash={firmware}",
+    ],
+    base = ":sim_verilator_base",
+    data = [
+        "//hw:fusesoc_ignore",
+        "//hw:verilator_ver3",
+    ],
+    exec_env = "sim_verilator",
+    param = {
+        "exit_success": DEFAULT_TEST_SUCCESS_MSG,
+        "exit_failure": DEFAULT_TEST_FAILURE_MSG,
+    },
+    rom = "//sw/device/lib/testing/test_rom:test_rom",
+    test_cmd = """
+        --exec="console --non-interactive --exit-success='{exit_success}' --exit-failure='{exit_failure}'"
+        no-op
+    """,
+)
+
+sim_verilator(
     name = "sim_verilator_rom_with_fake_keys",
     testonly = True,
     base = ":sim_verilator",
