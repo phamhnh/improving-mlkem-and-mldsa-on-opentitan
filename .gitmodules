@@ -4,3 +4,9 @@
 [submodule "sw/device/tests/pq-crystals/kyber_opentitan"]
 	path = sw/device/tests/pq-crystals/kyber_opentitan
 	url = https://github.com/phamhnh/kyber_opentitan.git
+[submodule "dilithiumpy"]
+	path = sw/otbn/crypto/tests/mldsa/dilithiumpy_bench_otbn/dilithiumpy
+	url = https://github.com/dop-amin/dilithium-py-bench.git
+[submodule "kyberpy"]
+	path = sw/otbn/crypto/tests/mlkem/kyberpy_bench_otbn/kyberpy
+	url = https://github.com/phamhnh/kyberpy.git
