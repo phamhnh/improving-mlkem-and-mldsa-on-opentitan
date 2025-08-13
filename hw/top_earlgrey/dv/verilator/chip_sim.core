@@ -124,9 +124,12 @@ targets:
           # XXX: Cleanup all warnings and remove this option
           # (or make it more fine-grained at least)
           - '-Wno-fatal'
-          - 'bnmulv_ver1 ? (-DBNMULV_VER1)'
-          - 'bnmulv_ver2 ? (-DBNMULV_VER2)'
-          - 'bnmulv_ver3 ? (-DBNMULV_VER2 -DCOND_SUB)'
+          - bnmulv_ver1 ? (BNMULV=true)
+          - bnmulv_ver2 ? (BNMULV=true)
+          - bnmulv_ver2 ? (BNMULV_ACCH=true)
+          - bnmulv_ver3 ? (BNMULV=true)
+          - bnmulv_ver3 ? (BNMULV_ACCH=true)
+          - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
 
   lint:
     <<: *default_target

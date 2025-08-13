@@ -5,11 +5,6 @@
 // Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `include "prim_assert.sv"
-`ifdef BNMULV_VER1
-  `define BNMULV_VER1_OR_VER2
-`elsif BNMULV_VER2
-  `define BNMULV_VER1_OR_VER2
-`endif
 
 /**
  * OTBN Controller
@@ -1045,7 +1040,7 @@ module otbn_controller
   assign mac_bignum_operation_o.zero_acc          = insn_dec_bignum_i.mac_zero_acc;
   assign mac_bignum_operation_o.shift_acc         = insn_dec_bignum_i.mac_shift_out;
 
-`ifdef BNMULV_VER1_OR_VER2
+`ifdef BNMULV
   assign mac_bignum_operation_o.mulv              = insn_dec_bignum_i.mac_mulv;
   assign mac_bignum_operation_o.data_type         = insn_dec_bignum_i.mac_data_type;
   assign mac_bignum_operation_o.sel               = insn_dec_bignum_i.mac_sel;
@@ -1442,7 +1437,7 @@ module otbn_controller
       WsrRnd:  ispr_addr_bignum = IsprRnd;
       WsrUrnd: ispr_addr_bignum = IsprUrnd;
       WsrAcc:  ispr_addr_bignum = IsprAcc;
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
       WsrAccH: ispr_addr_bignum = IsprAccH;
 `endif
       WsrKmacMsg: ispr_addr_bignum = IsprKmacMsg;

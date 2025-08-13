@@ -266,7 +266,7 @@ interface otbn_trace_if
                                             u_otbn_alu_bignum.mod_intg_q[i_word*39+:32];
     assign ispr_read_data[IsprMod][i_word*32+:32] = u_otbn_alu_bignum.mod_intg_q[i_word*39+:32];
     assign ispr_write_data[IsprAcc][i_word*32+:32] = u_otbn_mac_bignum.acc_intg_d[i_word*39+:32];
-    `ifdef BNMULV_VER2
+    `ifdef BNMULV_ACCH
     assign ispr_write_data[IsprAccH][i_word*32+:32] = u_otbn_mac_bignum.acch_intg_d[i_word*39+:32];
     `endif
   end
@@ -303,7 +303,7 @@ interface otbn_trace_if
   assign ispr_read_data[IsprAcc] =
       (any_ispr_read & (ispr_addr == IsprAcc)) ? u_otbn_mac_bignum.acc_no_intg_q  :
                                                  u_otbn_mac_bignum.acc_blanked;
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   assign ispr_write[IsprAccH]     = u_otbn_mac_bignum.acch_en & ~ispr_init;
   assign ispr_read[IsprAccH]      = (any_ispr_read & (ispr_addr == IsprAccH)) | mac_bignum_en;
   assign ispr_read_data[IsprAccH] =

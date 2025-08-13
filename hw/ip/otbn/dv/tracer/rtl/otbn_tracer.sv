@@ -89,7 +89,7 @@ module otbn_tracer (
     unique case (ispr)
       IsprMod: return "MOD";
       IsprAcc: return "ACC";
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
       IsprAccH: return "ACCH";
 `endif
       IsprRnd: return "RND";

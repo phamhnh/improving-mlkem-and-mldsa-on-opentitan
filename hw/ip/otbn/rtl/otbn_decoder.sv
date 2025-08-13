@@ -5,11 +5,6 @@
 // Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 `include "prim_assert.sv"
-`ifdef BNMULV_VER1
-  `define BNMULV_VER1_OR_VER2
-`elsif BNMULV_VER2
-  `define BNMULV_VER1_OR_VER2
-`endif
 
 /**
  * OTBN instruction Decoder
@@ -91,8 +86,7 @@ module otbn_decoder
   logic       mac_shift_out_bignum;
   logic       mac_en_bignum;
 
-`ifdef BNMULV_VER1_OR_VER2
-  logic [4:0] mac_insn_rs2;
+`ifdef BNMULV
   logic       mac_mulv;
   logic       mac_data_type;
   logic       mac_sel;
@@ -160,7 +154,6 @@ module otbn_decoder
 
   // source registers
   assign insn_rs1 = insn[19:15];
-  assign insn_rs2 = insn[24:20];
 
   // destination register
   assign insn_rd = insn[11:7];
@@ -175,21 +168,14 @@ module otbn_decoder
   assign loop_bodysize_base  = insn[31:20];
   assign loop_immediate_base = insn[12];
 
-`ifdef BNMULV_VER1_OR_VER2
   assign mac_op_a_qw_sel_bignum     = insn[26:25];
   assign mac_wr_hw_sel_upper_bignum = insn[29];
   assign mac_pre_acc_shift_bignum   = insn[14:13];
 
+`ifdef BNMULV
   assign mac_sel        = insn[27];
   assign mac_lane_mode  = insn[25];
   assign mac_exec_mode  = insn[31:30];
-`else // Vanilla OTBN
-  assign mac_op_a_qw_sel_bignum     = insn[26:25];
-  assign mac_op_b_qw_sel_bignum     = insn[28:27];
-  assign mac_wr_hw_sel_upper_bignum = insn[29];
-  assign mac_pre_acc_shift_bignum   = insn[14:13];
-  assign mac_zero_acc_bignum        = insn[12];
-  assign mac_shift_out_bignum       = insn[30];
 `endif
 
   logic d_inc_bignum;
@@ -258,11 +244,7 @@ module otbn_decoder
 
   assign insn_dec_bignum_o = '{
     a:                   insn_rs1,
-`ifdef BNMULV_VER1_OR_VER2
-    b:                   mac_insn_rs2,
-`else
     b:                   insn_rs2,
-`endif
     d:                   insn_rd,
     i:                   imm_i_type_bignum,
     rf_a_indirect:       rf_a_indirect_bignum,
@@ -289,7 +271,7 @@ module otbn_decoder
     mac_pre_acc_shift:   mac_pre_acc_shift_bignum,
     mac_zero_acc:        mac_zero_acc_bignum,
     mac_shift_out:       mac_shift_out_bignum,
-`ifdef BNMULV_VER1_OR_VER2
+`ifdef BNMULV
     mac_mulv:            mac_mulv,
     mac_data_type:       mac_data_type,
     mac_sel:             mac_sel,
@@ -339,16 +321,19 @@ module otbn_decoder
     rf_ren_b_bignum        = 1'b0;
     mac_en_bignum          = 1'b0;
 
-`ifdef BNMULV_VER1_OR_VER2
     mac_op_b_qw_sel_bignum = 2'b00;
     mac_zero_acc_bignum    = 1'b0;
+    mac_shift_out_bignum   = 1'b0;
+
+`ifdef BNMULV
     mac_mulv               = 1'b0;
     mac_data_type          = 1'b0;
-    mac_shift_out_bignum   = insn[30];
     mac_lane_word_32       = 1'b0;
     mac_lane_word_16       = 1'b0;
-    mac_insn_rs2           = insn[24:20];
 `endif
+
+    insn_rs2           = insn[24:20];
+
     rf_a_indirect_bignum   = 1'b0;
     rf_b_indirect_bignum   = 1'b0;
     rf_d_indirect_bignum   = 1'b0;
@@ -729,16 +714,16 @@ module otbn_decoder
         rf_wdata_sel_bignum = RfWdSelMac;
         mac_en_bignum       = 1'b1;
 
-`ifdef BNMULV_VER1_OR_VER2
         mac_op_b_qw_sel_bignum = insn[28:27];
         mac_zero_acc_bignum    = insn[12];
-`endif
+        mac_shift_out_bignum   = insn[30];
+
         if (insn[30] == 1'b1 || insn[29] == 1'b1) begin  // BN.MULQACC.WO/BN.MULQACC.SO
           rf_we_bignum = 1'b1;
         end
       end
 
-`ifdef BNMULV_VER1_OR_VER2
+`ifdef BNMULV
       ///////////////////////////////////////////
       //            BN.MULV/BN.MULV.L          //
       ///////////////////////////////////////////
@@ -760,7 +745,8 @@ module otbn_decoder
             mac_data_type = insn[26];
 
             if (insn[25] == 1'b1) begin  // lane mode
-              mac_insn_rs2 = {{4'b1000}, insn[24]};
+              insn_rs2 = {{4'b1000}, insn[24]};
+
               if (mac_data_type == 1'b0) begin
                 mac_op_b_qw_sel_bignum = insn[23:22];
                 mac_lane_word_32       = insn[21];

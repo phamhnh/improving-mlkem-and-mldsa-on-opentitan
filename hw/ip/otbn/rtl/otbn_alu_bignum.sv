@@ -100,7 +100,7 @@ module otbn_alu_bignum
   output logic [ExtWLEN-1:0]          ispr_acc_wr_data_intg_o,
   output logic                        ispr_acc_wr_en_o,
 
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   input  logic [ExtWLEN-1:0]          ispr_acch_intg_i,
   output logic [ExtWLEN-1:0]          ispr_acch_wr_data_intg_o,
   output logic                        ispr_acch_wr_en_o,
@@ -798,7 +798,7 @@ module otbn_alu_bignum
   assign ispr_acc_wr_data_intg_o = ispr_init_i ? EccWideZeroWord
                                                : ispr_acc_bignum_wdata_intg_blanked;
 
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   //////////
   // ACCH //
   //////////
@@ -827,25 +827,18 @@ module otbn_alu_bignum
   //    for it.
   // 2. Select between the ISPRs that have integrity bits and the result of the first stage.
 
-  // Number of ISPRs that have integrity protection
-`ifdef BNMULV_VER2
-  localparam int NIntgIspr = 5;
-`else
-  localparam int NIntgIspr = 4;
-`endif
   // IDs fpr ISPRs with integrity
   localparam int IsprModIntg = 0;
   localparam int IsprAccIntg = 1;
   localparam int IsprKmacMsgIntg  = 2;
   localparam int IsprKmacDigestIntg = 3;
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   localparam int IsprAccHIntg = 4;
-`endif
-  // ID representing all ISPRs with no integrity
-`ifdef BNMULV_VER2
-  localparam int IsprNoIntg = 5;
+  localparam int IsprNoIntg = 5; // ID representing all ISPRs with no integrity
+  localparam int NIntgIspr = 5;  // Number of ISPRs that have integrity protection
 `else
-  localparam int IsprNoIntg = 4;
+  localparam int IsprNoIntg = 4; // ID representing all ISPRs with no integrity
+  localparam int NIntgIspr = 4;  // Number of ISPRs that have integrity protection
 `endif
 
   logic [NIntgIspr:0] ispr_rdata_intg_mux_sel;
@@ -858,7 +851,7 @@ module otbn_alu_bignum
   assign ispr_rdata_no_intg_mux_in[IsprAcc] = 0;
   assign ispr_rdata_no_intg_mux_in[IsprKmacMsg] = 0;
   assign ispr_rdata_no_intg_mux_in[IsprKmacDigest]  = 0;
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   assign ispr_rdata_no_intg_mux_in[IsprAccH] = 0;
 `endif
 
@@ -905,7 +898,7 @@ module otbn_alu_bignum
   assign ispr_rdata_intg_mux_in[IsprKmacMsgIntg]    = kmac_msg_intg_q;
   assign ispr_rdata_intg_mux_in[IsprKmacDigestIntg] = kmac_digest_intg_q;
   assign ispr_rdata_intg_mux_in[IsprNoIntg]  = ispr_rdata_intg_calc;
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   assign ispr_rdata_intg_mux_in[IsprAccHIntg] = ispr_acch_intg_i;
 `endif
 
@@ -913,7 +906,7 @@ module otbn_alu_bignum
   assign ispr_rdata_intg_mux_sel[IsprAccIntg] = ispr_predec_bignum_i.ispr_rd_en[IsprAcc];
   assign ispr_rdata_intg_mux_sel[IsprKmacMsgIntg]     = ispr_predec_bignum_i.ispr_rd_en[IsprKmacMsg];
   assign ispr_rdata_intg_mux_sel[IsprKmacDigestIntg] = ispr_predec_bignum_i.ispr_rd_en[IsprKmacDigest];
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   assign ispr_rdata_intg_mux_sel[IsprAccHIntg] = ispr_predec_bignum_i.ispr_rd_en[IsprAccH];
 `endif
 
@@ -937,7 +930,7 @@ module otbn_alu_bignum
   `ASSERT(IsprAccMustTakeIntg_A,
     ispr_predec_bignum_i.ispr_rd_en[IsprAcc] |-> !ispr_rdata_intg_mux_sel[IsprNoIntg])
 
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   `ASSERT(IsprAccHMustTakeIntg_A,
     ispr_predec_bignum_i.ispr_rd_en[IsprAccH] |-> !ispr_rdata_intg_mux_sel[IsprNoIntg])
 `endif

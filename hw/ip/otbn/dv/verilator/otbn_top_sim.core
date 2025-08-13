@@ -67,16 +67,17 @@ targets:
           - '--trace-structs'
           - '--trace-params'
           - '--trace-max-array 1024'
-          - 'bnmulv_ver1 ? (-DBNMULV_VER1)'
-          - 'bnmulv_ver2 ? (-DBNMULV_VER2)'
-          - 'bnmulv_ver3 ? (-DBNMULV_VER2 -DCOND_SUB)'
+          - 'bnmulv_ver1 ? (-DBNMULV)'
+          - 'bnmulv_ver2 ? (-DBNMULV -DBNMULV_ACCH)'
+          - 'bnmulv_ver3 ? (-DBNMULV -DBNMULV_ACCH -DBNMULV_COND_SUB)'
           - 'bnmulv_ver1 ? (-CFLAGS "-DBNMULV_VER=1")'
           - 'bnmulv_ver2 ? (-CFLAGS "-DBNMULV_VER=2")'
           - 'bnmulv_ver3 ? (-CFLAGS "-DBNMULV_VER=3")'
-          - '-CFLAGS "-std=c++11 -Wall -DVM_TRACE_FMT_FST -DTOPLEVEL_NAME=otbn_top_sim"'
+          - '-CFLAGS "-Wall -DVM_TRACE_FMT_FST -DTOPLEVEL_NAME=otbn_top_sim"'
           - '-LDFLAGS "-pthread -lutil -lelf"'
           - "-Wall"
           - "-Wno-UNOPTFLAT"
+          - "-Wno-GENUNNAMED"
           # RAM primitives wider than 64bit (required for ECC) fail to build in
           # Verilator without increasing the unroll count (see Verilator#1266)
           - "--unroll-count 72"

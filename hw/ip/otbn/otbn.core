@@ -94,13 +94,13 @@ parameters:
   SYNTHESIS:
     datatype: bool
     paramtype: vlogdefine
-  BNMULV_VER1:
+  BNMULV:
     datatype: bool
     paramtype: vlogdefine
-  BNMULV_VER2:
+  BNMULV_ACCH:
     datatype: bool
     paramtype: vlogdefine
-  COND_SUB:
+  BNMULV_COND_SUB:
     datatype: bool
     paramtype: vlogdefine
 
@@ -145,10 +145,12 @@ targets:
     default_tool: icarus
     parameters:
       - SYNTHESIS=true
-      - bnmulv_ver1 ? (BNMULV_VER1=true)
-      - bnmulv_ver2 ? (BNMULV_VER2=true)
-      - bnmulv_ver3 ? (BNMULV_VER2=true)
-      - bnmulv_ver3 ? (COND_SUB=true)
+      - bnmulv_ver1 ? (BNMULV=true)
+      - bnmulv_ver2 ? (BNMULV=true)
+      - bnmulv_ver2 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (BNMULV=true)
+      - bnmulv_ver3 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
     tools:
       vivado:
         part: "xc7k410tfbg676-1" # CW310 with K410T
@@ -163,10 +165,12 @@ targets:
     default_tool: icarus
     parameters:
       - SYNTHESIS=true
-      - bnmulv_ver1 ? (BNMULV_VER1=true)
-      - bnmulv_ver2 ? (BNMULV_VER2=true)
-      - bnmulv_ver3 ? (BNMULV_VER2=true)
-      - bnmulv_ver3 ? (COND_SUB=true)
+      - bnmulv_ver1 ? (BNMULV=true)
+      - bnmulv_ver2 ? (BNMULV=true)
+      - bnmulv_ver2 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (BNMULV=true)
+      - bnmulv_ver3 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
     tools:
       vivado:
         part: "xc7k160tfbg676-1" # CW310 with K410T
@@ -181,10 +185,12 @@ targets:
     default_tool: icarus
     parameters:
       - SYNTHESIS=true
-      - bnmulv_ver1 ? (BNMULV_VER1=true)
-      - bnmulv_ver2 ? (BNMULV_VER2=true)
-      - bnmulv_ver3 ? (BNMULV_VER2=true)
-      - bnmulv_ver3 ? (COND_SUB=true)
+      - bnmulv_ver1 ? (BNMULV=true)
+      - bnmulv_ver2 ? (BNMULV=true)
+      - bnmulv_ver2 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (BNMULV=true)
+      - bnmulv_ver3 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
     tools:
       vivado:
         part: "xc7k160tfbg676-1" # CW310 with K410T

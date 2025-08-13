@@ -1,3 +1,4 @@
+`ifdef BNMULV
 module unified_mul #(
   parameter int WLEN = 256,
   parameter int DLEN = 64,
@@ -7,7 +8,7 @@ module unified_mul #(
   input  logic [1:0]                   word_mode, // 00 = 64x64, 11 = 4x32x32, 10 = 16x16x16
   input  logic [$clog2(WLEN/DLEN)-1:0] word_sel_A,
   input  logic [$clog2(WLEN/DLEN)-1:0] word_sel_B,
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   input  logic [1:0]                   exec_mode,
 `endif
   input  logic                         half_sel,
@@ -19,7 +20,7 @@ module unified_mul #(
   input  logic [1:0]                   data_type_64_shift,
   output logic [31:0]                  scalar32,
   output logic [15:0]                  scalar16,
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   output logic [2*WLEN-1:0]            result
 `else
   output logic [WLEN-1:0]              result
@@ -27,7 +28,7 @@ module unified_mul #(
 );
 
   localparam int NHALF = WLEN / HLEN;  // 16
-`ifndef BNMULV_VER2
+`ifndef BNMULV_ACCH
   localparam int NSING = WLEN / SLEN;  // 8
 `endif
   localparam int NDOUB = WLEN / DLEN;  // 4
@@ -71,7 +72,7 @@ module unified_mul #(
 
     unique case (word_mode)
       MODE_16: begin
-        `ifdef BNMULV_VER2
+        `ifdef BNMULV_ACCH
         if (exec_mode == 2'b00) begin
           for (int i = 0; i < NHALF; i+=2) begin
             if (half_sel == 1'b0) begin
@@ -88,7 +89,7 @@ module unified_mul #(
             B_composed[i*HLEN +: HLEN] = (lane_mode == 1'b0) ? B[HLEN*i +: HLEN] : scalar16;
           end
         end
-        `elsif BNMULV_VER1
+        `else
         for (int i = 0; i < NSING; i++) begin
           if (half_sel == 1'b0) begin
             A_composed[i*HLEN +: HLEN] = A[HLEN*(2*i + 0) +: HLEN];
@@ -198,11 +199,11 @@ module unified_mul #(
   // -------------------------------------------------------------------
   // Output Reconstruction
   // -------------------------------------------------------------------
-`ifdef BNMULV_VER2
+`ifdef BNMULV_ACCH
   logic [2*HLEN*NHALF-1:0] result_16;
   logic [2*SLEN*NDOUB-1:0] result_32;
   logic [2*DLEN-1:0]       result_64;
-`elsif BNMULV_VER1
+`else
   logic [255:0] result_16;
   logic [255:0] result_32;
   logic [127:0] result_64;
@@ -211,12 +212,12 @@ module unified_mul #(
   // -- 16x16 results --
   always_comb begin
     result_16 = '0;
-    `ifdef BNMULV_VER2
+    `ifdef BNMULV_ACCH
     for (int i = 0; i < NHALF; i++) begin : gen_output_16
       if (word_mode == MODE_16)
         result_16[2*HLEN*i +: 2*HLEN] = products[i];
     end
-    `elsif BNMULV_VER1
+    `else
     for (int i = 0; i < NSING; i++) begin : gen_output_16
       if (word_mode == MODE_16)
         result_16[2*HLEN*i +: 2*HLEN] = products[i];
@@ -267,15 +268,15 @@ module unified_mul #(
           2'd0: result[  0 +: 128] = result_64;
           2'd1: result[ 64 +: 128] = result_64;
           2'd2: result[128 +: 128] = result_64;
-          `ifdef BNMULV_VER2
+          `ifdef BNMULV_ACCH
           2'd3: result[192 +: 128] = result_64;
-          `elsif BNMULV_VER1
+          `else
           2'd3: result[192 +:  64] = result_64[63:0];
           `endif
         endcase
       end
       MODE_32: begin
-        `ifdef BNMULV_VER2
+        `ifdef BNMULV_ACCH
         if (half_sel == 1'b0) begin
           for (int i = 0; i < NDOUB; i++) begin
             result[(128*i) +  0 +: 64] = result_32[64*i +: 64];
@@ -285,7 +286,7 @@ module unified_mul #(
             result[(128*i) + 64 +: 64] = result_32[64*i +: 64];
           end
         end
-        `elsif BNMULV_VER1
+        `else
         result = result_32;
         `endif
       end
@@ -299,4 +300,4 @@ module unified_mul #(
   end
 
 endmodule
-
+`endif // ifdef BNMULV
