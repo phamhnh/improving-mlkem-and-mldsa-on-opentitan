@@ -91,6 +91,15 @@ filesets:
       - lint/otbn.waiver
     file_type: waiver
 
+  files_sta:
+    files:
+      - ../../../vivado_timing_scripts/timing.tcl:
+          copyto: timing.tcl
+      - ../../../vivado_timing_scripts/gen_sv.tcl:
+          copyto: gen_sv.tcl
+      - rtl/bn_vec_core/sv_wrap.py:
+          copyto: sv_wrap.py
+
 parameters:
   SYNTHESIS:
     datatype: bool
@@ -137,6 +146,25 @@ targets:
         mode: lint-only
         verilator_options:
           - "-Wall"
+
+  sta:
+    default_tool: vivado
+    parameters:
+      - SYNTHESIS=true
+      - bnmulv_ver1 ? (BNMULV=true)
+      - bnmulv_ver2 ? (BNMULV=true)
+      - bnmulv_ver2 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (BNMULV=true)
+      - bnmulv_ver3 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
+    filesets:
+      - files_rtl_core
+      - files_rtl_top
+      - files_sta
+    toplevel: otbn
+    tools:
+      vivado:
+        part: "xc7a200tfbg676-3"
 
   syn:
     <<: *default_target

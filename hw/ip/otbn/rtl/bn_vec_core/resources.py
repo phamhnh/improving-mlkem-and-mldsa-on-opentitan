@@ -8,7 +8,8 @@ from math import ceil, log, floor
 import os
 import argparse
 
-from wrapper import generate_wrapper
+#from wrapper import generate_wrapper
+from sv_wrap import wrapper
 
 
 def synthesize(top_module, sources, outdir, wrap=True):
@@ -17,14 +18,16 @@ def synthesize(top_module, sources, outdir, wrap=True):
   os.makedirs(outdir, exist_ok=True)
 
   if wrap:
-    with open(top_module + ".sv", 'r') as f:
-      module_code = f.read()
+#    with open(top_module + ".sv", 'r') as f:
+#      module_code = f.read()
+#
+#    wrapper_code = generate_wrapper(module_code)
+#
+#    with open(f"{outdir}/wrapper.sv", 'w') as f:
+#      f.write(wrapper_code)
+#    print(f"Wrapper written to {outdir}/wrapper.sv")
 
-    wrapper_code = generate_wrapper(module_code)
-
-    with open(f"{outdir}/wrapper.sv", 'w') as f:
-      f.write(wrapper_code)
-    print(f"Wrapper written to {outdir}/wrapper.sv")
+    wrapper(top_module + ".sv", top_module, "wrapper", f"{outdir}/wrapper.sv")
 
     sources = sources + f" {outdir}/wrapper.sv"
 
@@ -154,6 +157,13 @@ if __name__ == "__main__":
   )
 
   parser.add_argument(
+      "--mul",
+      action="store_true",
+      default=False,
+      help="Output for all multipliers. (default: False)"
+  )
+
+  parser.add_argument(
       "--cond_sub",
       action="store_true",
       default=False,
@@ -188,7 +198,9 @@ if __name__ == "__main__":
   print(f"sources: {args.sources}")
   print(f"wrap: {args.wrap}")
 
-  if args.adders:
+  if args.mul:
+    modules = ["unified_mul", "otbn_bignum_mul"]
+  elif args.adders:
     modules = ["brent_kung_adder_256", "csa_adder_256", "kogge_stone_adder_256", "sklansky_adder_256", "ref_vec_add", "buffer_bit"]
   elif args.cond_sub:
     modules = ["cond_sub", "cond_sub_buffer_bit", "cond_sub_buffer_bit_new"]
