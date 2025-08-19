@@ -91,3 +91,9 @@ book
 
 # Custom Ruff config overrides
 .ruff.toml
+
+# venv
+.venv
+
+# cocotb/pytest
+hw/ip/otbn/rtl/sim_build/
