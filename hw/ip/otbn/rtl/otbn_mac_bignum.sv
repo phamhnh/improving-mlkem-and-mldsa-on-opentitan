@@ -602,7 +602,7 @@ module otbn_mac_bignum
     endcase
   end
   `ifdef BNMULV_COND_SUB
-  cond_sub cond (
+  cond_sub_buffer_bit cond (
     .A        (pre_cond),
     .B        (cond_sub_B),
     .word_mode(operation_i.data_type), // 0: vec16, 1: vec32

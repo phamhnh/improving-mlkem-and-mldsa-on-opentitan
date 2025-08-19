@@ -1,7 +1,7 @@
 // Vector CPA with bit propagate/kill insertion adder based conditional subtraction.
 // A - B >= 0 ? A - B : A
 
-module cond_sub (
+module cond_sub_buffer_bit (
   input  logic [255:0] A,
   input  logic [255:0] B,
   input  logic         word_mode,   // 0: vec16, 1: vec32

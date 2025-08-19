@@ -66,7 +66,7 @@ async def run_cond_sub_test(dut):
 )
 def test_cond_sub_sim(variant, word_mode):
     run(
-        toplevel="cond_sub",
+        toplevel=f"{variant}",
         module="test_cond_sub_pytest",
         toplevel_lang="verilog",
         testcase="run_cond_sub_test",
