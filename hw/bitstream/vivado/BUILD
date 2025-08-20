@@ -101,6 +101,7 @@ fusesoc_build(
     tags = ["manual"],
     target = "synth",
     bnmulv_version_id = "1",
+    bitstream_cw310 = True,
 )
 
 filegroup(
@@ -143,6 +144,7 @@ fusesoc_build(
     tags = ["manual"],
     target = "synth",
     bnmulv_version_id = "2",
+    bitstream_cw310 = True,
 )
 
 filegroup(
@@ -185,6 +187,7 @@ fusesoc_build(
     tags = ["manual"],
     target = "synth",
     bnmulv_version_id = "3",
+    bitstream_cw310 = True,
 )
 
 filegroup(

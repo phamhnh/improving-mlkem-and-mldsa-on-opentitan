@@ -16,7 +16,8 @@ filesets:
       - lowrisc:earlgrey_ip:flash_ctrl_prim_reg_top
       # TODO(#27347): prim_legacy_pkg is deprecated
       - lowrisc:prim:prim_legacy_pkg
-      - lowrisc:prim_xilinx:all
+      - '!bitstream_cw310 ? (lowrisc:prim_xilinx:all)'
+      - bitstream_cw310 ? (lowrisc:prim_xilinx_cw310_bitstream:all)
       - lowrisc:prim_generic:flash
     files:
       - rtl/clkgen_xil7series.sv
