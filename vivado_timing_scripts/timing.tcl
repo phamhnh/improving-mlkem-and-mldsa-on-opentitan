@@ -1,5 +1,7 @@
 set start_f 10
 
+set outdir reports
+
 set help_text {
 Usage: vivado -mode batch -source my_script.tcl -tclargs [options]
 
@@ -7,6 +9,7 @@ Options:
   --top_module <name>   Name of the top module to synthesize.
   --wrap                Enable wrapping.
   --start_freq <freq>   Start frequrncy for search (default: $start_f MHz).
+  --outdir <dir>        Output directory for reports (default: reports).
   -h, --help            Show this help and exit.
 }
 
@@ -30,6 +33,10 @@ for {set i 0} {$i < $argc} {incr i} {
             incr i
             set start_f [lindex $argv $i]
         }
+        --outdir {
+            incr i
+            set outdir [lindex $argv $i]
+        }
         --wrap {
             set wrap 1
         }
@@ -49,11 +56,9 @@ if {$wrap} {
   set top_module wrapper
 }
 
-
 synth_design -mode out_of_context -top $top_module
 
-
-set outdir reports/
+#write_verilog -force  $outdir/test.v
 
 set file_utilization $outdir/utilization.txt
 set file_utilization_hierarchical $outdir/utilization_hierarchical.txt
@@ -106,9 +111,9 @@ while {1} {
 
     puts "\n\n***********************************************"
     puts "***********************************************"
-    puts "Slow frequency: $slow_f MHz (period: [expr 1000.0/$slow_f] ns)\n"
-    puts "Fast frequency: $fast_f MHz (period: [expr 1000.0/$fast_f] ns)\n"
-    puts "Testing clock period: $mid_f MHz (Frequency: [expr 1000.0/$mid_f] ns)\n"
+    puts "Slow frequency: $slow_f MHz (period: [expr 1000.0/$slow_f] ns)"
+    puts "Fast frequency: $fast_f MHz (period: [expr 1000.0/$fast_f] ns)"
+    puts "Testing clock period: $mid_f MHz (Frequency: [expr 1000.0/$mid_f] ns)"
     puts "***********************************************"
     puts "***********************************************\n\n"
 
@@ -134,6 +139,10 @@ while {1} {
     set ACTIVE_STEP route_design
 
 
+    #puts "writing schmeatic"
+    #write_verilog -force  $outdir/test.v
+    #puts "schematic done"
+
     report_timing_summary -file $file_timing_summary
 
     set slack [get_property SLACK [get_timing_paths -nworst 1]]
@@ -153,9 +162,9 @@ while {1} {
       set fast_f $mid_f
     }
 
-    puts "Best frequency: $best_f MHz (period: [expr 1000.0/$best_f] ns)\n"
-    puts "Slow frequency: $slow_f MHz (period: [expr 1000.0/$slow_f] ns)\n"
-    puts "Fast frequency: $fast_f MHz (period: [expr 1000.0/$fast_f] ns)\n"
+    puts "Best frequency: $best_f MHz (period: [expr 1000.0/$best_f] ns)"
+    puts "Slow frequency: $slow_f MHz (period: [expr 1000.0/$slow_f] ns)"
+    puts "Fast frequency: $fast_f MHz (period: [expr 1000.0/$fast_f] ns)"
     puts "***********************************************"
     puts "***********************************************\n\n"
 
@@ -185,6 +194,7 @@ set ACTIVE_STEP phys_opt_design
 route_design
 set ACTIVE_STEP route_design
 
+#write_verilog -force  $outdir/test.v
 
 report_utilization -file $file_utilization
 report_utilization -hierarchical -hierarchical_depth 6 -file $file_utilization_hierarchical

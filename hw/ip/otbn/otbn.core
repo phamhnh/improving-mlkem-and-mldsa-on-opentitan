@@ -101,6 +101,18 @@ filesets:
       - rtl/bn_vec_core/sv_wrap.py:
           copyto: sv_wrap.py
 
+  files_sv_sta:
+    files:
+      - rtl/bn_vec_core/brent_kung_adder_256.sv
+      - rtl/bn_vec_core/kogge_stone_adder_256.sv
+      - rtl/bn_vec_core/sklansky_adder_256.sv
+      - rtl/bn_vec_core/buffer_bit.sv
+      - rtl/bn_vec_core/cond_sub.sv
+      - rtl/bn_vec_core/cond_sub_buffer_bit.sv
+      - rtl/bn_vec_core/unified_mul.sv
+      - rtl/bn_vec_core/otbn_bignum_mul.sv
+    file_type: systemVerilogSource
+
 parameters:
   SYNTHESIS:
     datatype: bool
@@ -170,6 +182,7 @@ targets:
       - files_rtl_core
       - files_rtl_top
       - files_sta
+      - files_sv_sta
     toplevel: otbn
     tools:
       vivado:
