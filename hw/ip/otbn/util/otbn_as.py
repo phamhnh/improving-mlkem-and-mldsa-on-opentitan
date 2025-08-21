@@ -1194,7 +1194,7 @@ def transform_inputs(out_dir: str, inputs: List[str], insns_file: InsnsFile,
     return out_paths
 
 
-def run_c_preprocessor(out_dir: str, inputs: List[str], copts: str) -> List[str]:
+def run_c_preprocessor(out_dir: str, inputs: List[str], copts: List[str]) -> List[str]:
     inputs_pre = []
     for idx, in_path in enumerate(inputs):
         out_path = os.path.join(out_dir, str(idx))
@@ -1202,8 +1202,7 @@ def run_c_preprocessor(out_dir: str, inputs: List[str], copts: str) -> List[str]
 
         gcc_name = find_tool('gcc')
         default_args = ["-E"]
-        if copts:
-            default_args.append(copts)
+        default_args += copts
         default_args += [
             "-CC",
             "-x", "assembler-with-cpp",
@@ -1260,22 +1259,13 @@ def main(argv: List[str]) -> int:
     files = files or ['--']
     just_translate = '--otbn-translate' in flags
 
-    # Since we can pass many -D options, especially for the FPGA tests in sw/device/tests
-    # we need to decide which -DKYBER_K/DILITHIUM_MODE is for dependencies and which one is for
-    # *_test.c. We also need to remove -DBNMULV_VER passed in during FPGA tests. Thus, we put
-    # all -D options in a separate list. As we know that -D options of sw/device/tests always come
-    # after -D option in dependencies, we keep the first -D as copts and then delete all -Ds in
-    # other_args.
-    define_args = []
+    copts = []
     for arg in other_args:
         if "-D" in arg:
-            define_args.append(arg)
-    if define_args:
-        copts = define_args[0]
-        for arg in define_args:
+            copts.append(arg)
+    if copts:
+        for arg in copts:
             other_args.remove(arg)
-    else:
-        copts = None
 
     # Extract bnmulv_version_id and remove it from the list of options.
     bnmulv_version_id = '0'
