@@ -293,14 +293,14 @@ poly_add:
     bn.lid x21, 0(x11++)
     bn.lid x22, 0(x11++)
 
-    bn.addvm.16H w0, w0, w8
-    bn.addvm.16H w1, w1, w9
-    bn.addvm.16H w2, w2, w10
-    bn.addvm.16H w3, w3, w11
-    bn.addvm.16H w4, w4, w12
-    bn.addvm.16H w5, w5, w13
-    bn.addvm.16H w6, w6, w14
-    bn.addvm.16H w7, w7, w15
+    bn.addvm.16H.cond w0, w0, w8
+    bn.addvm.16H.cond w1, w1, w9
+    bn.addvm.16H.cond w2, w2, w10
+    bn.addvm.16H.cond w3, w3, w11
+    bn.addvm.16H.cond w4, w4, w12
+    bn.addvm.16H.cond w5, w5, w13
+    bn.addvm.16H.cond w6, w6, w14
+    bn.addvm.16H.cond w7, w7, w15
 
     bn.sid x4,  0(x12++)
     bn.sid x5,  0(x12++)
@@ -414,6 +414,6 @@ poly_tomont:
     bn.lid                 x4, 0(x10)
     bn.mulv.16H.acc.z.lo   w1, w0, w1
     bn.mulv.l.16H.lo       w1, w1, sw0.2
-    bn.mulv.l.16H.acc.hi.cond   w1, w1, sw0.0
+    bn.mulv.l.16H.acc.hi   w1, w1, sw0.0
     bn.sid                 x4, 0(x10++)
   ret

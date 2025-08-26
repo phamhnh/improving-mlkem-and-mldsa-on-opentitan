@@ -156,10 +156,8 @@
     scheme: bnam
     mapping:
       vec: b0
-      type: b00
+      type: b000
       sub: b0
-      vec: b0
-      type: b00
       wrs2: wrs2
       wrs1: wrs1
       funct3: b101
@@ -170,10 +168,11 @@
   operands:
     - name: type
       abbrev: t
-      type: enum(.8S,.16H,m.8S,m.16H)
+      type: enum(.8S,.16H,m.8S,m.16H,'','',m.8S.cond,m.16H.cond)
       doc: |
         Select the data type of the registers. `.8S` interprets the WDRs as 8
-        32-bit registers, `.16H` as 16 16-bit registers. m for reduction
+        32-bit registers, `.16H` as 16 16-bit registers. m for reduction. cond for conditional
+        subtraction from the modulus set in MOD on wrs2, before the modular subtraction with wrs1.
     - name: wrd
       doc: Updated WDR.
       type: wrb
@@ -630,7 +629,7 @@
     mapping:
       sub: b1
       vec: b0
-      type: b00
+      type: b000
       wrs2: wrs2
       wrs1: wrs1
       funct3: b101
@@ -641,10 +640,11 @@
   operands:
     - name: type
       abbrev: t
-      type: enum(.8S,.16H,m.8S,m.16H)
+      type: enum(.8S,.16H,m.8S,m.16H,'','',m.8S.cond,m.16H.cond)
       doc: |
         Select the data type of the registers. `.8S` interprets the WDRs as 8
-        32-bit registers, `.16H` as 16 16-bit registers. m for reduction
+        32-bit registers, `.16H` as 16 16-bit registers. m for reduction. cond for conditional
+        subtraction from the modulus set in MOD on wrs2, before the modular subtraction with wrs1.
     - name: wrd
       doc: Updated WDR.
       type: wrb
@@ -1245,10 +1245,8 @@
                  .8S.even.acc.hi, "", .8S.odd.acc.hi,
                  .16H.acc.z.hi,
                  .8S.even.acc.z.hi, "", .8S.odd.acc.z.hi,
-                 "", "", "", "",
-                 .16H.hi.cond, .8S.even.hi.cond, "", .8S.odd.hi.cond,
-                 .16H.acc.hi.cond, .8S.even.acc.hi.cond, "", .8S.odd.acc.hi.cond,
-                 .16H.acc.z.hi.cond, .8S.even.acc.z.hi.cond, "", .8S.odd.acc.z.hi.cond,
+                 "", "", "", "", "", "", "", "",
+                 "", "", "", "", "", "", "", "",
                  "", "", "", ""
                  )
   glued-ops: true
@@ -1352,10 +1350,8 @@
                  .8S.even.acc.hi, "", .8S.odd.acc.hi,
                  .16H.acc.z.hi,
                  .8S.even.acc.z.hi, "", .8S.odd.acc.z.hi,
-                 "", "", "", "",
-                 .16H.hi.cond, .8S.even.hi.cond, "", .8S.odd.hi.cond,
-                 .16H.acc.hi.cond, .8S.even.acc.hi.cond, "", .8S.odd.acc.hi.cond,
-                 .16H.acc.z.hi.cond, .8S.even.acc.z.hi.cond, "", .8S.odd.acc.z.hi.cond,
+                 "", "", "", "", "", "", "", "",
+                 "", "", "", "", "", "", "", "",
                  "", "", "", ""
                  )
   glued-ops: true

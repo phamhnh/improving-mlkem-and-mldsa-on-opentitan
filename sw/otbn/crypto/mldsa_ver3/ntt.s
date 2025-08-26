@@ -100,299 +100,299 @@ ntt:
          * even parts of w30 from previous computations. */
         bn.mulv.l.8S.even.acc.z.lo w30, w8, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w8, w0, w30
-        bn.addvm.8S                w0, w0, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w8, w0, w30
+        bn.addvm.8S.cond           w0, w0, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w9, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w9, w1, w30
-        bn.addvm.8S                w1, w1, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w9, w1, w30
+        bn.addvm.8S.cond           w1, w1, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w10, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w10, w2, w30
-        bn.addvm.8S                w2, w2, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w10, w2, w30
+        bn.addvm.8S.cond           w2, w2, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w11, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w11, w3, w30
-        bn.addvm.8S                w3, w3, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w11, w3, w30
+        bn.addvm.8S.cond           w3, w3, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w12, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w12, w4, w30
-        bn.addvm.8S                w4, w4, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w12, w4, w30
+        bn.addvm.8S.cond           w4, w4, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w13, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w13, w5, w30
-        bn.addvm.8S                w5, w5, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w13, w5, w30
+        bn.addvm.8S.cond           w5, w5, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w14, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w14, w6, w30
-        bn.addvm.8S                w6, w6, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w14, w6, w30
+        bn.addvm.8S.cond           w6, w6, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w15, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w15, w7, w30
-        bn.addvm.8S                w7, w7, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w15, w7, w30
+        bn.addvm.8S.cond           w7, w7, w30
         
         /* Layer 2, stride 64 */
 
         bn.mulv.l.8S.even.acc.z.lo w30, w4, sw1.1
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.1
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w4, w0, w30
-        bn.addvm.8S                w0, w0, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w4, w0, w30
+        bn.addvm.8S.cond           w0, w0, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w5, sw1.1
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.1
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w5, w1, w30
-        bn.addvm.8S                w1, w1, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w5, w1, w30
+        bn.addvm.8S.cond           w1, w1, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w6, sw1.1
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.1
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w6, w2, w30
-        bn.addvm.8S                w2, w2, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w6, w2, w30
+        bn.addvm.8S.cond           w2, w2, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w7, sw1.1
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.1
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w7, w3, w30
-        bn.addvm.8S                w3, w3, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w7, w3, w30
+        bn.addvm.8S.cond           w3, w3, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w12, sw1.2
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.2
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w12, w8, w30
-        bn.addvm.8S                w8, w8, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w12, w8, w30
+        bn.addvm.8S.cond           w8, w8, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w13, sw1.2
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.2
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w13, w9, w30
-        bn.addvm.8S                w9, w9, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w13, w9, w30
+        bn.addvm.8S.cond           w9, w9, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w14, sw1.2
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.2
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w14, w10, w30
-        bn.addvm.8S                w10, w10, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w14, w10, w30
+        bn.addvm.8S.cond           w10, w10, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w15, sw1.2
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.2
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w15, w11, w30
-        bn.addvm.8S                w11, w11, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w15, w11, w30
+        bn.addvm.8S.cond           w11, w11, w30
 
         /* Layer 3, stride 32 */
 
         bn.mulv.l.8S.even.acc.z.lo w30, w2, sw1.3
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.3
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w2, w0, w30
-        bn.addvm.8S                w0, w0, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w2, w0, w30
+        bn.addvm.8S.cond           w0, w0, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w3, sw1.3
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.3
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w3, w1, w30
-        bn.addvm.8S                w1, w1, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w3, w1, w30
+        bn.addvm.8S.cond           w1, w1, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w6, sw1.4
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.4
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w6, w4, w30
-        bn.addvm.8S                w4, w4, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w6, w4, w30
+        bn.addvm.8S.cond           w4, w4, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w7, sw1.4
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.4
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w7, w5, w30
-        bn.addvm.8S                w5, w5, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w7, w5, w30
+        bn.addvm.8S.cond           w5, w5, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w10, sw1.5
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.5
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w10, w8, w30
-        bn.addvm.8S                w8, w8, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w10, w8, w30
+        bn.addvm.8S.cond           w8, w8, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w11, sw1.5
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.5
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w11, w9, w30
-        bn.addvm.8S                w9, w9, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w11, w9, w30
+        bn.addvm.8S.cond           w9, w9, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w14, sw1.6
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.6
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w14, w12, w30
-        bn.addvm.8S                w12, w12, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w14, w12, w30
+        bn.addvm.8S.cond           w12, w12, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w15, sw1.6
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.6
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w15, w13, w30
-        bn.addvm.8S                w13, w13, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w15, w13, w30
+        bn.addvm.8S.cond           w13, w13, w30
 
         /* Layer 4, stride 16 */
 
         bn.mulv.l.8S.even.acc.z.lo w30, w1, sw1.7
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.7
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w1, w0, w30
-        bn.addvm.8S                w0, w0, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w1, w0, w30
+        bn.addvm.8S.cond           w0, w0, w30
 
         bn.mov w17, w18 /* Copy second batch of Twiddle factors to w17 */
         
         bn.mulv.l.8S.even.acc.z.lo w30, w3, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w3, w2, w30
-        bn.addvm.8S                w2, w2, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w3, w2, w30
+        bn.addvm.8S.cond           w2, w2, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w5, sw1.1
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.1
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w5, w4, w30
-        bn.addvm.8S                w4, w4, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w5, w4, w30
+        bn.addvm.8S.cond           w4, w4, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w7, sw1.2
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.2
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w7, w6, w30
-        bn.addvm.8S                w6, w6, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w7, w6, w30
+        bn.addvm.8S.cond           w6, w6, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w9, sw1.3
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.3
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w9, w8, w30
-        bn.addvm.8S                w8, w8, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w9, w8, w30
+        bn.addvm.8S.cond           w8, w8, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w11, sw1.4
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.4
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w11, w10, w30
-        bn.addvm.8S                w10, w10, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w11, w10, w30
+        bn.addvm.8S.cond           w10, w10, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w13, sw1.5
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.5
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w13, w12, w30
-        bn.addvm.8S                w12, w12, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w13, w12, w30
+        bn.addvm.8S.cond           w12, w12, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w15, sw1.6
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.6
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w15, w14, w30
-        bn.addvm.8S                w14, w14, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w15, w14, w30
+        bn.addvm.8S.cond           w14, w14, w30
 
         bn.mov w17, w19 /* Copy the first batch of Twiddle factors back for next loop. */
 
@@ -453,75 +453,75 @@ ntt:
         /* Butterflies */
         bn.mulv.l.8S.even.acc.z.lo w30, w1, sw1.0
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.0
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w1, w0, w30
-        bn.addvm.8S                w0, w0, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w1, w0, w30
+        bn.addvm.8S.cond           w0, w0, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w3, sw1.1
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.1
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w3, w2, w30
-        bn.addvm.8S                w2, w2, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w3, w2, w30
+        bn.addvm.8S.cond           w2, w2, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w5, sw1.2
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.2
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w5, w4, w30
-        bn.addvm.8S                w4, w4, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w5, w4, w30
+        bn.addvm.8S.cond           w4, w4, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w7, sw1.3
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.3
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w7, w6, w30
-        bn.addvm.8S                w6, w6, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w7, w6, w30
+        bn.addvm.8S.cond           w6, w6, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w9, sw1.4
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.4
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w9, w8, w30
-        bn.addvm.8S                w8, w8, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w9, w8, w30
+        bn.addvm.8S.cond           w8, w8, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w11, sw1.5
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.5
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w11, w10, w30
-        bn.addvm.8S                w10, w10, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w11, w10, w30
+        bn.addvm.8S.cond           w10, w10, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w13, sw1.6
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.6
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w13, w12, w30
-        bn.addvm.8S                w12, w12, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w13, w12, w30
+        bn.addvm.8S.cond           w12, w12, w30
 
         bn.mulv.l.8S.even.acc.z.lo w30, w15, sw1.7
         bn.mulv.l.8S.even.lo       w30, w30, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  w30, w30, sw0.0
+        bn.mulv.l.8S.even.acc.hi   w30, w30, sw0.0
         bn.mulv.l.8S.odd.acc.z.lo  w30, w30, sw1.7
         bn.mulv.l.8S.odd.lo        w30, w30, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  w30, w30, sw0.0
-        bn.subvm.8S                w15, w14, w30
-        bn.addvm.8S                w14, w14, w30
+        bn.mulv.l.8S.odd.acc.hi    w30, w30, sw0.0
+        bn.subvm.8S.cond           w15, w14, w30
+        bn.addvm.8S.cond           w14, w14, w30
 
         /* Transpose */
         /* At this point, w0-w15 are in use */
@@ -590,77 +590,77 @@ ntt:
         /* Butterflies */
         bn.mulv.8S.even.acc.z.lo   wtmp, w28, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w28, w24, wtmp
-        bn.addvm.8S                w24, w24, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w28, w24, wtmp
+        bn.addvm.8S.cond           w24, w24, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w29, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w29, w25, wtmp
-        bn.addvm.8S                w25, w25, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w29, w25, wtmp
+        bn.addvm.8S.cond           w25, w25, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w30, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w30, w26, wtmp
-        bn.addvm.8S                w26, w26, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w30, w26, wtmp
+        bn.addvm.8S.cond           w26, w26, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w31, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w31, w27, wtmp
-        bn.addvm.8S                w27, w27, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w31, w27, wtmp
+        bn.addvm.8S.cond           w27, w27, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
         
         bn.mulv.8S.even.acc.z.lo   wtmp, w4, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w4, w0, wtmp
-        bn.addvm.8S                w0, w0, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w4, w0, wtmp
+        bn.addvm.8S.cond           w0, w0, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w5, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w5, w1, wtmp
-        bn.addvm.8S                w1, w1, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w5, w1, wtmp
+        bn.addvm.8S.cond           w1, w1, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w6, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w6, w2, wtmp
-        bn.addvm.8S                w2, w2, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w6, w2, wtmp
+        bn.addvm.8S.cond           w2, w2, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w7, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w7, w3, wtmp
-        bn.addvm.8S                w3, w3, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w7, w3, wtmp
+        bn.addvm.8S.cond           w3, w3, wtmp
 
         /* Layer 7, stride 2 */
 
@@ -669,81 +669,81 @@ ntt:
         /* Butterflies */
         bn.mulv.8S.even.acc.z.lo   wtmp, w26, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w26, w24, wtmp
-        bn.addvm.8S                w24, w24, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w26, w24, wtmp
+        bn.addvm.8S.cond           w24, w24, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w27, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w27, w25, wtmp
-        bn.addvm.8S                w25, w25, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w27, w25, wtmp
+        bn.addvm.8S.cond           w25, w25, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w30, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w30, w28, wtmp
-        bn.addvm.8S                w28, w28, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w30, w28, wtmp
+        bn.addvm.8S.cond           w28, w28, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w31, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w31, w29, wtmp
-        bn.addvm.8S                w29, w29, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w31, w29, wtmp
+        bn.addvm.8S.cond           w29, w29, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w2, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w2, w0, wtmp
-        bn.addvm.8S                w0, w0, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w2, w0, wtmp
+        bn.addvm.8S.cond           w0, w0, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w3, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w3, w1, wtmp
-        bn.addvm.8S                w1, w1, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w3, w1, wtmp
+        bn.addvm.8S.cond           w1, w1, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w6, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w6, w4, wtmp
-        bn.addvm.8S                w4, w4, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w6, w4, wtmp
+        bn.addvm.8S.cond           w4, w4, wtmp
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w7, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w7, w5, wtmp
-        bn.addvm.8S                w5, w5, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w7, w5, wtmp
+        bn.addvm.8S.cond           w5, w5, wtmp
 
         /* Layer 8, stride 1 */
 
@@ -752,89 +752,89 @@ ntt:
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w25, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w25, w24, wtmp
-        bn.addvm.8S                w24, w24, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w25, w24, wtmp
+        bn.addvm.8S.cond           w24, w24, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w27, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w27, w26, wtmp
-        bn.addvm.8S                w26, w26, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w27, w26, wtmp
+        bn.addvm.8S.cond           w26, w26, wtmp
         
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w29, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w29, w28, wtmp
-        bn.addvm.8S                w28, w28, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w29, w28, wtmp
+        bn.addvm.8S.cond           w28, w28, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w31, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w31, w30, wtmp
-        bn.addvm.8S                w30, w30, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w31, w30, wtmp
+        bn.addvm.8S.cond           w30, w30, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w1, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w1, w0, wtmp
-        bn.addvm.8S                w0, w0, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w1, w0, wtmp
+        bn.addvm.8S.cond           w0, w0, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w3, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w3, w2, wtmp
-        bn.addvm.8S                w2, w2, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w3, w2, wtmp
+        bn.addvm.8S.cond           w2, w2, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w5, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w5, w4, wtmp
-        bn.addvm.8S                w4, w4, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w5, w4, wtmp
+        bn.addvm.8S.cond           w4, w4, wtmp
 
         bn.lid x23, 0(x11++) /* Load twiddle factors */
 
         bn.mulv.8S.even.acc.z.lo   wtmp, w7, w17
         bn.mulv.l.8S.even.lo       wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.even.acc.hi.cond  wtmp, wtmp, sw0.0
+        bn.mulv.l.8S.even.acc.hi   wtmp, wtmp, sw0.0
         bn.mulv.8S.odd.acc.z.lo    wtmp, wtmp, w17
         bn.mulv.l.8S.odd.lo        wtmp, wtmp, sw0.1
-        bn.mulv.l.8S.odd.acc.hi.cond  wtmp, wtmp, sw0.0
-        bn.subvm.8S                w7, w6, wtmp
-        bn.addvm.8S                w6, w6, wtmp
+        bn.mulv.l.8S.odd.acc.hi    wtmp, wtmp, sw0.0
+        bn.subvm.8S.cond           w7, w6, wtmp
+        bn.addvm.8S.cond           w6, w6, wtmp
 
         /* Transpose back */
         /* First trans w8-w15 */

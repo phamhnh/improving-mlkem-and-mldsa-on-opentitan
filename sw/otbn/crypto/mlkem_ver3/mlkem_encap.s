@@ -348,11 +348,11 @@ indcpa_enc:
 
   /*** ADD ***/
   /** b = b + ep **/
-  li  a0, STACK_ENC_B
+  li  a0, STACK_ENC_EP
   add a0, fp, a0
-  li  a1, STACK_ENC_EP
+  li  a1, STACK_ENC_B
   add a1, fp, a1 
-  add a2, zero, a0 
+  add a2, zero, a1
   .rept KYBER_K
     jal x1, poly_add 
   .endr 

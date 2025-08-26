@@ -30,20 +30,18 @@ def eprint(text):
     print(text, file=sys.stderr)
 
 
-def cmod(n, q):
-    t = n % q
-    # if t > floor(q / 2):
-    #     t -= q
-    return t
+def cond_sub(n, q):
+    "Conditional subtraction from q."
+    if n >= q:
+        n -= q
+    return n
 
 
-def cmod_single(n, q):
+def cond_add(n, q):
+    "Conditional addition with q."
     if n < 0:
-        return n + q
-    elif n >= q:
-        return n - q
-    else:
-        return n
+        n += q
+    return n
 
 
 class ADD(RV32RegReg):
@@ -764,19 +762,30 @@ class BNADDV(OTBNInsn):
         a = state.wdrs.get_reg(self.wrs1).read_unsigned()
         b = state.wdrs.get_reg(self.wrs2).read_unsigned()
         mod_val = state.wsrs.MOD.read_unsigned()
-        red = True if self.type > 1 else False
-        size = 32 if (self.type % 2 == 0) else 16
+
+        data_type = self.type & 0b1
+        red = (self.type & 0b10) >> 1
+        cond = (self.type & 0b100) >> 2
+
+        size = 16 if data_type else 32
         mod_val = extract_sub_word(mod_val, size, 0)
         result = 0
 
         for i in range(256 // size - 1, -1, -1):
             ai = OTBNInsn.from_2s_complement(extract_sub_word(a, size, i), size)
             bi = OTBNInsn.from_2s_complement(extract_sub_word(b, size, i), size)
+            ci = bi
+            if cond:
+                bi = cond_sub(bi, mod_val)
             resulti = ai + bi
             if red:
-                resulti = cmod_single(resulti, mod_val)
+                resulti = cond_sub(resulti, mod_val)
             if DEBUG_ARITH:
-                eprint(f"addvm {ai} + {bi} = {ai + bi} = {resulti}")
+                if red:
+                    eprint(f"bi = {ci}, bi_cond = {bi}")
+                    eprint(f"addvm {ai} + {bi} = {ai + bi} = {resulti}")
+                else:
+                    eprint(f"addv {ai} + {bi} = {ai + bi} = {resulti}")
             result <<= size
             result |= (OTBNInsn.to_2s_complement(resulti, size) & ((1 << size) - 1))
 
@@ -1042,19 +1051,30 @@ class BNSUBV(OTBNInsn):
         a = state.wdrs.get_reg(self.wrs1).read_unsigned()
         b = state.wdrs.get_reg(self.wrs2).read_unsigned()
         mod_val = state.wsrs.MOD.read_unsigned()
-        red = True if self.type > 1 else False
-        size = 32 if (self.type % 2 == 0) else 16
+
+        data_type = self.type & 0b1
+        red = (self.type & 0b10) >> 1
+        cond = (self.type & 0b100) >> 2
+
+        size = 16 if data_type else 32
         mod_val = extract_sub_word(mod_val, size, 0)
         result = 0
 
         for i in range(256 // size - 1, -1, -1):
             ai = OTBNInsn.from_2s_complement(extract_sub_word(a, size, i), size)
             bi = OTBNInsn.from_2s_complement(extract_sub_word(b, size, i), size)
+            ci = bi
+            if cond:
+                bi = cond_sub(bi, mod_val)
             resulti = ai - bi
             if red:
-                resulti = cmod_single(resulti, mod_val)
+                resulti = cond_add(resulti, mod_val)
             if DEBUG_ARITH:
-                eprint(f"subvm {ai} - {bi} = {ai - bi} = {resulti}")
+                if red:
+                    eprint(f"bi = {ci}, bi_cond = {bi}")
+                    eprint(f"subvm {ai} - {bi} = {ai - bi} = {resulti}")
+                else:
+                    eprint(f"subv {ai} - {bi} = {ai - bi} = {resulti}")
             result <<= size
             result |= (OTBNInsn.to_2s_complement(resulti, size) & ((1 << size) - 1))
 
@@ -1624,7 +1644,7 @@ class BNMULV(OTBNInsn):
         #    data_type:    0 = .16H, 1 = .8S
         #    sel:       0 = .even, 1 = .odd
         #    acc_mode:  0 = disabled, 1 = .acc, 2 = .acc.z
-        #    exec_mode: 0 = standard, 1 = .lo, 2 = .hi, 3 = .hi.cond
+        #    exec_mode: 0 = standard, 1 = .lo, 2 = .hi
         data_type = self.type & 0b01
         sel = (self.type & 0b10) >> 1
         acc_mode = (self.type & 0b1100) >> 2
@@ -1691,11 +1711,6 @@ class BNMULV(OTBNInsn):
                 wrd_v[i] = prodi & mask
             elif exec_mode == 2:
                 wrd_v[i] = (prodi >> size) & mask
-            elif exec_mode == 3:
-                hi = (prodi >> size) & mask
-                if hi >= wrs2_v[i]:
-                    hi -= wrs2_v[i]
-                wrd_v[i] = hi
 
             if DEBUG_ARITH:
                 eprint(f"wrd_v[{i}] = {hex(wrd_v[i])}")
@@ -1778,7 +1793,7 @@ class BNMULVL(OTBNInsn):
 
         if DEBUG_ARITH:
             eprint(f"lane_mode | exec_mode | acc_mode | sel | data_type = \
-                   1 |{exec_mode} | {acc_mode} | {sel} | {data_type}")
+                   1 | {exec_mode} | {acc_mode} | {sel} | {data_type}")
             eprint(f"acc_v = {[hex(acci) for acci in acc_v]}")
             eprint(f'lane_indices = {lane_indices}')
 
@@ -1805,11 +1820,6 @@ class BNMULVL(OTBNInsn):
                 wrd_v[i] = prodi & mask
             elif exec_mode == 2:
                 wrd_v[i] = (prodi >> size) & mask
-            elif exec_mode == 3:
-                hi = (prodi >> size) & mask
-                if hi >= wrs2_v[i]:
-                    hi -= wrs2_v[i]
-                wrd_v[i] = hi
 
             if DEBUG_ARITH:
                 eprint(f"wrd_v[{i}] = {hex(wrd_v[i])}")

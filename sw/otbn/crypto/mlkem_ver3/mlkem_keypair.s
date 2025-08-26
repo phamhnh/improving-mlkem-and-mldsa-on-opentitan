@@ -299,11 +299,11 @@ indcpa_keypair:
   .endr
 
   /* Polyvec add */
-  li   a0, STACK_A
+  li   a0, STACK_SKPV
   add  a0, fp, a0
-  li   a1, STACK_SKPV 
+  li   a1, STACK_A 
   add  a1, fp, a1 
-  add  a2, x0, a0 
+  add  a2, x0, a1
   .rept KYBER_K
     jal x1, poly_add
   .endr

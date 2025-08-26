@@ -341,11 +341,11 @@ bnam:
     - funct3
   fields:
     vec: 25
-    type: 27-26
+    type: 28-26
     sub: 30
     fixed:
-      bits: 31,29-28
-      value: bxxx
+      bits: 31,29
+      value: bxx
 
 # Used for bn.mulqacc
 bnaq:

@@ -156,10 +156,8 @@
     scheme: bnam
     mapping:
       vec: b0
-      type: b00
+      type: b000
       sub: b0
-      vec: b0
-      type: b00
       wrs2: wrs2
       wrs1: wrs1
       funct3: b101
@@ -630,7 +628,7 @@
     mapping:
       sub: b1
       vec: b0
-      type: b00
+      type: b000
       wrs2: wrs2
       wrs1: wrs1
       funct3: b101
