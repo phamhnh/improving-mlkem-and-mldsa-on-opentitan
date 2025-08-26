@@ -96,10 +96,6 @@ filesets:
     files:
       - ../../../vivado_timing_scripts/timing.tcl:
           copyto: timing.tcl
-      - ../../../vivado_timing_scripts/gen_sv.tcl:
-          copyto: gen_sv.tcl
-      - rtl/bn_vec_core/sv_wrap.py:
-          copyto: sv_wrap.py
 
   files_sv_sta:
     files:
@@ -187,6 +183,12 @@ targets:
     tools:
       vivado:
         part: "xc7a200tfbg676-3"
+
+  sky130:
+     default_tool : openlane
+     filesets : [files_rtl_core, files_rtl_top]
+     toplevel: otbn
+
 
   syn:
     <<: *default_target

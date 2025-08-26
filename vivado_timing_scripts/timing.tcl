@@ -7,7 +7,6 @@ Usage: vivado -mode batch -source my_script.tcl -tclargs [options]
 
 Options:
   --top_module <name>   Name of the top module to synthesize.
-  --wrap                Enable wrapping.
   --start_freq <freq>   Start frequrncy for search (default: $start_f MHz).
   --outdir <dir>        Output directory for reports (default: reports).
   -h, --help            Show this help and exit.
@@ -20,7 +19,6 @@ if {$argc == 0 || [lindex $argv 0] in {"-h" "--help"}} {
 
 
 set top_module ""
-set wrap 0
 
 for {set i 0} {$i < $argc} {incr i} {
     set arg [lindex $argv $i]
@@ -37,24 +35,15 @@ for {set i 0} {$i < $argc} {incr i} {
             incr i
             set outdir [lindex $argv $i]
         }
-        --wrap {
-            set wrap 1
-        }
         default {
             puts "Unknown option: $arg"
         }
     }
 }
 
-puts "top_module=$top_module, start_freq=$start_f, wrap=$wrap"
+puts "top_module=$top_module, start_freq=$start_f"
 
 source lowrisc_ip_otbn_0.1.tcl
-
-if {$wrap} {
-  puts "Generating wrapper."
-  source gen_sv.tcl
-  set top_module wrapper
-}
 
 synth_design -mode out_of_context -top $top_module
 
@@ -70,13 +59,27 @@ set file_clocks $outdir/clocks.txt
 write_checkpoint -force $outdir/synth.dcp
 
 
+proc set_timing_paths {clk clk_period} {
+  if {[llength [get_ports -quiet $clk]] > 0} {
+    # Create clock to attach it to a clock buffer.
+    create_clock -name $clk -period $clk_period [get_ports $clk]
+    set_property HD.CLK_SRC BUFGCTRL_X0Y2 [get_ports $clk]
+    
+    # ---- in2reg: inputs -> regs captured by clk
+    set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_clocks $clk]
+    
+    # ---- reg2out: regs launched by clk -> output ports
+    set_max_delay $clk_period -from [get_clocks $clk] -to [get_ports [all_outputs]]
+  }
+  
+  # ---- in2out: pure combinational ports -> ports
+  set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_ports [all_outputs]] -datapath_only
+}
+
 # Set clock port name
 set clk "clk_i"
 
-
-# Create clock to attach it to a clock buffer.
-create_clock -name $clk -period [expr 1000.0/$start_f] [get_ports $clk]
-set_property HD.CLK_SRC BUFGCTRL_X0Y2 [get_ports $clk]
+set_timing_paths $clk [expr {1000.0/$start_f}]
 
 
 # Define search range
@@ -86,43 +89,39 @@ set fast_f 1000
 set best_f $slow_f
 set max_freq $best_f
 
-set mid_f [expr $start_f/2]
+set mid_f [expr {$start_f/2}]
 
 
 # Binary search for max frequency
 while {1} {
 
-    if {[expr ($fast_f - $slow_f)] <= 5} {
+    if {$fast_f - $slow_f <= 5} {
       break
     }
 
     if {$fast_f == 1000} {
-       set mid_f [expr 2*$mid_f]
+       set mid_f [expr {2*$mid_f}]
     } else {
-      set mid_f [expr 1000.0/((1000.0/$slow_f + 1000.0/$fast_f) / 2.0)]
+      set mid_f [expr {1000.0/((1000.0/$slow_f + 1000.0/$fast_f) / 2.0)}]
     }
 
-    if {[expr $mid_f >= $fast_f]} {
+    if {$mid_f >= $fast_f} {
        puts "$mid_f >= $fast_f"
        exit -1
     }
 
-    set mid_f [expr ((int($mid_f) + 4) / 5) * 5]
+    set mid_f [expr {((int($mid_f) + 4) / 5) * 5}]
 
     puts "\n\n***********************************************"
     puts "***********************************************"
-    puts "Slow frequency: $slow_f MHz (period: [expr 1000.0/$slow_f] ns)"
-    puts "Fast frequency: $fast_f MHz (period: [expr 1000.0/$fast_f] ns)"
-    puts "Testing clock period: $mid_f MHz (Frequency: [expr 1000.0/$mid_f] ns)"
+    puts "Slow frequency: $slow_f MHz (period: [expr {1000.0/$slow_f}] ns)"
+    puts "Fast frequency: $fast_f MHz (period: [expr {1000.0/$fast_f}] ns)"
+    puts "Testing clock period: $mid_f MHz (Frequency: [expr {1000.0/$mid_f}] ns)"
     puts "***********************************************"
     puts "***********************************************\n\n"
 
-    set mid_period [expr 1000.0/$mid_f]
-
     # Apply new clock constraint
-    create_clock -name $clk -period $mid_period [get_ports $clk]
-
-    puts "new clock"
+    set_timing_paths $clk [expr {1000.0/$mid_f}]
 
     opt_design
     set ACTIVE_STEP opt_design
@@ -138,7 +137,6 @@ while {1} {
     route_design
     set ACTIVE_STEP route_design
 
-
     #puts "writing schmeatic"
     #write_verilog -force  $outdir/test.v
     #puts "schematic done"
@@ -148,6 +146,10 @@ while {1} {
     set slack [get_property SLACK [get_timing_paths -nworst 1]]
 
     puts "\n\n***********************************************"
+    puts "***********************************************"
+    puts "Slow frequency: $slow_f MHz (period: [expr {1000.0/$slow_f}] ns)"
+    puts "Fast frequency: $fast_f MHz (period: [expr {1000.0/$fast_f}] ns)"
+    puts "Tested clock period: $mid_f MHz (Frequency: [expr {1000.0/$mid_f}] ns)"
     puts "***********************************************"
     puts "Slack: $slack ns"
 
@@ -162,23 +164,23 @@ while {1} {
       set fast_f $mid_f
     }
 
-    puts "Best frequency: $best_f MHz (period: [expr 1000.0/$best_f] ns)"
-    puts "Slow frequency: $slow_f MHz (period: [expr 1000.0/$slow_f] ns)"
-    puts "Fast frequency: $fast_f MHz (period: [expr 1000.0/$fast_f] ns)"
+    puts "New best frequency: $best_f MHz (period: [expr {1000.0/$best_f}] ns)"
+    puts "New slow frequency: $slow_f MHz (period: [expr {1000.0/$slow_f}] ns)"
+    puts "New fast frequency: $fast_f MHz (period: [expr {1000.0/$fast_f}] ns)"
     puts "***********************************************"
     puts "***********************************************\n\n"
 
     open_checkpoint $outdir/synth.dcp
 }
 
-set best_period [expr 1000.0/$max_freq]
+set best_period [expr {1000.0/$max_freq}]
 
 puts "\n\n================================================"
 puts "Maximum Achievable Frequency: $max_freq MHz"
 puts "Clock Period: $best_period ns"
 puts "================================================\n\n"
 
-create_clock -name $clk -period $best_period [get_ports $clk]
+set_timing_paths $clk $best_period
 
 opt_design
 set ACTIVE_STEP opt_design
@@ -212,6 +214,9 @@ puts $rpt
 
 
 set p [lindex [get_timing_paths -from [get_clocks $clk] -to [get_clocks $clk] -setup -nworst 1] 0]
+report_timing -of_objects $p
+
+set p [lindex [get_timing_paths -from [get_ports [all_inputs]] -to [get_ports [all_outputs]] -setup -nworst 1] 0]
 report_timing -of_objects $p
 
 

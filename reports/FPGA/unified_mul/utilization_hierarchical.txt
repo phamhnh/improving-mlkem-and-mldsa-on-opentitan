@@ -1,10 +1,10 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
-| Date         : Thu Aug 21 17:38:58 2025
+| Date         : Mon Aug 25 10:05:19 2025
 | Host         : ruben-nb02 running 64-bit Ubuntu 22.04.5 LTS
 | Command      : report_utilization -hierarchical -hierarchical_depth 6 -file ../../../reports/FPGA/unified_mul/utilization_hierarchical.txt
-| Design       : wrapper
+| Design       : unified_mul
 | Device       : xc7a200tfbg676-3
 | Speed File   : -3
 | Design State : Routed
@@ -19,13 +19,11 @@ Table of Contents
 1. Utilization by Hierarchy
 ---------------------------
 
-+-------------+-------------+------------+------------+---------+------+-----+--------+--------+------------+
-|   Instance  |    Module   | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
-+-------------+-------------+------------+------------+---------+------+-----+--------+--------+------------+
-| wrapper     |       (top) |       1571 |       1571 |       0 |    0 | 791 |      0 |      0 |         16 |
-|   (wrapper) |       (top) |         37 |         37 |       0 |    0 | 791 |      0 |      0 |          0 |
-|   u_dut     | unified_mul |       1535 |       1535 |       0 |    0 |   0 |      0 |      0 |         16 |
-+-------------+-------------+------------+------------+---------+------+-----+--------+--------+------------+
++-------------+--------+------------+------------+---------+------+-----+--------+--------+------------+
+|   Instance  | Module | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------+--------+------------+------------+---------+------+-----+--------+--------+------------+
+| unified_mul |  (top) |       1535 |       1535 |       0 |    0 |   0 |      0 |      0 |         16 |
++-------------+--------+------------+------------+---------+------+-----+--------+--------+------------+
 * Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining
 
 

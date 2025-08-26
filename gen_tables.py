@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import subprocess, re
 from tabulate import tabulate
 import argparse
@@ -68,14 +70,12 @@ def report(data):
   print()
 
 
-def synthesize(top_module, outdir, wrap=True):
-  command = f"fusesoc --cores-root . run --flag=fileset_top --target=sta --flag bnmulv_ver1 --no-export --tool=vivado --setup lowrisc:ip:otbn:0.1; cd build/lowrisc_ip_otbn_0.1/sta-vivado; vivado -mode batch -source timing.tcl -notrace -tclargs --top_module {top_module} {'--wrap ' if wrap else ''}--start_freq 10 --outdir ../../../{outdir}"
+def synthesize(top_module, outdir):
+  command = f"fusesoc --cores-root . run --flag=fileset_top --target=sta --flag bnmulv_ver1 --no-export --tool=vivado --setup lowrisc:ip:otbn:0.1; cd build/lowrisc_ip_otbn_0.1/sta-vivado; vivado -mode batch -source timing.tcl -notrace -tclargs --top_module {top_module} --start_freq 10 --outdir ../../../{outdir}"
 
   print(f"Command: {command})")
 
   result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
-
-#  report([extract("buffer_bit", "reports/wrapper")])
 
 
 if __name__ == "__main__":
@@ -110,24 +110,23 @@ if __name__ == "__main__":
   )
 
   parser.add_argument(
+      "--otbn_sub",
+      action="store_true",
+      default=False,
+      help="Output for all otbn sub modules. (default: False)"
+  )
+
+  parser.add_argument(
       "--top_module",
       type=str,
       default=None,
       help="Top-level hardware module."
   )
 
-  parser.add_argument(
-      "--wrap",
-      action="store_true",
-      default=False,
-      help="Wrap module in registers for inputs and outputs. (default: False)"
-  )
-
   args = parser.parse_args()
 
   print(f"run_synthesis: {args.run_synthesis}")
   print(f"top_module: {args.top_module}")
-  print(f"wrap: {args.wrap}")
 
   if args.mul:
     modules = ["unified_mul", "otbn_bignum_mul"]
@@ -135,12 +134,14 @@ if __name__ == "__main__":
     modules = ["brent_kung_adder_256", "kogge_stone_adder_256", "sklansky_adder_256", "buffer_bit"]
   elif args.cond_sub:
     modules = ["cond_sub", "cond_sub_buffer_bit"]
+  elif args.otbn_sub:
+    modules = ["otbn_mac_bignum", "otbn_alu_bignum"]
   else:
     modules = [args.top_module]
 
   if args.run_synthesis:
     for top_module in modules:
-      synthesize(top_module, "reports/FPGA/" + top_module, args.wrap)
+      synthesize(top_module, "reports/FPGA/" + top_module)
    
   data = [extract(top_module, "reports/FPGA/" + top_module) for top_module in modules]
 
