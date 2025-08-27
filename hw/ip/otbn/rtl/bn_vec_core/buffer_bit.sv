@@ -5,16 +5,15 @@
 // The adder is meant to replace Adder X and Adder Y in BN-ALU. So it can either
 // compute in_A + in_B (A + B) or in_A + ~in_B + 1 (A + B + cin).
 
-module buffer_bit #(
-  parameter int WLEN = 256
-) (
+module buffer_bit 
+  import otbn_pkg::*;
+(
   input logic [WLEN-1:0]  A,
   input logic [WLEN-1:0]  B,
-  input logic             vector_en,
-  input logic             word_mode, // 1: vec16, 0: vec32
+  input vec_type_e        word_mode,
   input logic             b_invert,
   input logic             cin,
-  output logic [WLEN+1:0] sum,
+  output logic [WLEN+1:0] res,
   output logic [15:0]     cout
 );
 
@@ -30,16 +29,15 @@ module buffer_bit #(
       assign B_buffed[i*17 +: 16] = B[i*16 +: 16];
     end
 
-    for (i = 0; i < 15; i += 2) begin
-      assign A_buffed[i*17 + 16] =
-          (vector_en == 1'b0) ? 1'b0 : (word_mode & b_invert);
-      assign B_buffed[i*17 + 16] =
-          (vector_en == 1'b0) ? 1'b1 : ((word_mode & b_invert) ^ (~word_mode));
-    end
-
-    for (i = 1; i < 15; i += 2) begin
-      assign A_buffed[i*17 + 16] = (vector_en == 1'b0) ? 1'b0 : b_invert;
-      assign B_buffed[i*17 + 16] = (vector_en == 1'b0) ? 1'b1 : b_invert;
+    for (i = 1; i < 16; i += 1) begin
+      assign A_buffed[i*17 - 1] = (word_mode == VecType16) ? (((i*16) % 16) == 0 ? b_invert : 1'b0) :
+                                  (word_mode == VecType32) ? (((i*16) % 32) == 0 ? b_invert : 1'b0) :
+                                  (word_mode == VecType64) ? (((i*16) % 64) == 0 ? b_invert : 1'b0) :
+                                  1'b0;
+      assign B_buffed[i*17 - 1] = (word_mode == VecType16) ? (((i*16) % 16) == 0 ? b_invert : 1'b1) :
+                                  (word_mode == VecType32) ? (((i*16) % 32) == 0 ? b_invert : 1'b1) :
+                                  (word_mode == VecType64) ? (((i*16) % 64) == 0 ? b_invert : 1'b1) :
+                                  1'b1;
     end
   endgenerate
 
@@ -47,11 +45,11 @@ module buffer_bit #(
 
   generate
     for(i = 0; i < 16; i++) begin
-      assign sum[(i*16 + 1) +: 16] = R_buffed[i*17 +: 16];
+      assign res[(i*16 + 1) +: 16] = R_buffed[i*17 +: 16];
       assign cout[i] = R_buffed[i*17 + 16];
     end
   endgenerate
 
-  assign sum[WLEN + 1] = cout[15];
+  assign res[WLEN + 1] = cout[15];
 
 endmodule

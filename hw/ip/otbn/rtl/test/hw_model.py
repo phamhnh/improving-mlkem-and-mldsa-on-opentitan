@@ -157,7 +157,7 @@ def reference_cond_sub(A, B, data_type, cin, wsize=[(8, 32), (16, 16)]):
         raise ValueError("Invalid mode")
 
 
-def reference_vector_addition(A, B, addition, data_type, wsize=[(8, 32), (16, 16), (1, 256)]):
+def reference_vector_addition(A, B, addition, data_type, wsize=[(16, 16), (8, 32), (4, 64), (1, 256)]):
     """Reference model for vector addition: A + B and subtraction: A + ~in_B + 1 where B = ~in_B"""
     num_words = wsize[data_type][0]
     word_size = wsize[data_type][1]

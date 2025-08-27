@@ -13,6 +13,9 @@ module cond_sub_buffer_bit (
   logic [270:0] B_buffed;
   logic [271:0] R_buffed;
 
+  logic unused_ok;
+  assign unused_ok = ^(cin);
+
   genvar i;
 
   // Compute A - B = A + ~B + 1

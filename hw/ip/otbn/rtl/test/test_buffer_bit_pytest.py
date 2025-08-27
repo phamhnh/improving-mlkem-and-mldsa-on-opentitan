@@ -7,9 +7,10 @@ from cocotb.triggers import Timer
 
 from hw_model import reference_vector_addition
 
-MODE_32 = 0
-MODE_16 = 1
-MODE_256 = 2
+MODE_16 = 0
+MODE_32 = 1
+MODE_64 = 2
+MODE_256 = 3
 
 
 @cocotb.test()
@@ -20,9 +21,6 @@ async def run_buffer_bit_test(dut):
     for _ in range(num_tests):
         word_mode = int(os.environ.get("WORD_MODE"))
         addition = int(os.environ.get("ADDITION"))
-
-        vector_en = 0 if word_mode == MODE_256 else 1
-        vector_type = 0 if word_mode == MODE_32 else 1
 
         random.seed(0)  # For reproducibility
         in_a = random.getrandbits(256)
@@ -36,8 +34,7 @@ async def run_buffer_bit_test(dut):
         # Assign inputs
         dut.A.value = in_a
         dut.B.value = in_b
-        dut.vector_en.value = vector_en
-        dut.word_mode.value = vector_type
+        dut.word_mode.value = word_mode
         dut.b_invert.value = b_invert
         dut.cin.value = cin
 
@@ -46,13 +43,11 @@ async def run_buffer_bit_test(dut):
         # Get result
         sum_expected = reference_vector_addition(in_a, in_b, addition, word_mode)
         sum_expected = reference_vector_addition(in_a, in_b, addition, word_mode)
-        sum_out = dut.sum.value.integer
+        sum_out = dut.res.value.integer
         sum_out = (sum_out >> 1) & ((1 << 256) - 1)
 
         print(f"in_a: {format(in_a, '064x')}")
         print(f"in_b: {format(in_b, '064x')}")
-        print(f"vector_en: {vector_en}")
-        print(f"vector_type: {vector_type}")
         print(f"word_mode: {word_mode}")
         print(f"addition: {addition}")
         print(f"b_invert: {b_invert}")
@@ -63,14 +58,18 @@ async def run_buffer_bit_test(dut):
         num_words = 1
         mask = (1 << 256) - 1
         size = 256
-        if word_mode == MODE_32:
-            num_words = 8
-            mask = (1 << 32) - 1
-            size = 32
-        elif word_mode == MODE_16:
+        if word_mode == MODE_16:
             num_words = 16
             mask = (1 << 16) - 1
             size = 16
+        elif word_mode == MODE_32:
+            num_words = 8
+            mask = (1 << 32) - 1
+            size = 32
+        elif word_mode == MODE_64:
+            num_words = 4
+            mask = (1 << 64) - 1
+            size = 64
 
         for i in range(num_words):
             exp = (sum_expected >> (i * size)) & mask
@@ -84,12 +83,22 @@ async def run_buffer_bit_test(dut):
 
 @pytest.mark.parametrize(
     "variant, word_mode, addition",
-    [("buffer_bit", i, 1) for i in [MODE_16, MODE_32, MODE_256]] +
-    [("buffer_bit", i, 0) for i in [MODE_16, MODE_32, MODE_256]]
+    [("buffer_bit", i, 1) for i in [MODE_16, MODE_32, MODE_64, MODE_256]] +
+    [("buffer_bit", i, 0) for i in [MODE_16, MODE_32, MODE_64, MODE_256]]
 )
-def test_cond_sub_sim(variant, word_mode, addition):
+def test_buffer_bit_sim(variant, word_mode, addition):
     """Run buffer_bit test with different testcases."""
     num_tests = 4096
+
+    verilog_pkgs = ["../../prim/rtl/prim_mubi_pkg.sv",
+                    "../../prim/rtl/prim_secded_pkg.sv",
+                    "../../prim/rtl/prim_util_pkg.sv",
+                    "../../lc_ctrl/rtl/lc_ctrl_state_pkg.sv",
+                    "../../lc_ctrl/rtl/lc_ctrl_reg_pkg.sv",
+                    "../../lc_ctrl/rtl/lc_ctrl_pkg.sv",
+                    "../../otp_ctrl/rtl/otp_ctrl_pkg.sv",
+                    "otbn_pkg.sv"]
+
     run(
         toplevel="buffer_bit",
         module="test_buffer_bit_pytest",
@@ -97,7 +106,11 @@ def test_cond_sub_sim(variant, word_mode, addition):
         testcase="run_buffer_bit_test",
         simulator="verilator",
         sim_build=f"sim_build/{variant}-{addition}",
-        verilog_sources=[f"bn_vec_core/{variant}.sv"],
+        extra_args=["-I../../../../prim/rtl/",
+                    "-I../../../../otp_ctrl/rtl/",
+                    "-I../../../../prim_generic/rtl/",
+                    "-DBNMULV"],
+        verilog_sources=verilog_pkgs + [f"bn_vec_core/{variant}.sv"],
         extra_env={
             "WORD_MODE": str(word_mode),
             "ADDITION": str(addition),

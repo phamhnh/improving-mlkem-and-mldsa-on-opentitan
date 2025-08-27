@@ -418,6 +418,15 @@ package otbn_pkg;
 `endif
   } ispr_e;
 
+`ifdef BNMULV
+  typedef enum logic [1:0] {
+    VecType16  = 2'b00,
+    VecType32  = 2'b01,
+    VecType64  = 2'b10,
+    VecType256 = 2'b11
+  } vec_type_e;
+`endif
+
   typedef logic [$clog2(NFlagGroups)-1:0] flag_group_t;
 
   typedef struct packed {

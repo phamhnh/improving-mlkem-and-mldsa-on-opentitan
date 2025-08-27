@@ -1314,10 +1314,9 @@ module otbn_alu_bignum
   logic [WLEN-1:0]  shift_mod_mux_out;
   logic [WLEN-1:0]  x_res_operand_a_mux_out;
 
-  logic             vector_en, mode;
-
-  assign vector_en = operation_i.vector_sel; // 0: normal addition, 1: vector addition
-  assign mode      = operation_i.vector_type[0]; // 1: 16-bit mode, 0: 32-bit mode
+  vec_type_e mode;
+  assign mode = operation_i.vector_sel ? (operation_i.vector_type[0] == 1'b0 ? VecType32 : VecType16) :
+                                         VecType256;
 
   // SEC_CM: DATA_REG_SW.SCA
   prim_blanker #(.Width(WLEN)) u_adder_x_op_a_blanked (
@@ -1338,11 +1337,10 @@ module otbn_alu_bignum
   buffer_bit adder_x (
     .A        (adder_x_op_a_blanked),
     .B        (adder_x_op_b_blanked),
-    .vector_en(vector_en),
     .word_mode(mode),
     .b_invert (adder_x_op_b_invert),
     .cin      (adder_x_carry_in),
-    .sum      (adder_x_res),
+    .res      (adder_x_res),
     .cout     (adder_x_carry_out)
   );
 
@@ -1365,19 +1363,20 @@ module otbn_alu_bignum
 
   assign shift_mod_mux_out =
       alu_predec_bignum_i.shift_mod_sel ? adder_y_op_shifter_res_blanked :
-      ((vector_en) ? ((mode == 1'b1) ? {16 {mod_no_intg_q[15:0]}} : {8 {mod_no_intg_q[31:0]}}) :
-                     mod_no_intg_q);
+      (mode == VecType16) ? {16 {mod_no_intg_q[15:0]}} :
+      (mode == VecType32) ? { 8 {mod_no_intg_q[31:0]}} :
+      mod_no_intg_q;
+
   assign adder_y_op_a = x_res_operand_a_mux_out;
   assign adder_y_op_b = adder_y_op_b_invert ? ~shift_mod_mux_out : shift_mod_mux_out;
 
   buffer_bit adder_y (
     .A        (adder_y_op_a),
     .B        (adder_y_op_b),
-    .vector_en(vector_en),
     .word_mode(mode),
     .b_invert (adder_y_op_b_invert),
     .cin      (adder_y_carry_in),
-    .sum      (adder_y_res),
+    .res      (adder_y_res),
     .cout     (adder_y_carry_out)
   );
 `endif //BUFFER_BIT
