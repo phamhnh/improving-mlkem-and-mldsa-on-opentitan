@@ -13,7 +13,7 @@ module buffer_bit
   input vec_type_e        word_mode,
   input logic             b_invert,
   input logic             cin,
-  output logic [WLEN+1:0] res,
+  output logic [WLEN-1:0] res,
   output logic [15:0]     cout
 );
 
@@ -41,15 +41,16 @@ module buffer_bit
     end
   endgenerate
 
-  assign R_buffed = A_buffed + B_buffed + {271'b0, cin};
+  logic unused;
+
+  // Make sure we get addition with carry.
+  assign {R_buffed, unused} = {A_buffed, cin} + {B_buffed, cin};  // same as A_buffed + B_buffed + cin
 
   generate
     for(i = 0; i < 16; i++) begin
-      assign res[(i*16 + 1) +: 16] = R_buffed[i*17 +: 16];
+      assign res[i*16 +: 16] = R_buffed[i*17 +: 16];
       assign cout[i] = R_buffed[i*17 + 16];
     end
   endgenerate
-
-  assign res[WLEN + 1] = cout[15];
 
 endmodule

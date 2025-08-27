@@ -131,7 +131,7 @@ module otbn_alu_bignum
   input  kmac_pkg::app_rsp_t kmac_app_rsp_i
 );
 
-  logic [WLEN+1:0] adder_y_res;
+  logic [WLEN-1:0] adder_y_res;
   logic [WLEN-1:0] logical_res;
 
   ///////////
@@ -245,11 +245,11 @@ module otbn_alu_bignum
 
   // Adder operations update all flags.
   assign adder_update_flags.C = (operation_i.op == AluOpBignumAdd ||
-                                 operation_i.op == AluOpBignumAddc) ?  adder_y_res[WLEN+1] :
-                                                                      ~adder_y_res[WLEN+1];
-  assign adder_update_flags.M = adder_y_res[WLEN];
-  assign adder_update_flags.L = adder_y_res[1];
-  assign adder_update_flags.Z = ~|adder_y_res[WLEN:1];
+                                 operation_i.op == AluOpBignumAddc) ?  adder_y_carry_out[15] :
+                                                                      ~adder_y_carry_out[15];
+  assign adder_update_flags.M = adder_y_res[WLEN-1];
+  assign adder_update_flags.L = adder_y_res[0];
+  assign adder_update_flags.Z = ~|adder_y_res;
 
   for (genvar i_fg = 0; i_fg < NFlagGroups; i_fg++) begin : g_update_flag_groups
 
@@ -1162,7 +1162,7 @@ module otbn_alu_bignum
   logic            adder_x_carry_in;
   logic            adder_x_carry_in_blanked;
   logic            adder_x_op_b_invert;
-  logic [WLEN:0]   adder_x_res;
+  logic [WLEN-1:0] adder_x_res;
 
   logic            adder_y_carry_in;
   logic            adder_y_op_b_invert;
@@ -1240,11 +1240,10 @@ module otbn_alu_bignum
         adder_x_op_a_blanked[i] + adder_x_op_b_blanked[i];
 
     // Combine all sums to 256-bit vector
-    assign adder_x_res[1+i*16+:16] = adder_x_sum[i][15:0];
+    assign adder_x_res[i*16+:16] = adder_x_sum[i][15:0];
   end
 
   /* verilator lint_on UNOPTFLAT */
-  assign adder_x_res[0] = 'b0;
   for (genvar i=0; i<16; ++i) begin
     assign adder_y_vcarry_in[i] =
         adder_vector_i ?
@@ -1270,11 +1269,8 @@ module otbn_alu_bignum
         adder_y_op_a[i] + adder_y_op_b[i];
 
     // Combine all sums to 256-bit vector
-    assign adder_y_res[1+i*16+:16] = adder_y_sum[i][15:0];
+    assign adder_y_res[i*16+:16] = adder_y_sum[i][15:0];
   end
-
-  assign adder_y_res[WLEN+1] = adder_y_carry_out[15];
-  assign adder_y_res[0]      = 'b0;
 
   // SEC_CM: DATA_REG_SW.SCA
   prim_blanker #(.Width(WLEN)) u_adder_y_op_shifter_blanked (
@@ -1300,7 +1296,7 @@ module otbn_alu_bignum
   logic [WLEN-1:0] adder_x_op_a_blanked, adder_x_op_b, adder_x_op_b_blanked;
   logic            adder_x_carry_in;
   logic            adder_x_op_b_invert;
-  logic [WLEN+1:0] adder_x_res;
+  logic [WLEN-1:0] adder_x_res;
   logic [15:0]     adder_x_carry_out;
 
   // ADDER Y logic
@@ -1352,7 +1348,7 @@ module otbn_alu_bignum
   );
 
   assign x_res_operand_a_mux_out =
-      alu_predec_bignum_i.x_res_operand_a_sel ? adder_x_res[WLEN:1] : adder_y_op_a_blanked;
+      alu_predec_bignum_i.x_res_operand_a_sel ? adder_x_res : adder_y_op_a_blanked;
 
   // SEC_CM: DATA_REG_SW.SCA
   prim_blanker #(.Width(WLEN)) u_adder_y_op_shifter_blanked (
@@ -1380,11 +1376,6 @@ module otbn_alu_bignum
     .cout     (adder_y_carry_out)
   );
 `endif //BUFFER_BIT
-
-  // The LSb of the adder results are unused.
-  logic unused_adder_x_res_lsb, unused_adder_y_res_lsb;
-  assign unused_adder_x_res_lsb = adder_x_res[0];
-  assign unused_adder_y_res_lsb = adder_y_res[0];
 
   //////////////////////////////
   // Shifter & Adders control //
@@ -1703,7 +1694,7 @@ module otbn_alu_bignum
 
   logic adder_y_res_used;
   always_comb begin
-    operation_result_o = adder_y_res[WLEN:1];
+    operation_result_o = adder_y_res;
     adder_y_res_used = 1'b1;
 
     unique case(operation_i.op)
@@ -1711,7 +1702,7 @@ module otbn_alu_bignum
       AluOpBignumAddc,
       AluOpBignumSub,
       AluOpBignumSubb: begin
-        operation_result_o = adder_y_res[WLEN:1];
+        operation_result_o = adder_y_res;
         adder_y_res_used = 1'b1;
       end
 
@@ -1729,15 +1720,15 @@ module otbn_alu_bignum
         // `adder_y_res` is always used: either as condition in the following `if` statement or, if
         // the `if` statement short-circuits, in the body of the `if` statement.
         adder_y_res_used = 1'b1;
-        if (adder_x_carry_out[15] || adder_y_res[WLEN+1]) begin
-          operation_result_o = adder_y_res[WLEN:1];
+        if (adder_x_carry_out[15] || adder_y_carry_out[15]) begin
+          operation_result_o = adder_y_res;
         end else begin
-          operation_result_o = adder_x_res[WLEN:1];
+          operation_result_o = adder_x_res;
         end
       end
 
       AluOpBignumAddv: begin
-        operation_result_o = adder_x_res[WLEN:1];
+        operation_result_o = adder_x_res;
       end
 
       AluOpBignumAddvm: begin
@@ -1759,10 +1750,10 @@ module otbn_alu_bignum
             operation_result_o[i*16 +: 16] = ((operation_i.vector_type[0]) ?
                 (adder_x_carry_out[i] || adder_y_carry_out[i]) :
                 (adder_x_carry_out[i + 1] || adder_y_carry_out[i + 1])) ?
-                    adder_y_res[(i*16 + 1) +: 16] : adder_x_res[(i*16 + 1) +: 16];
+                    adder_y_res[i*16 +: 16] : adder_x_res[i*16 +: 16];
             operation_result_o[(i + 1)* 16 +: 16] =
               (adder_x_carry_out[i + 1] || adder_y_carry_out[i + 1]) ?
-                  adder_y_res[((i + 1)*16 + 1) +: 16] : adder_x_res[((i + 1)*16 + 1) +: 16];
+                  adder_y_res[(i + 1)*16 +: 16] : adder_x_res[(i + 1)*16 +: 16];
           end
       `endif //BUFFER_BIT
       end
@@ -1772,16 +1763,16 @@ module otbn_alu_bignum
       // * Otherwise select Y result
       AluOpBignumSubm: begin
         if (adder_x_carry_out[15]) begin
-          operation_result_o = adder_x_res[WLEN:1];
+          operation_result_o = adder_x_res;
           adder_y_res_used = 1'b0;
         end else begin
-          operation_result_o = adder_y_res[WLEN:1];
+          operation_result_o = adder_y_res;
           adder_y_res_used = 1'b1;
         end
       end
 
       AluOpBignumSubv: begin
-        operation_result_o = adder_x_res[WLEN:1];
+        operation_result_o = adder_x_res;
       end
 
       AluOpBignumSubvm: begin
@@ -1800,9 +1791,9 @@ module otbn_alu_bignum
         for (int i = 0; i < 16; i += 2) begin
           operation_result_o[i*16 +: 16] = ((operation_i.vector_type[0]) ?
               adder_x_carry_out[i] : adder_x_carry_out[i + 1]) ?
-                  adder_x_res[(i*16 + 1) +: 16] : adder_y_res[(i*16 + 1) +: 16];
+                  adder_x_res[i*16 +: 16] : adder_y_res[i*16 +: 16];
           operation_result_o[(i + 1)* 16 +: 16] = adder_x_carry_out[i + 1] ?
-                adder_x_res[((i + 1)*16 + 1) +: 16] : adder_y_res[((i + 1)*16 + 1) +: 16];
+                adder_x_res[(i + 1)*16 +: 16] : adder_y_res[(i + 1)*16 +: 16];
         end
       `endif //BUFFER_BIT
       end
@@ -1880,7 +1871,7 @@ module otbn_alu_bignum
   // `a >= b` (thus the result of Adder X has the carry bit set), the result of Adder Y is not used
   // but it cannot be blanked solely based on the carry bit.
   `ASSERT(BlankingBignumAluYResUsed_A,
-          !adder_y_res_used && !(operation_i.op == AluOpBignumSubm && adder_x_res[WLEN+1])
+          !adder_y_res_used && !(operation_i.op == AluOpBignumSubm && adder_x_carry_out[15])
           |-> {x_res_operand_a_mux_out, adder_y_op_b} == '0,
           clk_i, !rst_ni || alu_predec_error_o || !operation_commit_i)
 

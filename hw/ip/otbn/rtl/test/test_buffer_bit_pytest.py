@@ -20,9 +20,9 @@ async def run_buffer_bit_test(dut):
         random.seed(0)  # For reproducibility
         in_a = random.getrandbits(256)
         in_b = random.getrandbits(256)
+        print(f"in_b: {format(in_b, '064x')}")
         if not addition:
             in_b = ~in_b & ((1 << 256) - 1)
-        print(f"in_b: {format(in_b, '064x')}")
         cin = ~addition & 1
         b_invert = 0 if addition else 1
 
@@ -39,7 +39,7 @@ async def run_buffer_bit_test(dut):
         sum_expected = reference_vector_addition(in_a, in_b, addition, word_mode)
         sum_expected = reference_vector_addition(in_a, in_b, addition, word_mode)
         sum_out = dut.res.value.integer
-        sum_out = (sum_out >> 1) & ((1 << 256) - 1)
+        sum_out = sum_out & ((1 << 256) - 1)
 
         print(f"in_a: {format(in_a, '064x')}")
         print(f"in_b: {format(in_b, '064x')}")
@@ -78,8 +78,8 @@ async def run_buffer_bit_test(dut):
 
 @pytest.mark.parametrize(
     "variant, word_mode, addition",
-    [("buffer_bit", i, 1) for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
-    [("buffer_bit", i, 0) for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]]
+    [("buffer_bit", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
+    [("brent_kung", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]]
 )
 def test_buffer_bit_sim(variant, word_mode, addition):
     """Run buffer_bit test with different testcases."""
@@ -95,7 +95,7 @@ def test_buffer_bit_sim(variant, word_mode, addition):
                     "otbn_pkg.sv"]
 
     run(
-        toplevel="buffer_bit",
+        toplevel=variant,
         module="test_buffer_bit_pytest",
         toplevel_lang="verilog",
         testcase="run_buffer_bit_test",

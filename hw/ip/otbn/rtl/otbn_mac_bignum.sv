@@ -216,9 +216,6 @@ module otbn_mac_bignum
 `endif
 
 `ifdef BNMULV
-  logic unused_lsb;
-  logic unused_msb;
-
   vec_type_e mode;
   assign mode = operation_i.mulv ? (operation_i.data_type == 1'b0 ? VecType_s32 : VecType_d64) :
                                    VecType_v256;
@@ -229,21 +226,18 @@ module otbn_mac_bignum
     .word_mode(mode),
     .b_invert (1'b0),
     .cin      (1'b0),
-    .res      ({unused_msb, adder_result[WLEN-1:0], unused_lsb}),
+    .res      (adder_result[WLEN-1:0]),
     .cout     ()
   );
 
   `ifdef BNMULV_ACCH
-  logic unused_lsbh;
-  logic unused_msbh;
-
   buffer_bit adder16 (
     .A        (operation_i.mulv ? adder_op_a[WLEN+:WLEN] : 256'b0),
     .B        (operation_i.mulv ? adder_op_b[WLEN+:WLEN] : 256'b0),
     .word_mode(operation_i.data_type == 1'b0 ? VecType_s32 : VecType_d64),
     .b_invert (1'b0),
     .cin      (1'b0),
-    .res      ({unused_msbh, adder_result[WLEN+:WLEN], unused_lsbh}),
+    .res      (adder_result[WLEN+:WLEN]),
     .cout     ()
   );
   `endif

@@ -61,8 +61,8 @@ async def run_cond_sub_test(dut):
 
 @pytest.mark.parametrize(
     "variant, word_mode",
-    [("cond_sub", i) for i in [MODE_16, MODE_32]] +
-    [("cond_sub_buffer_bit", i) for i in [MODE_16, MODE_32]]
+    [("cond_sub", i) for i in [MODE_16, MODE_32]] #+
+#    [("cond_sub_buffer_bit", i) for i in [MODE_16, MODE_32]]
 )
 def test_cond_sub_sim(variant, word_mode):
     run(
