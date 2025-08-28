@@ -29,6 +29,12 @@ filesets:
       - otbn_top_sim_waivers.vlt
     file_type: vlt
 
+parameters:
+  MAC_ADDER:
+    datatype: str
+    paramtype: vlogdefine
+    default: "buffer_bit"
+
 targets:
   default: &default_target
     filesets:
@@ -52,6 +58,8 @@ targets:
   sim:
     <<: *default_target
     default_tool: verilator
+    parameters:
+      - MAC_ADDER
     tools:
       vcs:
         vcs_options:

@@ -11,7 +11,7 @@ module brent_kung
 );
 
     logic [255:0] G, P;
-    logic [256:0] C;
+    logic [255:0] C;
 
     // Step 1: Bitwise G/P
     genvar i;
@@ -391,7 +391,6 @@ module brent_kung
         C[253] = G8[252] | (P7[252] & C[252]);
         C[254] = G8[253] | (P7[253] & C[252]);
         C[255] = G8[254] | (P7[254] & C[254]);
-        C[256] = G8[255] | (P7[255] & C[127]);
     end
 
     // Step 4: Final sum

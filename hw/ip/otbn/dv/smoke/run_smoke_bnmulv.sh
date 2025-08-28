@@ -6,7 +6,9 @@
 # Runs the OTBN smoke test (builds software, build simulation, runs simulation
 # and checks expected output)
 
-while getopts 'hst:v:' OPTION; do
+MAC_ADDER=buffer_bit
+
+while getopts 'hst:v:m:' OPTION; do
   case "$OPTION" in
     h)
       echo "This script is for running the smoke tests with the new BNMULV instruction."
@@ -22,6 +24,12 @@ while getopts 'hst:v:' OPTION; do
       echo "                   - 1: BNMULV without ACCH"
       echo "                   - 2: BNMULV with ACCH"
       echo "                   - 3: BNMULV with ACCH and conditional subtraction"
+      echo "  -m MAC_ADDERR    Specify the adder to be used in otbn_mac_bignum."
+      echo "                   Supported versions are:"
+      echo "                   - buffer_bit (default)"
+      echo "                   - Brent-Kung"
+      echo "                   - Sklansky"
+      echo "                   - Kogge-Stone"
       exit 1
       ;;   
     s)
@@ -35,6 +43,11 @@ while getopts 'hst:v:' OPTION; do
     v)
       BNMULV_VER="$OPTARG"
       echo "-v is given: Simulate otbn_top_sim with BNMULV_VER = $BNMULV_VER"
+      ;;
+    m)
+      MAC_ADDER="${OPTARG//-/_}"
+      MAC_ADDER="${MAC_ADDER,,}"
+      echo "-m is given: Using $MAC_ADDER. This option also needs '-v BNMULV_VER'"
       ;;
     ?)
       echo "run_smoke_bnmulv: Unrecognized option: '$OPTARG'"
@@ -92,11 +105,12 @@ if [[ -z "$SKIP_VERILATOR_BUILD" ]]; then
         --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn_top_sim \
         --make_options="-j$(nproc)" || fail "HW Sim build failed")
   else
-    echo "Building Verilator model of otbn_top_sim with BNMULV_VER = $BNMULV_VER..."
+    echo "Building Verilator model of otbn_top_sim with BNMULV_VER = $BNMULV_VER and $MAC_ADDER"
     (cd $REPO_TOP;
     fusesoc --cores-root=. run --target=sim --setup --build \
         --flag +bnmulv_ver$BNMULV_VER \
         --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn_top_sim \
+        --MAC_ADDER $MAC_ADDER \
         --make_options="-j$(nproc)" || fail "HW Sim build failed")
   fi
 else
