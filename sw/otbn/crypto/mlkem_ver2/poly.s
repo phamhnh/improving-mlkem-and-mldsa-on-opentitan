@@ -91,35 +91,35 @@ poly_frommsg:
 poly_tomsg:
   /* Set up registers for input and output */
   li x4, 0
-  li x5, 1
-  li x6, 2
-  li x7, 3
-  li x8, 4
+  li x5, 2
+  li x7, 16
 
   /* Load const */
-  bn.lid x6, 0(x11)
-  bn.lid x7, 0(x13)
+  bn.lid x5++, 0(x11) /* w2 = (0x681)^16 */
+  bn.lid x7, 0(x13) /* w16 = 1290167 */
   
-  bn.rshi w16, w31, w3 >> 4 /* 80635 */
+  /* Multiply the constant 80635 with 2**4 so that later we shift to the right
+   * 32 bits instead of 28 bits. This means we can return the high parts of
+   * the 64-bit products within the multiplication instruction. */
+  bn.subi w16, w16, 7 /* w16 = 1290160 = 80635 << 4 */
+  /* Zeroize w31 */
   bn.xor  w31, w31, w31
-  LOOPI 16, 16
-    bn.lid       x4, 0(x10++)  /* Load input */
-    bn.shv.16H   w0, w0 << 1   /* <= 1 */ 
-    bn.addv.16H  w0, w0, w2    /* += 1665 */
-    LOOPI 2, 11
-      LOOPI 8, 3
-        bn.rshi w1, w0, w1 >> 16  /* write one coeff to w1 */
-        bn.rshi w1, w31, w1 >> 16 /* make the coeff 32-bit */
-        bn.rshi w0, w31, w0 >> 16 /* shift out used coeff */
-      bn.mulv.l.8S.even.lo w1, w1, sw0.0     /* *= 80635 */
-      bn.mulv.l.8S.odd.lo  w1, w1, sw0.0     /* *= 80635 */
-      bn.shv.8S            w1, w1 >> 28      /* >>= 28 */
-      LOOPI 8, 2
-        bn.rshi w4, w1, w4 >> 1
-        bn.rshi w1, w31, w1 >> 32 
-      NOP
-    NOP 
-  bn.sid x8, 0(x12)
+  LOOPI 16, 14
+    bn.lid               x4, 0(x10++)  /* Load input */
+    bn.shv.16H           w0, w0 << 1   /* <= 1 */ 
+    bn.addv.16H          w0, w0, w2    /* += 1665 */
+    bn.trn1.16H          w1, w0, w31 /* Put even coeffs in 32-bit slots */
+    bn.mulv.l.8S.even.hi w1, w1, sw0.0 /* >> 32 is taking the high parts of 64-bit products */
+    bn.mulv.l.8S.odd.hi  w1, w1, sw0.0 /* >> 32 is taking the high parts of 64-bit products */
+    bn.trn2.16H          w0, w0, w31 /* Put odd coeffs to 32-bit slots */
+    bn.mulv.l.8S.even.hi w0, w0, sw0.0 /* >> 32 is taking the high parts of 64-bit products */
+    bn.mulv.l.8S.odd.hi  w0, w0, sw0.0 /* >> 32 is taking the high parts of 64-bit products */
+    bn.trn1.16H          w0, w1, w0 /* Interleaving the results to original order */
+    LOOPI 16, 2
+      bn.rshi w3, w0, w3 >> 1
+      bn.rshi w0, w31, w0 >> 16
+    NOP
+  bn.sid x5, 0(x12)
 
   ret
 
