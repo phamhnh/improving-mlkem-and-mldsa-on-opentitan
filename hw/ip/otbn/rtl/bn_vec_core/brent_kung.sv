@@ -1,3 +1,4 @@
+`ifdef BNMULV
 module brent_kung
   import otbn_pkg::*;
 (
@@ -407,3 +408,4 @@ module brent_kung
   endgenerate
 
 endmodule
+`endif

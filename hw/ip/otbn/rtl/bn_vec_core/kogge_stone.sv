@@ -1,3 +1,4 @@
+`ifdef BNMULV
 module kogge_stone
   import otbn_pkg::*;
 (
@@ -198,3 +199,4 @@ module kogge_stone
     endgenerate
 
 endmodule
+`endif
