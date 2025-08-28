@@ -36,10 +36,9 @@ async def run_buffer_bit_test(dut):
         await Timer(1, units="ns")  # allow evaluation
 
         # Get result
-        sum_expected = reference_vector_addition(in_a, in_b, addition, word_mode)
-        sum_expected = reference_vector_addition(in_a, in_b, addition, word_mode)
-        sum_out = dut.res.value.integer
-        sum_out = sum_out & ((1 << 256) - 1)
+        cout_expected, sum_expected  = reference_vector_addition(in_a, in_b, addition, word_mode)
+        sum_out = dut.res.value.integer & ((1 << 256) - 1)
+        cout_out = dut.cout.value.integer
 
         print(f"in_a: {format(in_a, '064x')}")
         print(f"in_b: {format(in_b, '064x')}")
@@ -49,6 +48,9 @@ async def run_buffer_bit_test(dut):
         print(f"cin: {cin}")
         print(f"sum_expected: {format(sum_expected, '064x')}")
         print(f"sum out:      {format(sum_out, '064x')}")
+        print(f"cout_expected: {format(cout_expected, '0x')}")
+        print(f"cout out:      {format(cout_out, '0x')}")
+
 
         num_words = 1
         mask = (1 << 256) - 1
@@ -61,10 +63,17 @@ async def run_buffer_bit_test(dut):
             num_words = 8
             mask = (1 << 32) - 1
             size = 32
+            cout_out = sum(((cout_out >> (i*2+1)) & 1) << i for i in range(num_words))
         elif word_mode == VecType.d64:
             num_words = 4
             mask = (1 << 64) - 1
             size = 64
+            cout_out = sum(((cout_out >> (i*4+3)) & 1) << i for i in range(num_words))
+        elif word_mode == VecType.v256:
+            num_words = 1
+            mask = (1 << 256) - 1
+            size = 256
+            cout_out = cout_out >> 15
 
         for i in range(num_words):
             exp = (sum_expected >> (i * size)) & mask

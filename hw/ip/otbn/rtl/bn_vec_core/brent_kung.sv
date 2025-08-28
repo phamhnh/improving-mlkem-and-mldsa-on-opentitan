@@ -403,7 +403,7 @@ module brent_kung
 
   generate
     for(i = 0; i < 16; i++) begin
-      assign cout[i] = C[i*16 + 16];
+      assign cout[i] = G8[i*16 + 15];
     end
   endgenerate
 

@@ -144,11 +144,9 @@ module sklansky
     assign res = p ^ carry;
 
     generate
-      for(i = 0; i < 15; i++) begin
-        assign cout[i] = carry[i*16 + 16];
+      for(i = 0; i < 16; i++) begin
+        assign cout[i] =  g_s8[i*16 + 15];
       end
     endgenerate
-
-   assign cout[15] = g_s8[255];
 
 endmodule

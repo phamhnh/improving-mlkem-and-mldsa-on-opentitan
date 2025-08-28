@@ -180,7 +180,10 @@ def reference_vector_addition(A, B, addition, data_type, wsize=[(16, 16), (8, 32
 
     result = sum(mask(res[i], word_size) << (i * word_size) for i in range(num_words))
     result = mask(result)
-    return result
+
+    cout = sum((res[i] >> word_size) << i for i in range(num_words))
+
+    return cout, result
 
 
 acc = 0
