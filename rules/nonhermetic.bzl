@@ -12,6 +12,7 @@ NONHERMETIC_BINS = [
     "verilator",
     "vivado",
     "updatemem",
+    "sv2v",
 ]
 
 """Variables that describe non-hermetic parts of the environment.
