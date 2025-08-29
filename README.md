@@ -52,6 +52,13 @@ sudo CC=gcc-11 CXX=g++-11 make install
 export PATH=/tools/verilator/$VERILATOR_VERSION/bin:$PATH
 ``` 
 
+To run ASIC synthesis with OpenLane/OpenRoad in our paper, you need `sv2v` to
+translate SystemVerilog source files to Verilog files. To install `sv2v`, you
+can download the release from [sv2v
+GitHub](https://github.com/zachjs/sv2v/releases/tag/v0.0.13) and move the
+executable to your desired install directory, e.g., `/tools/sv2v/`. Then add
+this to your `PATH`.
+
 ## Relevant Files
 We propose 3 approaches for the new vector multiplication instruction:
 
@@ -176,6 +183,19 @@ To run all the tests available for ML-{KEM,DSA}, run:
 <!-- TODO: With Sky130 -->
 <!-- TODO: With ASAP7 PDK -->
 <!-- TODO: Mention which tables in the paper correspond to these results -->
+ASIC synthesis with OpenLane/OpenRoad is integrated into our bazel workflow.
+Bazel will download the docker container of OpenLane/OpenRoad and synthesize the
+design. In order to run this flow, you need to be able to run `docker` without
+root permission. This can be done by:
+```
+ sudo gpasswd -a $USER docker
+```
+Then you may have to restart your PC for this to take effect. After this, you're
+set to run our ASIC flow with:
+```
+./bazelisk.sh build //hw/ip/otbn:otbn_alu_bignum_VER2_sky130hd_all_results
+```
+<!-- TODO: Update targets -->
 
 <!-- Synthesis with Cadence Genus -->
 <!-- TODO: Mention which tables in the paper correspond to these results -->
