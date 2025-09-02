@@ -66,6 +66,9 @@ module otbn_predecode
   alu_vector_type_t alu_bignum_vector_type;
   logic             alu_bignum_vector_sel;
   alu_trn_type_t    alu_bignum_trn_type;
+`ifdef BNMULV_COND_SUB
+  logic             alu_bignum_cond_sub;
+`endif
 
   flag_group_t flag_group;
   logic [NFlagGroups-1:0] flag_group_sel;
@@ -174,6 +177,9 @@ module otbn_predecode
     alu_bignum_vector_type           = alu_vector_type_t'('0);
     alu_bignum_vector_sel            = 1'b0;
     alu_bignum_trn_type              = alu_trn_type_t'('0);
+`ifdef BNMULV_COND_SUB
+    alu_bignum_cond_sub              = 1'b0;
+`endif
 
     flags_adder_update = '0;
     flags_logic_update = '0;
@@ -351,6 +357,9 @@ module otbn_predecode
               alu_bignum_shift_mod_sel       = 1'b0;
               alu_bignum_vector_type         = alu_vector_type_t'(imem_rdata_i[27:26]);
               alu_bignum_vector_sel          = imem_rdata_i[25];
+              `ifdef BNMULV_COND_SUB
+              alu_bignum_cond_sub            = imem_rdata_i[28];
+              `endif // BNMULV_COND_SUB
             end
             default: ;
           endcase
@@ -619,6 +628,9 @@ module otbn_predecode
   assign alu_predec_bignum_o.flags_logic_update    = flags_logic_update;
   assign alu_predec_bignum_o.flags_mac_update      = flags_mac_update;
   assign alu_predec_bignum_o.flags_ispr_wr         = flags_ispr_wr;
+`ifdef BNMULV_COND_SUB
+  assign alu_predec_bignum_o.cond_sub              = alu_bignum_cond_sub;
+`endif
 
   assign mac_predec_bignum_o.op_en     = mac_bignum_op_en;
   assign mac_predec_bignum_o.acc_rd_en = mac_bignum_acc_rd_en;

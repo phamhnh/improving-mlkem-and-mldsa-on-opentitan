@@ -1052,6 +1052,9 @@ module otbn_controller
   assign alu_bignum_operation_o.vector_type = insn_dec_bignum_i.vector_type;
   assign alu_bignum_operation_o.vector_sel  = insn_dec_bignum_i.vector_sel;
   assign alu_bignum_operation_o.trn_type    = insn_dec_bignum_i.alu_trn_type;
+`ifdef BNMULV_COND_SUB
+  assign alu_bignum_operation_o.cond_sub    = insn_dec_bignum_i.cond_sub;
+`endif
   assign alu_bignum_operation_o.flag_group  = insn_dec_bignum_i.alu_flag_group;
   assign alu_bignum_operation_o.sel_flag    = insn_dec_bignum_i.alu_sel_flag;
   assign alu_bignum_operation_o.alu_flag_en = insn_dec_bignum_i.alu_flag_en & insn_valid_i;

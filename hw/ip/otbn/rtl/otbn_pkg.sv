@@ -249,12 +249,18 @@ package otbn_pkg;
     AluOpBignumAddm,
     AluOpBignumAddv,
     AluOpBignumAddvm,
+`ifdef BNMULV_COND_SUB
+    AluOpBignumAddvmcond,
+`endif
 
     AluOpBignumSub,
     AluOpBignumSubb,
     AluOpBignumSubm,
     AluOpBignumSubv,
     AluOpBignumSubvm,
+`ifdef BNMULV_COND_SUB
+    AluOpBignumSubvmcond,
+`endif
 
     AluOpBignumRshi,
 
@@ -546,6 +552,10 @@ package otbn_pkg;
 
     alu_trn_type_t           alu_trn_type;
 
+`ifdef BNMULV_COND_SUB
+    logic                    cond_sub;
+`endif
+
     flag_group_t             alu_flag_group;
     flag_e                   alu_sel_flag;
     logic                    alu_flag_en;
@@ -602,6 +612,9 @@ package otbn_pkg;
     alu_vector_type_t        vector_type;
     logic                    vector_sel;
     alu_trn_type_t           trn_type; 
+`ifdef BNMULV_COND_SUB
+    logic                    cond_sub;
+`endif
     logic [$clog2(WLEN)-1:0] shift_amt;
     logic                    logic_a_en;
     logic                    logic_shifter_en;
@@ -657,6 +670,9 @@ package otbn_pkg;
     alu_vector_type_t        vector_type;
     logic                    vector_sel;
     alu_trn_type_t           trn_type;
+`ifdef BNMULV_COND_SUB
+    logic                    cond_sub;
+`endif
     logic                    shift_right;
     logic [$clog2(WLEN)-1:0] shift_amt;
     flag_group_t             flag_group;

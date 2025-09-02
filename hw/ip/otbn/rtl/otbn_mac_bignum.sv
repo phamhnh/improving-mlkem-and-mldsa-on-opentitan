@@ -463,12 +463,6 @@ module otbn_mac_bignum
   );
 `endif
 
-
-`ifdef BNMULV_COND_SUB
-  logic [31:0] scalar32;
-  logic [15:0] scalar16;
-`endif
-
 `ifdef BNMULV
   unified_mul mul (
     .word_mode         ({operation_i.mulv, operation_i.data_type}), // 00 = 64x64, 11 = 4x32x32, 10 = 16x16x16
@@ -484,10 +478,6 @@ module otbn_mac_bignum
     .A                 (operand_a_blanked),
     .B                 (operand_b_blanked),
     .data_type_64_shift(operation_i.pre_acc_shift_imm),
-    `ifdef BNMULV_COND_SUB
-    .scalar32          (scalar32),
-    .scalar16          (scalar16),
-    `endif
     .result            (mul_res_shifted)
   );
 `else
@@ -972,18 +962,10 @@ module otbn_mac_bignum
   // The operation result is taken directly from the adder, shift_acc only applies to the new value
   // written to the accumulator.
 `ifdef BNMULV
-  logic [WLEN-1:0] pre_cond;
-
-  `ifdef BNMULV_COND_SUB
-  logic [WLEN-1:0] cond_sub_B;
-  `endif
   always_comb begin
-    `ifdef BNMULV_COND_SUB
-    cond_sub_B = 256'b0;
-    `endif
     case (operation_i.mulv)
       1'b0 : begin
-        pre_cond = adder_result[WLEN-1:0];
+        operation_result_o = adder_result[WLEN-1:0];
       end
       default: begin
         case (operation_i.exec_mode)
@@ -991,13 +973,13 @@ module otbn_mac_bignum
             `ifdef BNMULV_ACCH
             case (operation_i.data_type)
               1'b1 : begin
-                pre_cond = {adder_result[384 + 64*operation_i.sel +: 64],
+                operation_result_o = {adder_result[384 + 64*operation_i.sel +: 64],
                                       adder_result[256 + 64*operation_i.sel +: 64],
                                       adder_result[128 + 64*operation_i.sel +: 64],
                                       adder_result[      64*operation_i.sel +: 64]};
               end
               1'b0 : begin
-                pre_cond = {adder_result[448 + 32*operation_i.sel +: 32],
+                operation_result_o = {adder_result[448 + 32*operation_i.sel +: 32],
                                       adder_result[384 + 32*operation_i.sel +: 32],
                                       adder_result[320 + 32*operation_i.sel +: 32],
                                       adder_result[256 + 32*operation_i.sel +: 32],
@@ -1007,11 +989,11 @@ module otbn_mac_bignum
                                       adder_result[      32*operation_i.sel +: 32]};
               end
               default: begin
-                pre_cond = {WLEN{1'b0}};   // ERROR!
+                operation_result_o = {WLEN{1'b0}};   // ERROR!
               end
             endcase
             `else
-            pre_cond = adder_result;
+            operation_result_o = adder_result;
             `endif
           end
           2'b01 : begin
@@ -1020,26 +1002,26 @@ module otbn_mac_bignum
                 case (operation_i.sel)
                   `ifdef BNMULV_ACCH
                   1'b0: begin
-                    pre_cond = {operand_a_blanked[224+:32], adder_result[384+:32],
+                    operation_result_o = {operand_a_blanked[224+:32], adder_result[384+:32],
                                           operand_a_blanked[160+:32], adder_result[256+:32],
                                           operand_a_blanked[ 96+:32], adder_result[128+:32],
                                           operand_a_blanked[ 32+:32], adder_result[  0+:32]};
                   end
                   1'b1: begin
-                    pre_cond = {adder_result[384+64+:32], operand_a_blanked[192+:32],
+                    operation_result_o = {adder_result[384+64+:32], operand_a_blanked[192+:32],
                                           adder_result[256+64+:32], operand_a_blanked[128+:32],
                                           adder_result[128+64+:32], operand_a_blanked[ 64+:32],
                                           adder_result[  0+64+:32], operand_a_blanked[  0+:32]};
                   end
                   `else
                   1'b0: begin
-                    pre_cond = {operand_a_blanked[224+:32], adder_result[192+:32],
+                    operation_result_o = {operand_a_blanked[224+:32], adder_result[192+:32],
                                           operand_a_blanked[160+:32], adder_result[128+:32],
                                           operand_a_blanked[ 96+:32], adder_result[ 64+:32],
                                           operand_a_blanked[ 32+:32], adder_result[  0+:32]};
                   end
                   1'b1: begin
-                    pre_cond = {adder_result[192+:32], operand_a_blanked[192+:32],
+                    operation_result_o = {adder_result[192+:32], operand_a_blanked[192+:32],
                                           adder_result[128+:32], operand_a_blanked[128+:32],
                                           adder_result[ 64+:32], operand_a_blanked[ 64+:32],
                                           adder_result[  0+:32], operand_a_blanked[  0+:32]};
@@ -1049,7 +1031,7 @@ module otbn_mac_bignum
               end
               1'b0 : begin
                 `ifdef BNMULV_ACCH
-                pre_cond = {adder_result[480+:16], adder_result[448+:16],
+                operation_result_o = {adder_result[480+:16], adder_result[448+:16],
                                       adder_result[416+:16], adder_result[384+:16],
                                       adder_result[352+:16], adder_result[320+:16],
                                       adder_result[288+:16], adder_result[256+:16],
@@ -1060,7 +1042,7 @@ module otbn_mac_bignum
                 `else
                 case (operation_i.sel)
                   1'b0: begin
-                    pre_cond = {operand_a_blanked[240+:16], adder_result[224+:16],
+                    operation_result_o = {operand_a_blanked[240+:16], adder_result[224+:16],
                                           operand_a_blanked[208+:16], adder_result[192+:16],
                                           operand_a_blanked[176+:16], adder_result[160+:16],
                                           operand_a_blanked[144+:16], adder_result[128+:16],
@@ -1070,7 +1052,7 @@ module otbn_mac_bignum
                                           operand_a_blanked[ 16+:16], adder_result[  0+:16]};
                   end
                   1'b1: begin
-                    pre_cond = {adder_result[224+:16], operand_a_blanked[224+:16],
+                    operation_result_o = {adder_result[224+:16], operand_a_blanked[224+:16],
                                           adder_result[192+:16], operand_a_blanked[192+:16],
                                           adder_result[160+:16], operand_a_blanked[160+:16],
                                           adder_result[128+:16], operand_a_blanked[128+:16],
@@ -1083,7 +1065,7 @@ module otbn_mac_bignum
                 `endif
               end
               default: begin
-                pre_cond = {WLEN{1'b0}};   // ERROR!
+                operation_result_o = {WLEN{1'b0}};   // ERROR!
               end
             endcase
           end
@@ -1093,58 +1075,26 @@ module otbn_mac_bignum
                 case (operation_i.sel)
                   `ifdef BNMULV_ACCH
                   1'b0: begin
-                    pre_cond = {operand_a_blanked[224+:32], adder_result[416+:32],
+                    operation_result_o = {operand_a_blanked[224+:32], adder_result[416+:32],
                                           operand_a_blanked[160+:32], adder_result[288+:32],
                                           operand_a_blanked[ 96+:32], adder_result[160+:32],
                                           operand_a_blanked[ 32+:32], adder_result[ 32+:32]};
-                      `ifdef BNMULV_COND_SUB
-                      if (operation_i.exec_mode == 2'b11) begin
-                        case (operation_i.lane_mode)
-                          1'b0: begin
-                            for (int i = 0; i < 4; i++) begin
-                              cond_sub_B[i*64 +: 64] = {32'b0, operand_b_blanked[64*i +: 32]};
-                            end
-                          end
-                          1'b1: begin
-                            for (int i = 0; i < 4; i++) begin
-                              cond_sub_B[i*64 +: 64] = {32'b0, scalar32};
-                            end
-                          end
-                        endcase
-                      end
-                      `endif
                   end
                   1'b1: begin
-                    pre_cond = {adder_result[416+64+:32], operand_a_blanked[192+:32],
+                    operation_result_o = {adder_result[416+64+:32], operand_a_blanked[192+:32],
                                           adder_result[288+64+:32], operand_a_blanked[128+:32],
                                           adder_result[160+64+:32], operand_a_blanked[ 64+:32],
                                           adder_result[ 32+64+:32], operand_a_blanked[  0+:32]};
-                    `ifdef BNMULV_COND_SUB
-                     if (operation_i.exec_mode == 2'b11) begin
-                       case (operation_i.lane_mode)
-                         1'b0: begin
-                           for (int i = 0; i < 4; i++) begin
-                             cond_sub_B[i*64 +: 64] = {operand_b_blanked[64*i+32 +: 32], 32'b0};
-                           end
-                         end
-                         1'b1: begin
-                           for (int i = 0; i < 4; i++) begin
-                             cond_sub_B[i*64 +: 64] = {scalar32, 32'b0};
-                           end
-                         end
-                       endcase
-                     end
-                    `endif
                   end
                   `else
                   1'b0: begin
-                    pre_cond = {operand_a_blanked[224+:32], adder_result[192+32+:32],
+                    operation_result_o = {operand_a_blanked[224+:32], adder_result[192+32+:32],
                                           operand_a_blanked[160+:32], adder_result[128+32+:32],
                                           operand_a_blanked[ 96+:32], adder_result[ 64+32+:32],
                                           operand_a_blanked[ 32+:32], adder_result[  0+32+:32]};
                   end
                   1'b1: begin
-                    pre_cond = {adder_result[192+32+:32], operand_a_blanked[192+:32],
+                    operation_result_o = {adder_result[192+32+:32], operand_a_blanked[192+:32],
                                           adder_result[128+32+:32], operand_a_blanked[128+:32],
                                           adder_result[ 64+32+:32], operand_a_blanked[ 64+:32],
                                           adder_result[  0+32+:32], operand_a_blanked[  0+:32]};
@@ -1154,7 +1104,7 @@ module otbn_mac_bignum
               end
               1'b0 : begin
                 `ifdef BNMULV_ACCH
-                pre_cond = {adder_result[496+:16], adder_result[464+:16],
+                operation_result_o = {adder_result[496+:16], adder_result[464+:16],
                                       adder_result[432+:16], adder_result[400+:16],
                                       adder_result[368+:16], adder_result[336+:16],
                                       adder_result[304+:16], adder_result[272+:16],
@@ -1162,26 +1112,10 @@ module otbn_mac_bignum
                                       adder_result[176+:16], adder_result[144+:16],
                                       adder_result[112+:16], adder_result[ 80+:16],
                                       adder_result[ 48+:16], adder_result[ 16+:16]};
-                  `ifdef BNMULV_COND_SUB
-                   if (operation_i.exec_mode == 2'b11) begin
-                     case (operation_i.lane_mode)
-                       1'b0: begin
-                         for (int i = 0; i < 16; i++) begin
-                           cond_sub_B[i*16 +: 16] = operand_b_blanked[16*i +: 16];
-                         end
-                       end
-                       1'b1: begin
-                         for (int i = 0; i < 16; i++) begin
-                           cond_sub_B[i*16 +: 16] = scalar16;
-                         end
-                       end
-                     endcase
-                   end
-                  `endif
                 `else
                 case (operation_i.sel)
                   1'b0: begin
-                    pre_cond = {operand_a_blanked[240+:16], adder_result[224+16+:16],
+                    operation_result_o = {operand_a_blanked[240+:16], adder_result[224+16+:16],
                                           operand_a_blanked[208+:16], adder_result[192+16+:16],
                                           operand_a_blanked[176+:16], adder_result[160+16+:16],
                                           operand_a_blanked[144+:16], adder_result[128+16+:16],
@@ -1191,7 +1125,7 @@ module otbn_mac_bignum
                                           operand_a_blanked[ 16+:16], adder_result[  0+16+:16]};
                   end
                   1'b1: begin
-                    pre_cond = {adder_result[224+16+:16], operand_a_blanked[224+:16],
+                    operation_result_o = {adder_result[224+16+:16], operand_a_blanked[224+:16],
                                           adder_result[192+16+:16], operand_a_blanked[192+:16],
                                           adder_result[160+16+:16], operand_a_blanked[160+:16],
                                           adder_result[128+16+:16], operand_a_blanked[128+:16],
@@ -1204,29 +1138,17 @@ module otbn_mac_bignum
                 `endif
               end
               default: begin
-                pre_cond = {WLEN{1'b0}};   // ERROR!
+                operation_result_o = {WLEN{1'b0}};   // ERROR!
               end
             endcase
           end
           default: begin
-            pre_cond = adder_result[WLEN-1:0];
+            operation_result_o = adder_result[WLEN-1:0];
           end
         endcase
       end
     endcase
   end
-  `ifdef BNMULV_COND_SUB
-  cond_sub_buffer_bit cond (
-    .A        (pre_cond),
-    .B        (cond_sub_B),
-    .word_mode(operation_i.data_type), // 0: vec16, 1: vec32
-    .cin      (1'b1),
-    .sum      (operation_result_o),
-    .cout     ()
-  );
-  `else
-  assign operation_result_o = pre_cond;
-  `endif
 `else
   `ifndef TOWARDS_MAC
   assign operation_result_o = adder_result;

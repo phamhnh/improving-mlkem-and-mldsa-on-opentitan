@@ -17,10 +17,6 @@ module unified_mul #(
   input  logic [WLEN-1:0]              A,
   input  logic [WLEN-1:0]              B,
   input  logic [1:0]                   data_type_64_shift,
-`ifdef BNMULV_COND_SUB
-  output logic [31:0]                  scalar32,
-  output logic [15:0]                  scalar16,
-`endif
 `ifdef BNMULV_ACCH
   output logic [2*WLEN-1:0]            result
 `else
@@ -60,10 +56,8 @@ module unified_mul #(
   assign scalar64_A = A[DLEN*word_sel_A +: DLEN];
   assign scalar64_B = B[DLEN*word_sel_B +: DLEN];
 
-`ifndef BNMULV_COND_SUB
   logic [31:0] scalar32;
   logic [15:0] scalar16;
-`endif
 
   assign scalar32 = scalar64_B[SLEN*lane_word_32 +: SLEN];
   assign scalar16 = scalar32[HLEN*lane_word_16 +: HLEN];

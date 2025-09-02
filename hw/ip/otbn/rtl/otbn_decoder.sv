@@ -149,6 +149,11 @@ module otbn_decoder
   alu_trn_type_t    alu_trn_type_bignum;
   assign            alu_trn_type_bignum = alu_trn_type_t'(insn[27:25]);
 
+`ifdef BNMULV_COND_SUB
+  logic  alu_cond_sub_bignum;
+  assign alu_cond_sub_bignum = insn[28];
+`endif
+
   flag_group_t alu_flag_group_bignum;
 
   assign alu_flag_group_bignum = insn[31];
@@ -272,6 +277,9 @@ module otbn_decoder
     vector_type:         alu_vector_type_bignum,
     vector_sel:          alu_vector_sel_bignum,
     alu_trn_type:        alu_trn_type_bignum,
+`ifdef BNMULV_COND_SUB
+    cond_sub:            alu_cond_sub_bignum,             
+`endif
     alu_op_b_sel:        alu_op_b_mux_sel_bignum,
     mac_op_a_qw_sel:     mac_op_a_qw_sel_bignum,
     mac_op_b_qw_sel:     mac_op_b_qw_sel_bignum,
@@ -994,7 +1002,15 @@ module otbn_decoder
             if (insn_alu[30]) begin
               if (insn_alu[25]) begin
                 if (insn[27]) begin
+                `ifndef BNMULV_COND_SUB
                   alu_operator_bignum = AluOpBignumSubvm;
+                `else
+                  if (insn[28]) begin
+                    alu_operator_bignum = AluOpBignumSubvmcond;
+                  end else begin
+                    alu_operator_bignum = AluOpBignumSubvm;
+                  end
+                `endif // BNMULV_COND_SUB
                 end else begin
                   alu_operator_bignum = AluOpBignumSubv;
                 end
@@ -1005,7 +1021,15 @@ module otbn_decoder
             end else begin
               if (insn_alu[25]) begin
                 if (insn[27]) begin
+                `ifndef BNMULV_COND_SUB
                   alu_operator_bignum = AluOpBignumAddvm;
+                `else
+                  if (insn[28]) begin
+                    alu_operator_bignum = AluOpBignumAddvmcond;
+                  end else begin
+                    alu_operator_bignum = AluOpBignumAddvm;
+                  end
+                `endif // BNMULV_COND_SUB
                 end else begin
                   alu_operator_bignum = AluOpBignumAddv;
                 end

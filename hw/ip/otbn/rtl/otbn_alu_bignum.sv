@@ -1323,6 +1323,51 @@ module otbn_alu_bignum
   assign mode = operation_i.vector_sel ? (operation_i.vector_type[0] == 1'b0 ? VecType_s32 : VecType_h16) :
                                          VecType_v256;
 
+  `ifdef BNMULV_COND_SUB
+  // ADDER W logic
+  logic [WLEN-1:0] adder_w_op_a_blanked, adder_w_op_b, adder_w_op_b_blanked;
+  logic [WLEN-1:0] adder_w_res, adder_w_res_mux_out;
+  logic [15:0]     adder_w_carry_out;
+
+  // SEC_CM: DATA_REG_SW.SCA
+  prim_blanker #(.Width(WLEN)) u_adder_w_op_a_blanked (
+    .in_i (operation_i.operand_b),
+    .en_i (operation_i.cond_sub), // If cond_sub is not enabled, we always blank operand a to Adder W
+    .out_o(adder_w_op_a_blanked)
+  );
+
+  // Adder W is only when cond_sub is enabled, which is only when 
+  // operation_i.vector_type[0] in {0,1} --> mode in {VecType_h16, VecType_s32}.
+  assign adder_w_op_b = (mode == VecType_h16) ?
+      {16 {~mod_no_intg_q[15:0]}} : {8 {~mod_no_intg_q[31:0]}};
+
+  // SEC_CM: DATA_REG_SW.SCA
+  prim_blanker #(.Width(WLEN)) u_adder_w_op_b_blanked (
+    .in_i (adder_w_op_b),
+    .en_i (operation_i.cond_sub), // If cond_sub is not enabled, we always blank operand b to Adder W
+    .out_o(adder_w_op_b_blanked)
+  );
+
+  buffer_bit adder_w (
+    .A        (adder_w_op_a_blanked),
+    .B        (adder_w_op_b_blanked),
+    .word_mode(mode),
+    .b_invert (1'b1), // Operand b is always ~q because this is conditional subtraction.
+    .cin      (1'b1), // cin is always set because this is conditional subtraction.
+    .res      (adder_w_res),
+    .cout     (adder_w_carry_out)
+  );
+
+  // Output multiplexer for Adder W
+  for (genvar i = 0; i < 16; i += 2) begin
+    assign adder_w_res_mux_out[i*16 +: 16] =
+        ((mode == VecType_h16 ? adder_w_carry_out[i] : adder_w_carry_out[i + 1]) == 1'b1) ?
+            adder_w_res[i*16 +: 16] : adder_w_op_a_blanked[i*16 +: 16];
+    assign adder_w_res_mux_out[(i + 1)*16 +: 16] = adder_w_carry_out[i + 1] == 1'b1 ?
+        adder_w_res[(i + 1)*16 +: 16] : adder_w_op_a_blanked[(i + 1)*16 +: 16];
+  end
+  `endif //BNMULV_COND_SUB
+
   // SEC_CM: DATA_REG_SW.SCA
   prim_blanker #(.Width(WLEN)) u_adder_x_op_a_blanked (
     .in_i (operation_i.operand_a),
@@ -1330,7 +1375,13 @@ module otbn_alu_bignum
     .out_o(adder_x_op_a_blanked)
   );
 
+  `ifdef BNMULV_COND_SUB
+  assign adder_x_op_b = operation_i.cond_sub ?
+      (adder_x_op_b_invert ? ~adder_w_res_mux_out : adder_w_res_mux_out) :
+      (adder_x_op_b_invert ? ~operation_i.operand_b : operation_i.operand_b);
+  `else
   assign adder_x_op_b = adder_x_op_b_invert ? ~operation_i.operand_b : operation_i.operand_b;
+  `endif // BNMULV_COND_SUB
 
   // SEC_CM: DATA_REG_SW.SCA
   prim_blanker #(.Width(WLEN)) u_adder_x_op_b_blanked (
@@ -1404,6 +1455,9 @@ module otbn_alu_bignum
   alu_vector_type_t expected_vector_type;
   alu_trn_type_t    expected_trn_type;
   logic             expected_vector_sel;
+  `ifdef BNMULV_COND_SUB
+  logic             expected_cond_sub;
+  `endif
 
   always_comb begin
     adder_x_carry_in          = 1'b0;
@@ -1416,6 +1470,9 @@ module otbn_alu_bignum
     expected_vector_type      = alu_8s;
     expected_trn_type         = alu_trn_type_t'('0);
     expected_vector_sel       = 1'b0;
+    `ifdef BNMULV_COND_SUB
+    expected_cond_sub         = 1'b0;
+    `endif
 
     expected_adder_x_en             = 1'b0;
     expected_x_res_operand_a_sel    = 1'b0;
@@ -1490,6 +1547,9 @@ module otbn_alu_bignum
         expected_vector_type         = operation_i.vector_type;
         expected_vector_sel          = operation_i.vector_sel;
       end
+      `ifdef BNMULV_COND_SUB
+      AluOpBignumAddvmcond,
+      `endif
       AluOpBignumAddvm: begin
         // X computes A + B
         // Y computes adder_x_res - mod = adder_x_res + ~mod + 1
@@ -1506,6 +1566,9 @@ module otbn_alu_bignum
         expected_shift_mod_sel       = 1'b0;
         expected_vector_type         = operation_i.vector_type;
         expected_vector_sel          = operation_i.vector_sel;
+        `ifdef BNMULV_COND_SUB
+        expected_cond_sub            = operation_i.cond_sub;
+        `endif // BNMULV_COND_SUB
       end
       AluOpBignumSub: begin
         // Shifter computes B [>>|<<] shift_amt
@@ -1567,6 +1630,9 @@ module otbn_alu_bignum
         expected_vector_type         = operation_i.vector_type;
         expected_vector_sel          = operation_i.vector_sel;
       end
+      `ifdef BNMULV_COND_SUB
+      AluOpBignumSubvmcond,
+      `endif
       AluOpBignumSubvm: begin
         // X computes A - B = A + ~B + 1
         // Y computes adder_x_res + mod
@@ -1583,6 +1649,9 @@ module otbn_alu_bignum
         expected_shift_mod_sel       = 1'b0;
         expected_vector_type         = operation_i.vector_type;
         expected_vector_sel          = operation_i.vector_sel;
+        `ifdef BNMULV_COND_SUB
+        expected_cond_sub            = operation_i.cond_sub;
+        `endif
       end
       AluOpBignumRshi: begin
         // Shifter computes {A, B} >> shift_amt
@@ -1645,6 +1714,9 @@ module otbn_alu_bignum
       expected_vector_type != alu_predec_bignum_i.vector_type,
       expected_trn_type != alu_predec_bignum_i.trn_type,
       expected_vector_sel != alu_predec_bignum_i.vector_sel,
+      `ifdef BNMULV_COND_SUB
+      expected_cond_sub != alu_predec_bignum_i.cond_sub,
+      `endif
       expected_shift_amt != alu_predec_bignum_i.shift_amt,
       expected_shift_mod_sel != alu_predec_bignum_i.shift_mod_sel,
       expected_logic_a_en != alu_predec_bignum_i.logic_a_en,
@@ -1740,6 +1812,9 @@ module otbn_alu_bignum
         operation_result_o = adder_x_res;
       end
 
+      `ifdef BNMULV_COND_SUB
+      AluOpBignumAddvmcond,
+      `endif
       AluOpBignumAddvm: begin
         // `adder_y_res` is always used: either as condition in the following `if` statement or, if
         // the `if` statement short-circuits, in the body of the `if` statement.
@@ -1784,6 +1859,9 @@ module otbn_alu_bignum
         operation_result_o = adder_x_res;
       end
 
+      `ifdef BNMULV_COND_SUB
+      AluOpBignumSubvmcond,
+      `endif
       AluOpBignumSubvm: begin
         adder_y_res_used = 1'b1;
       `ifdef TOWARDS_ADDER
