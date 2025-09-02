@@ -14,27 +14,27 @@ main:
   bn.mulv.l.8S.odd.lo        w5, w0, sw0.5
   bn.mulv.l.8S.even.hi       w6, w0, sw0.5
   bn.mulv.l.8S.odd.hi        w7, w0, sw0.5
-  bn.mulv.l.8S.even.hi.cond  w8, w0, sw0.5
-  bn.mulv.l.8S.odd.hi.cond   w9, w0, sw0.5
   bn.mulv.l.8S.even.acc      w10, w0, sw0.5
   bn.mulv.l.8S.odd.acc       w11, w0, sw0.5
   bn.mulv.l.8S.even.acc.lo   w12, w0, sw0.5
   bn.mulv.l.8S.odd.acc.lo    w13, w0, sw0.5
   bn.mulv.l.8S.even.acc.hi   w14, w0, sw0.5
   bn.mulv.l.8S.odd.acc.hi    w15, w0, sw0.5
-  bn.mulv.l.8S.even.acc.hi.cond w1, w0, sw0.5
-  bn.mulv.l.8S.odd.acc.hi.cond w17, w0, sw0.5
   bn.mulv.l.8S.even.acc.z    w18, w0, sw0.5
   bn.mulv.l.8S.odd.acc.z     w19, w0, sw0.5
   bn.mulv.l.8S.even.acc.z.lo w20, w0, sw0.5
   bn.mulv.l.8S.odd.acc.z.lo  w21, w0, sw0.5
   bn.mulv.l.8S.even.acc.z.hi w22, w0, sw0.5
   bn.mulv.l.8S.odd.acc.z.hi  w23, w0, sw0.5
-  bn.mulv.l.8S.even.acc.z.hi.cond w24, w0, sw0.5
-  bn.mulv.l.8S.odd.acc.z.hi.cond w25, w0, sw0.5
 
   /* Zeroize the unused WDRs to test with expected results.
    * Otherwise, they will have random values. */
+  bn.xor w8, w8, w8
+  bn.xor w9, w9, w9
+  bn.xor w1, w1, w1
+  bn.xor w17, w17, w17
+  bn.xor w24, w24, w24
+  bn.xor w25, w25, w25
   bn.xor w26, w26, w26
   bn.xor w27, w27, w27
   bn.xor w28, w28, w28

@@ -2,31 +2,33 @@
 
 .globl main
 main:
-  li     x4, 0
-  li     x5, 1
-  la     x6, operand1
-  bn.lid x4, 0(x6)
-  bn.lid x5, 32(x6)
+  li      x4, 0
+  la      x5, operand1
+  bn.lid  x4++, 0(x5)
+  bn.lid  x4++, 32(x5)
+  bn.lid  x4, 128(x5)
+  bn.wsrw 0x0, w2
+  li      x4, 16
+  bn.lid  x4++, 64(x5)
+  bn.lid  x4, 96(x5)
 
   bn.mulv.16H.even          w2, w0, w1
   bn.mulv.16H.odd           w3, w0, w1
   bn.mulv.16H.lo            w4, w0, w1
   bn.mulv.16H.hi            w5, w0, w1
-  bn.mulv.16H.hi.cond       w6, w0, w1
   bn.mulv.16H.even.acc      w7, w0, w1
   bn.mulv.16H.odd.acc       w8, w0, w1
   bn.mulv.16H.acc.lo        w9, w0, w1
   bn.mulv.16H.acc.hi        w10, w0, w1
-  bn.mulv.16H.acc.hi.cond   w11, w0, w1
   bn.mulv.16H.even.acc.z    w12, w0, w1
   bn.mulv.16H.odd.acc.z     w13, w0, w1
   bn.mulv.16H.acc.z.lo      w14, w0, w1
   bn.mulv.16H.acc.z.hi      w15, w0, w1
-  bn.mulv.16H.acc.z.hi.cond w16, w0, w1
+  bn.addvm.16H.cond         w6, w16, w17
+  bn.subvm.16H.cond         w11, w16, w17
 
   /* Zeroize the unused WDRs to test with expected results.
    * Otherwise, they will have random values. */
-  bn.xor w17, w17, w17
   bn.xor w18, w18, w18
   bn.xor w19, w19, w19
   bn.xor w20, w20, w20
@@ -46,6 +48,7 @@ main:
    * Otherwise, they will have random values. */
   xor x2, x2, x2
   xor x3, x3, x3
+  xor x6, x6, x6
   xor x7, x7, x7
   xor x8, x8, x8
   xor x9, x9, x9
@@ -89,3 +92,24 @@ operand2:
   .dword 0xaf19922abad640fb
   .dword 0x6f25e2a219c78df4
   .dword 0x7a1d5006e9bb17bc
+
+.globl operand3
+operand3:
+  .dword 0x004a0aba0cdd065a
+  .dword 0x005604370c2003b6
+  .dword 0x0767055a0ae002e7
+  .dword 0x0bfa04810c490398
+
+.globl operand4
+operand4:
+  .dword 0x108518d109fc0034
+  .dword 0x0219156e0ec90812
+  .dword 0x1919177615670470
+  .dword 0x09e20b95032a13b0
+
+.globl modulus
+modulus:
+  .dword 0x0000000000000d01
+  .dword 0x0000000000000000
+  .dword 0x0000000000000000
+  .dword 0x0000000000000000
