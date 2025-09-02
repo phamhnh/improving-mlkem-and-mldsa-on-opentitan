@@ -306,21 +306,6 @@ bnaf:
     - shift
     - fg
 
-# Used for bn.and, bn.or, bn.xor, bn.not vector variants
-bnav:
-  parents:
-    - custom4
-    - funct3
-    - shift
-    - wrd
-  fields:
-    wrs1: 24-20
-    type: 16
-    fixed:
-      bits: 31,19-17,15
-      value: bxxxxx
-
-
 # Used for the wide bn.addi and bn.subi instructions.
 bnai:
   parents:
