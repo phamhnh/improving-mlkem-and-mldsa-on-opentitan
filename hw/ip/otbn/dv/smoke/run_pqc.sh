@@ -6,7 +6,10 @@
 # Run ML-KEM and ML-DSA tests (build software, build simulation, run simulation
 # and checks if RTL trace matches ISS trace)
 
-while getopts 'hst:v:l' OPTION; do
+MAC_ADDER=buffer_bit
+ALU_ADDER=buffer_bit
+
+while getopts 'hst:v:lm:a:' OPTION; do
   case "$OPTION" in
     h)
       echo "This script is for running ML-{KEM,DSA} tests with the old or new BNMULV instruction."
@@ -25,6 +28,18 @@ while getopts 'hst:v:l' OPTION; do
       echo "                   - 1: BNMULV without ACCH"
       echo "                   - 2: BNMULV with ACCH"
       echo "                   - 3: BNMULV with ACCH and conditional subtraction"
+      echo "  -m MAC_ADDER     Specify the adder to be used in otbn_mac_bignum. Only used if BNMULV_VER != 0"
+      echo "                   Supported versions are:"
+      echo "                   - buffer_bit (default)"
+      echo "                   - Brent-Kung"
+      echo "                   - Sklansky"
+      echo "                   - Kogge-Stone"
+      echo "  -a ALU_ADDER     Specify the adder to be used in otbn_alu_bignum. Only used if BNMULV_VER != 0"
+      echo "                   Supported versions are:"
+      echo "                   - buffer_bit (default)"
+      echo "                   - Brent-Kung"
+      echo "                   - Sklansky"
+      echo "                   - Kogge-Stone"
       exit 1
       ;;   
     s)
@@ -42,6 +57,16 @@ while getopts 'hst:v:l' OPTION; do
     v)
       BNMULV_VER="$OPTARG"
       echo "-v is given: Simulate otbn_top_sim with BNMULV_VER = $BNMULV_VER"
+      ;;
+    m)
+      MAC_ADDER="${OPTARG//-/_}"
+      MAC_ADDER="${MAC_ADDER,,}"
+      echo "-m is given: Using $MAC_ADDER. This option also needs '-v BNMULV_VER'"
+      ;;
+    a)
+      ALU_ADDER="${OPTARG//-/_}"
+      ALU_ADDER="${ALU_ADDER,,}"
+      echo "-a is given: Using $ALU_ADDER. This option also needs '-v BNMULV_VER'"
       ;;
     ?)
       echo "run_pqc: Unrecognized option: '$OPTARG'"
@@ -99,6 +124,7 @@ if [[ -z "$SKIP_VERILATOR_BUILD" ]]; then
   if [[ "$BNMULV_VER" -eq 0 ]]; then
     # For BNMULV_VER == 0 means old design in Towards paper.
     echo "Building Verilator model of otbn_top_sim with BNMULV_VER = $BNMULV_VER..."
+    echo -e "\e[1;33mWARNING: TOWARDS_ADDER and TOWARDS_MAC are used. -m and -a have no meaning if set\e[0m"
     (cd $REPO_TOP;
     fusesoc --cores-root=. run --target=sim --setup --build \
         --flag +old_adder \
@@ -108,11 +134,13 @@ if [[ -z "$SKIP_VERILATOR_BUILD" ]]; then
   else
     # OTBN's BN-ALU adders are set to buffer-bit adders by default.
     # To use old adder by Towards paper, please add "--flag +old_adder" to the command below.
-    echo "Building Verilator model of otbn_top_sim with BNMULV_VER = $BNMULV_VER..."
+    echo "Building Verilator model of otbn_top_sim with BNMULV_VER = $BNMULV_VER: MAC_ADDER = $MAC_ADDER, ALU_ADDER = $ALU_ADDER..."
     (cd $REPO_TOP;
     fusesoc --cores-root=. run --target=sim --setup --build \
         --flag +bnmulv_ver$BNMULV_VER \
         --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn_top_sim \
+        --MAC_ADDER $MAC_ADDER \
+        --ALU_ADDER $ALU_ADDER \
         --make_options="-j$(nproc)" || fail "HW Sim build failed")
     echo ""
   fi
