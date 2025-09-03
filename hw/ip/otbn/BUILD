@@ -65,12 +65,14 @@ TOP_MODULES = [
 ADDERS = ["buffer_bit", "brent_kung", "sklansky", "kogge_stone"]
 
 # List of different versions for our design.
+# MAC_ADDER and ALU_ADDER is default to "buffer_bit".
+# TODO: Specify VER*_ADDER targets.
 VERSION = {
-    "TOWARDS": ["TOWARDS_ADDER"],
+    "TOWARDS": ["TOWARDS_ADDER", "TOWARDS_MAC"],
     # "VER1_" + adder: ["BNMULV", "BUFFER_BIT", "MAC_ADDER=" + adder] for adder in ADDERS,
-    "VER1": ["BNMULV", "BUFFER_BIT"],
-    "VER2": ["BNMULV", "BNMULV_ACCH", "BUFFER_BIT"],
-    "VER3": ["BNMULV", "BNMULV_ACCH", "BNMULV_COND_SUB", "BUFFER_BIT"],
+    "VER1": ["BNMULV"],
+    "VER2": ["BNMULV", "BNMULV_ACCH"],
+    "VER3": ["BNMULV", "BNMULV_ACCH", "BNMULV_COND_SUB"],
 }
 
 [

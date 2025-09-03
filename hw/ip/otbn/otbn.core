@@ -132,10 +132,11 @@ parameters:
   TOWARDS_MAC:
     datatype: bool
     paramtype: vlogdefine
-  BUFFER_BIT:
-    datatype: bool
-    paramtype: vlogdefine
   MAC_ADDER:
+    datatype: str
+    paramtype: vlogdefine
+    default: "buffer_bit"
+  ALU_ADDER:
     datatype: str
     paramtype: vlogdefine
     default: "buffer_bit"
@@ -144,6 +145,7 @@ targets:
   default: &default_target
     parameters:
       - MAC_ADDER
+      - ALU_ADDER
     filesets:
       - tool_verilator ? (files_verilator_waiver)
       - tool_ascentlint ? (files_ascentlint_waiver)
@@ -170,6 +172,7 @@ targets:
     parameters:
       - SYNTHESIS=true
       - MAC_ADDER
+      - ALU_ADDER
     tools:
       verilator:
         mode: lint-only
@@ -180,10 +183,10 @@ targets:
     default_tool: vivado
     parameters:
       - MAC_ADDER
+      - ALU_ADDER
       - SYNTHESIS=true
       - old_mac ? (TOWARDS_MAC=true)
       - old_adder ? (TOWARDS_ADDER=true)
-      - '!old_adder ? (BUFFER_BIT=true)'
       - bnmulv_ver1 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV_ACCH=true)
@@ -216,7 +219,6 @@ targets:
       - SYNTHESIS=true
       - old_mac ? (TOWARDS_MAC=true)
       - old_adder ? (TOWARDS_ADDER=true)
-      - '!old_adder ? (BUFFER_BIT=true)'
       - bnmulv_ver1 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV_ACCH=true)
@@ -238,9 +240,9 @@ targets:
     parameters:
       - SYNTHESIS=true
       - MAC_ADDER
+      - ALU_ADDER
       - old_mac ? (TOWARDS_MAC=true)
       - old_adder ? (TOWARDS_ADDER=true)
-      - '!old_adder ? (BUFFER_BIT=true)'
       - bnmulv_ver1 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV_ACCH=true)
@@ -262,9 +264,9 @@ targets:
     parameters:
       - SYNTHESIS=true
       - MAC_ADDER
+      - ALU_ADDER
       - old_mac ? (TOWARDS_MAC=true)
       - old_adder ? (TOWARDS_ADDER=true)
-      - '!old_adder ? (BUFFER_BIT=true)'
       - bnmulv_ver1 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV_ACCH=true)

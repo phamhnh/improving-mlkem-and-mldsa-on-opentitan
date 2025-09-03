@@ -34,6 +34,10 @@ parameters:
     datatype: str
     paramtype: vlogdefine
     default: "buffer_bit"
+  ALU_ADDER:
+    datatype: str
+    paramtype: vlogdefine
+    default: "buffer_bit"
 
 targets:
   default: &default_target
@@ -60,6 +64,7 @@ targets:
     default_tool: verilator
     parameters:
       - MAC_ADDER
+      - ALU_ADDER
     tools:
       vcs:
         vcs_options:
@@ -77,7 +82,6 @@ targets:
           - '--trace-max-array 1024'
           - 'old_mac ? (-DTOWARDS_MAC)'
           - 'old_adder ? (-DTOWARDS_ADDER)'
-          - '!old_adder ? (-DBUFFER_BIT)'
           - 'bnmulv_ver1 ? (-DBNMULV)'
           - 'bnmulv_ver2 ? (-DBNMULV -DBNMULV_ACCH)'
           - 'bnmulv_ver3 ? (-DBNMULV -DBNMULV_ACCH -DBNMULV_COND_SUB)'

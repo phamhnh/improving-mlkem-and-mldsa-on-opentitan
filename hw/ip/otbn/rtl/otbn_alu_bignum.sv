@@ -1300,7 +1300,7 @@ module otbn_alu_bignum
   end
 `endif //TOWARDS_ADDER
 
-`ifdef BUFFER_BIT
+`ifdef BNMULV
   // ADDER X logic
   logic [WLEN-1:0] adder_x_op_a_blanked, adder_x_op_b, adder_x_op_b_blanked;
   logic            adder_x_carry_in;
@@ -1348,7 +1348,11 @@ module otbn_alu_bignum
     .out_o(adder_w_op_b_blanked)
   );
 
-  buffer_bit adder_w (
+  `ifndef ALU_ADDER
+    `define ALU_ADDER buffer_bit
+  `endif
+
+  `ALU_ADDER adder_w (
     .A        (adder_w_op_a_blanked),
     .B        (adder_w_op_b_blanked),
     .word_mode(mode),
@@ -1390,7 +1394,7 @@ module otbn_alu_bignum
     .out_o(adder_x_op_b_blanked)
   );
 
-  buffer_bit adder_x (
+  `ALU_ADDER adder_x (
     .A        (adder_x_op_a_blanked),
     .B        (adder_x_op_b_blanked),
     .word_mode(mode),
@@ -1426,7 +1430,7 @@ module otbn_alu_bignum
   assign adder_y_op_a = x_res_operand_a_mux_out;
   assign adder_y_op_b = adder_y_op_b_invert ? ~shift_mod_mux_out : shift_mod_mux_out;
 
-  buffer_bit adder_y (
+  `ALU_ADDER adder_y (
     .A        (adder_y_op_a),
     .B        (adder_y_op_b),
     .word_mode(mode),
@@ -1435,7 +1439,7 @@ module otbn_alu_bignum
     .res      (adder_y_res),
     .cout     (adder_y_carry_out)
   );
-`endif //BUFFER_BIT
+`endif // BNMULV
 
   //////////////////////////////
   // Shifter & Adders control //
@@ -1829,7 +1833,7 @@ module otbn_alu_bignum
         end
       `endif //TOWARDS_ADDER
 
-      `ifdef BUFFER_BIT
+      `ifdef BNMULV
           for (int i = 0; i < 16; i += 2) begin
             operation_result_o[i*16 +: 16] = ((operation_i.vector_type[0]) ?
                 (adder_x_carry_out[i] || adder_y_carry_out[i]) :
@@ -1839,7 +1843,7 @@ module otbn_alu_bignum
               (adder_x_carry_out[i + 1] || adder_y_carry_out[i + 1]) ?
                   adder_y_res[(i + 1)*16 +: 16] : adder_x_res[(i + 1)*16 +: 16];
           end
-      `endif //BUFFER_BIT
+      `endif //BNMULV
       end
 
       // BN.SUBM - X = a - b, Y = X + mod, add mod if a - b < 0
@@ -1874,7 +1878,7 @@ module otbn_alu_bignum
         end
       `endif //TOWARDS_ADDER
 
-      `ifdef BUFFER_BIT
+      `ifdef BNMULV
         for (int i = 0; i < 16; i += 2) begin
           operation_result_o[i*16 +: 16] = ((operation_i.vector_type[0]) ?
               adder_x_carry_out[i] : adder_x_carry_out[i + 1]) ?
@@ -1882,7 +1886,7 @@ module otbn_alu_bignum
           operation_result_o[(i + 1)* 16 +: 16] = adder_x_carry_out[i + 1] ?
                 adder_x_res[(i + 1)*16 +: 16] : adder_y_res[(i + 1)*16 +: 16];
         end
-      `endif //BUFFER_BIT
+      `endif //BNMULV
       end
 
       AluOpBignumRshi,AluOpBignumShv: begin

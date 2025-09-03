@@ -88,9 +88,17 @@ parameters:
   TOWARDS_ADDER:
     datatype: bool
     paramtype: vlogdefine
-  BUFFER_BIT:
+  TOWARDS_MAC:
     datatype: bool
     paramtype: vlogdefine
+  MAC_DDER:
+    datatype: bool
+    paramtype: vlogdefine
+    default: "buffer_bit"
+  ALU_DDER:
+    datatype: bool
+    paramtype: vlogdefine
+    default: "buffer_bit"
 
 targets:
   default: &default_target
@@ -114,7 +122,9 @@ targets:
       - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
       - AST_BYPASS_CLK=true
       - old_adder ? (TOWARDS_ADDER=true)
-      - '!old_adder ? (BUFFER_BIT=true)'
+      - old_mac ? (TOWARDS_MAC=true)
+      - MAC_ADDER
+      - ALU_ADDER
       - bnmulv_ver1 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV_ACCH=true)
