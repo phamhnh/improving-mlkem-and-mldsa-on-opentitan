@@ -191,7 +191,7 @@ if __name__ == "__main__":
   if args.mul:
     modules = ["unified_mul", "otbn_bignum_mul"]
   elif args.adders:
-    modules = ["brent_kung_adder_256", "kogge_stone_adder_256", "sklansky_adder_256", "buffer_bit"]
+    modules = ["brent_kung_adder_256", "kogge_stone_adder_256", "sklansky_adder_256", "buffer_bit", "csa_carry4"]
   elif args.cond_sub:
     modules = ["cond_sub", "cond_sub_buffer_bit"]
   elif args.otbn_sub:

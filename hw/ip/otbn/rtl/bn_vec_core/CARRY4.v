@@ -25,6 +25,7 @@
 //  End Revision:
 ///////////////////////////////////////////////////////////////////////////////
 
+`ifndef SYNTHESIS
 `celldefine
 
 module CARRY4
@@ -54,12 +55,10 @@ module CARRY4
   assign S_in = S;
 
 //// begin behavioral model
-
+  /* verilator lint_off UNOPTFLAT */
   wire [3:0] CO_fb;
-
-/* verilator lint_off UNOPTFLAT */
   wire [3:0] CO_tmp;
-/* verilator lint_on UNOPTFLAT */
+  /* verilator lint_on UNOPTFLAT */
 
   assign CO_fb = {CO_tmp[2:0], CI_in || CYINIT_in};
   assign O = S_in ^ CO_fb;
@@ -160,3 +159,4 @@ module CARRY4
 endmodule
 
 `endcelldefine
+`endif // SYNTHESIS

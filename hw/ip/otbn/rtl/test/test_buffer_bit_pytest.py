@@ -93,7 +93,7 @@ async def run_buffer_bit_test(dut):
     [("brent_kung", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
     [("sklansky", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
     [("kogge_stone", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
-    [("adder_carry4", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]]
+    [("csa_carry4", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]]
 )
 def test_buffer_bit_sim(variant, word_mode, addition):
     """Run buffer_bit test with different testcases."""
@@ -125,6 +125,6 @@ def test_buffer_bit_sim(variant, word_mode, addition):
             "ADDITION":  str(addition),
             "NUM_TESTS": str(num_tests)
         },
-        #waves=True,
-        #plus_args=["--trace"]  # enable trace all in verilator simulation
+        waves=True,
+        plus_args=["--trace"]  # enable trace all in verilator simulation
     )

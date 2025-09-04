@@ -31,12 +31,14 @@ while getopts 'hst:v:m:a:' OPTION; do
       echo "                   - Brent-Kung"
       echo "                   - Sklansky"
       echo "                   - Kogge-Stone"
+      echo "                   - csa_carry4"
       echo "  -a ALU_ADDER     Specify the adder to be used in otbn_alu_bignum."
       echo "                   Supported versions are:"
       echo "                   - buffer_bit (default)"
       echo "                   - Brent-Kung"
       echo "                   - Sklansky"
       echo "                   - Kogge-Stone"
+      echo "                   - csa_carry4"
       exit 1
       ;;   
     s)
@@ -117,14 +119,30 @@ if [[ -z "$SKIP_VERILATOR_BUILD" ]]; then
         --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn_top_sim \
         --make_options="-j$(nproc)" || fail "HW Sim build failed")
   else
-    echo "Building Verilator model of otbn_top_sim with BNMULV_VER = $BNMULV_VER: MAC_ADDER = $MAC_ADDER, ALU_ADDER = $ALU_ADDER"
-    (cd $REPO_TOP;
-    fusesoc --cores-root=. run --target=sim --setup --build \
-        --flag +bnmulv_ver$BNMULV_VER \
-        --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn_top_sim \
-        --MAC_ADDER $MAC_ADDER \
-        --ALU_ADDER $ALU_ADDER \
-        --make_options="-j$(nproc)" || fail "HW Sim build failed")
+    if [[ ("$ALU_ADDER" -eq "csa_carry4") || ("$MAC_ADDER" -eq "csa_carry4") ]]; then
+      echo "Building Verilator model of otbn_top_sim with BNMULV_VER = $BNMULV_VER: MAC_ADDER = $MAC_ADDER, ALU_ADDER = $ALU_ADDER..."
+      (cd $REPO_TOP;
+      fusesoc --cores-root=. run --target=sim --setup --build \
+          --flag +bnmulv_ver$BNMULV_VER \
+          --flag +csa_carry4 \
+          --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn_top_sim \
+          --MAC_ADDER $MAC_ADDER \
+          --ALU_ADDER $ALU_ADDER \
+          --make_options="-j$(nproc)" || fail "HW Sim build failed")
+      echo ""
+    else
+      # OTBN's BN-ALU adders are set to buffer-bit adders by default.
+      # To use old adder by Towards paper, please add "--flag +old_adder" to the command below.
+      echo "Building Verilator model of otbn_top_sim with BNMULV_VER = $BNMULV_VER: MAC_ADDER = $MAC_ADDER, ALU_ADDER = $ALU_ADDER..."
+      (cd $REPO_TOP;
+      fusesoc --cores-root=. run --target=sim --setup --build \
+          --flag +bnmulv_ver$BNMULV_VER \
+          --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn_top_sim \
+          --MAC_ADDER $MAC_ADDER \
+          --ALU_ADDER $ALU_ADDER \
+          --make_options="-j$(nproc)" || fail "HW Sim build failed")
+      echo ""
+    fi
   fi
 else
   echo "WARNING: skipping verilator build, because you set -s"
