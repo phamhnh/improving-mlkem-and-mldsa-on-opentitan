@@ -92,7 +92,8 @@ async def run_buffer_bit_test(dut):
     [("buffer_bit", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
     [("brent_kung", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
     [("sklansky", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
-    [("kogge_stone", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]]
+    [("kogge_stone", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]] +
+    [("adder_carry4", i, a) for a in [0,1] for i in [VecType.h16, VecType.s32, VecType.d64, VecType.v256]]
 )
 def test_buffer_bit_sim(variant, word_mode, addition):
     """Run buffer_bit test with different testcases."""
@@ -118,7 +119,7 @@ def test_buffer_bit_sim(variant, word_mode, addition):
                     "-I../../../../otp_ctrl/rtl/",
                     "-I../../../../prim_generic/rtl/",
                     "-DBNMULV"],
-        verilog_sources=verilog_pkgs + [f"bn_vec_core/{variant}.sv"],
+        verilog_sources=verilog_pkgs + [f"bn_vec_core/{variant}.sv"] + ["bn_vec_core/CARRY4.v"],
         extra_env={
             "WORD_MODE": str(int(word_mode)),
             "ADDITION":  str(addition),
