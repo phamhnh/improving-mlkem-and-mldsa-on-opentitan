@@ -47,6 +47,7 @@ filesets:
       - '!old_adder ? (rtl/bn_vec_core/kogge_stone.sv)'
       - '!old_adder ? (rtl/bn_vec_core/csa_carry4.sv)'
       - '!old_adder ? (rtl/bn_vec_core/CARRY4.v)'
+      - '!old_adder ? (rtl/bn_vec_core/ref_adder.sv)'
       - 'old_mac ? (rtl/otbn_mul.sv)'
       - bnmulv_ver1 ? (rtl/bn_vec_core/unified_mul.sv)
       - bnmulv_ver2 ? (rtl/bn_vec_core/unified_mul.sv)
@@ -114,6 +115,7 @@ filesets:
       - rtl/bn_vec_core/csa_carry4.sv
       - rtl/bn_vec_core/unified_mul.sv
       - rtl/bn_vec_core/otbn_bignum_mul.sv
+      - rtl/bn_vec_core/ref_adder.sv
     file_type: systemVerilogSource
 
 parameters:
