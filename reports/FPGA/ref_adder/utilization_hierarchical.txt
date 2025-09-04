@@ -1,0 +1,29 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
+| Date         : Thu Sep  4 17:14:27 2025
+| Host         : jadem4ci running 64-bit unknown
+| Command      : report_utilization -hierarchical -hierarchical_depth 6 -file ../../../reports/FPGA/ref_adder_bnmulv_ver1/utilization_hierarchical.txt
+| Design       : ref_adder
+| Device       : xc7a200tfbg676-3
+| Speed File   : -3
+| Design State : Routed
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-----------+--------+------------+------------+---------+------+-----+--------+--------+------------+
+|  Instance | Module | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++-----------+--------+------------+------------+---------+------+-----+--------+--------+------------+
+| ref_adder |  (top) |        449 |        449 |       0 |    0 |   0 |      0 |      0 |          0 |
++-----------+--------+------------+------------+---------+------+-----+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining
+
+
