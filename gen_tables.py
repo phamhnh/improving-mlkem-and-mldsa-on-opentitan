@@ -4,11 +4,12 @@ import subprocess, re
 from tabulate import tabulate
 import argparse
 
-def extract_utilization(file_path):
+def extract_utilization_FPGA(file_path):
     """Extract utilization information from the file."""  
     utilization_data = {
         "Slice LUTs": None,
         "DSPs": None,
+        "CARRY4": None,
         "Slice Registers": None,
         "Block RAM Tile": None,
     }
@@ -25,7 +26,7 @@ def extract_utilization(file_path):
     return utilization_data
 
 
-def extract_delay(file_path):
+def extract_delay_FPGA(file_path):
     """Extract path delay information from the file."""  
     delay_data = None
 
@@ -41,21 +42,50 @@ def extract_delay(file_path):
 
     return delay_data
 
+def extract_ORFS(file_path):
+    utilization_data = {
+        "in2out_required": None,
+        "design_area": None,
+    }
 
-def extract(top_module, outdir):
-  result = extract_utilization(f"{outdir}/utilization.txt")
+    shortest_slack = 0
 
-  timing = extract_delay(f"{outdir}/timing.txt")
+    try:
+      with open(file_path, "r") as file:
+        for line in file:
+          for key in utilization_data.keys():
+            # Extract values for specific components
+            if f"{key}" in line:
+                utilization_data[key] = float(line.split(": ")[1].strip())
+          if "shortest_slack" in line:
+            shortest_slack = float(line.split(": ")[1].strip())
+    except FileNotFoundError: pass
 
-  data = [top_module] + list(result.values()) + [1000/timing if timing else 0]
+    if shortest_slack < 0:
+      utilization_data["in2out_required"] = str(utilization_data["in2out_required"]) + "!"
+
+    return utilization_data
+
+
+def extract(top_module, flag_group):
+  outdir = top_module + ("_" + flag_group if flag_group else "")
+
+  result = extract_utilization_FPGA(f"reports/FPGA/{outdir}/utilization.txt")
+
+  timing = extract_delay_FPGA(f"reports/FPGA/{outdir}/timing.txt")
+
+  asap7 = extract_ORFS(f"reports/ASIC/{top_module}_{flag_group}_asap7_stats")
+  sky130hd = extract_ORFS(f"reports/ASIC/{top_module}_{flag_group}_sky130hd_stats")
+
+  data = [top_module.replace("_", "\_") + (" " + flag_group if flag_group else "")] + list(result.values()) + [1000/timing if timing else 0] + list(asap7.values()) + list(sky130hd.values())
 
   return data
 
 def report(data):
-  headers = ["top\\_module", "LUT", "DSP", "FF", "BRAM", "Fmax"]
+  headers = ["top\\_module", "LUT", "DSP", "CARRY4", "FF", "BRAM", "Fmax", "F", "area", "F", "area"]
   
   latex_table = tabulate(data, headers, tablefmt="latex_raw",
-                         floatfmt=["", "g", "g", "g", ".1f", ".0f"], #, ".3f", ".3f"],
+                         floatfmt=["", "g", "g", "g", "g", ".1f", ".0f", "g", "g"], #, ".3f", ".3f"],
                          missingval="{---}")
   
   print("""
@@ -68,6 +98,22 @@ def report(data):
   print(latex_table)
   print("\\end{document}")
   print()
+
+
+def synthesize_ASIC(top_module, outdir, flags = []):
+  command = f"bazel build //hw/ip/otbn:{top_module}_{flags}_asap7_all_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}_{flags}_asap7_stats {outdir}/"
+
+  # //hw/ip/otbn:otbn_mac_bignum_TOWARDS_asap7_all_results
+
+  print(f"Command: {command}")
+
+  result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
+
+  command = f"bazel build //hw/ip/otbn:{top_module}_{flags}_sky130hd_all_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}_{flags}_sky130hd_stats {outdir}"
+
+  print(f"Command: {command}")
+
+  result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
 
 
 def synthesize(top_module, outdir, flags = []):
@@ -163,9 +209,10 @@ if __name__ == "__main__":
   if args.run_synthesis:
     for top_module in modules:
       for flag_group, flag in flags.items():
-        synthesize(top_module, "reports/FPGA/" + top_module + ("_" + flag_group if flag_group else ""), flag)
+        synthesize_ASIC(top_module, "reports/ASIC/", flag_group)
+#        synthesize(top_module, "reports/FPGA/" + top_module + ("_" + flag_group if flag_group else ""), flag)
 
-  data = [extract(f"{top_module} {flag_group}", "reports/FPGA/" + top_module + ("_" + flag_group if flag_group else "")) for top_module in modules for flag_group in flags.keys()]
+  data = [extract(top_module, flag_group) for top_module in modules for flag_group in flags.keys()]
 
   report(data)
 

@@ -1,8 +1,7 @@
 name: otbn_alu_bignum
-in2reg_arrival: 2088.065186
-reg2out_arrival: 951.3256990000001
-reg2reg_arrival: 1266.166031
-in2out_arrival: 1776.683594
-slowest_path: 2088.065186
-instances: 43754
-area: 5247
+in2out_slack: 2084.037354
+in2out_required: 4000.000000
+shortest_slack: 2084.037354
+instances: 43375
+design_area: 5163
+utilization: 44

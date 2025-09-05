@@ -58,7 +58,7 @@ PDKS = [
 
 # List of top modules to be synthesized.
 TOP_MODULES = [
-    # "otbn_alu_bignum",
+    "otbn_alu_bignum",
     "otbn_mac_bignum"
 ]
 
@@ -75,6 +75,7 @@ ADDERS_CLOCK_PERIOD = {
 
 # List of different versions for our design.
 VERSION = {
+    "KMAC": ["KMAC"],
     "TOWARDS": ["TOWARDS_BASE", "TOWARDS_ADDER", "TOWARDS_MAC"],
     "VER1": ["TOWARDS_BASE", "BNMULV", "BUFFER_BIT"],
     "VER2": ["TOWARDS_BASE", "BNMULV", "BNMULV_ACCH", "BUFFER_BIT"],
