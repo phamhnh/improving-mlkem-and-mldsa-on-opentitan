@@ -345,8 +345,10 @@ module keymgr_kmac_if
   assign kmac_data_o.valid = valid;
   assign kmac_data_o.last  = last;
   assign kmac_data_o.strb  = strb;
+`ifdef TOWARDS_KMAC
   assign kmac_data_o.hold  = 1'b0;
   assign kmac_data_o.next  = 1'b0;
+`endif
 
   // kmac done is asserted outside of expected window
   // SEC_CM: KMAC_IF_DONE.CTRL.CONSISTENCY

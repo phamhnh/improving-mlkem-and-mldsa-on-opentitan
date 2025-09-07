@@ -156,9 +156,11 @@ module otbn_controller
 
   input  logic urnd_reseed_err_i,
 
+`ifdef TOWARDS_KMAC
   // KMAC interface
   input  logic kmac_msg_write_ready_i,
   input  logic kmac_digest_valid_i,
+`endif
 
   // Secure Wipe
   output logic secure_wipe_req_o,
@@ -220,7 +222,9 @@ module otbn_controller
 
   logic stall;
   logic ispr_stall;
+`ifdef TOWARDS_KMAC
   logic kmac_write_stall;
+`endif
   logic mem_stall;
   logic rf_indirect_stall;
 `ifdef TOWARDS_MAC
@@ -267,8 +271,10 @@ module otbn_controller
   logic                     lsu_predec_error, branch_target_predec_error, ctrl_predec_error;
 
   logic rnd_req_raw;
+`ifdef TOWARDS_KMAC
   logic kmac_digest_req_raw;
   logic kmac_msg_write_req_raw;
+`endif
 
   // Register read data with integrity stripped off
   logic [31:0]     rf_base_rd_data_a_no_intg;
@@ -393,8 +399,12 @@ module otbn_controller
 
   // Reads to RND must stall until data is available.
   // Also, writes to the KMAC_MSG register are only allowed, if it can accept new data.
+`ifdef TOWARDS_KMAC
   assign ispr_stall = (rnd_req_raw & ~rnd_valid_i) | (kmac_digest_req_raw & ~kmac_digest_valid_i);
   assign kmac_write_stall = (kmac_msg_write_req_raw & ~kmac_msg_write_ready_i);
+`else
+  assign ispr_stall = rnd_req_raw & ~rnd_valid_i;
+`endif // TOWARDS_KMAC
 
   assign rf_indirect_stall = insn_valid_i &
                              (state_q != OtbnStateStall) &
@@ -405,9 +415,17 @@ module otbn_controller
 
 `ifdef TOWARDS_MAC
   assign mulv_stall = insn_valid_i & insn_dec_bignum_i.mac_mulv_en & ~mac_mulv_done_i;
+  `ifdef TOWARDS_KMAC
   assign stall = mem_stall | ispr_stall | rf_indirect_stall | mulv_stall | kmac_write_stall;
+  `else
+  assign stall = mem_stall | ispr_stall | rf_indirect_stall | mulv_stall;
+  `endif // TOWARDS_KMAC
 `else
- assign stall = mem_stall | ispr_stall | rf_indirect_stall | kmac_write_stall;
+  `ifdef TOWARDS_KMAC
+  assign stall = mem_stall | ispr_stall | rf_indirect_stall | kmac_write_stall;
+  `else
+  assign stall = mem_stall | ispr_stall | rf_indirect_stall;
+  `endif // TOWARDS_KMAC
 `endif
 
   // OTBN is done when it was executing something (in state OtbnStateRun or OtbnStateStall)
@@ -999,11 +1017,14 @@ module otbn_controller
   );
 
   assign rf_bignum_rd_en_a_unbuf = insn_dec_bignum_i.rf_ren_a & insn_valid_i &
-      (~stall |
+      (
+`ifdef TOWARDS_KMAC
+       kmac_write_stall |
+`endif // TOWARDS_KMAC
 `ifdef TOWARDS_MAC
        insn_dec_bignum_i.mac_mulv_en |
 `endif
-       kmac_write_stall);
+       ~stall);
 
   prim_buf #(
     .Width(1)
@@ -1134,9 +1155,17 @@ module otbn_controller
     // Only write if valid instruction wants a bignum rf write and it isn't stalled. If instruction
     // doesn't execute (e.g. due to an error) the write won't commit.
 `ifdef TOWARDS_MAC
+  `ifdef TOWARDS_KMAC
     if (insn_valid_i && insn_dec_bignum_i.rf_we && !rf_indirect_stall && !mulv_stall && !kmac_write_stall) begin
+  `else
+    if (insn_valid_i && insn_dec_bignum_i.rf_we && !rf_indirect_stall && !mulv_stall) begin
+  `endif // TOWARDS_KMAC
 `else
+  `ifdef TOWARDS_KMAC
     if (insn_valid_i && insn_dec_bignum_i.rf_we && !rf_indirect_stall && !kmac_write_stall) begin
+  `else
+    if (insn_valid_i && insn_dec_bignum_i.rf_we && !rf_indirect_stall) begin
+  `endif // TOWARDS_KMAC
 `endif
       if (insn_dec_bignum_i.mac_en && insn_dec_bignum_i.mac_shift_out) begin
         // Special handling for BN.MULQACC.SO, only enable upper or lower half depending on
@@ -1370,6 +1399,7 @@ module otbn_controller
         // Reading from RND_PREFETCH results in 0, there is no ISPR to read so no address is set.
         // The csr_rdata mux logic takes care of producing the 0.
       end
+    `ifdef TOWARDS_KMAC
       CsrKmacMsg0, CsrKmacMsg1, CsrKmacMsg2, CsrKmacMsg3, CsrKmacMsg4, CsrKmacMsg5, CsrKmacMsg6, CsrKmacMsg7: begin
         ispr_addr_base      = IsprKmacMsg;
         ispr_word_addr_base = csr_sub_addr;
@@ -1386,6 +1416,7 @@ module otbn_controller
         ispr_addr_base      = IsprKmacDigest;
         ispr_word_addr_base = csr_sub_addr;
       end
+    `endif // TOWARDS_KMAC
       CsrRnd: begin
         ispr_addr_base      = IsprRnd;
         ispr_word_addr_base = '0;
@@ -1526,9 +1557,11 @@ module otbn_controller
 `ifdef BNMULV_ACCH
       WsrAccH: ispr_addr_bignum = IsprAccH;
 `endif
+`ifdef TOWARDS_KMAC
       WsrKmacMsg: ispr_addr_bignum = IsprKmacMsg;
       WsrKmacCfg: ispr_addr_bignum = IsprKmacCfg;
       WsrKmacDigest: ispr_addr_bignum = IsprKmacDigest;
+`endif // TOWARDS_KMAC
       WsrKeyS0L: begin
         ispr_addr_bignum = IsprKeyS0L;
         key_invalid = ~sideload_key_shares_valid_i[0];
@@ -1690,8 +1723,10 @@ module otbn_controller
                                             dmem_addr_unaligned_bignum |
                                             dmem_addr_unaligned_base);
 
+`ifdef TOWARDS_KMAC
   assign kmac_digest_req_raw = insn_valid_i & ispr_rd_insn & (ispr_addr_o == IsprKmacDigest);
   assign kmac_msg_write_req_raw = insn_valid_i & ispr_wr_insn & (ispr_addr_o == IsprKmacMsg);
+`endif // TOWARDS_KMAC
   assign rnd_req_raw = insn_valid_i & ispr_rd_insn & (ispr_addr_o == IsprRnd);
   // Don't factor rnd_rep/fips_err_i into rnd_req_o. This would lead to a combo loop.
   assign rnd_req_o = rnd_req_raw & insn_valid_i & ~(software_err | fatal_err);

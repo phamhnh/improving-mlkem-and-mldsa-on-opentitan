@@ -95,10 +95,12 @@ module otbn_tracer (
       IsprRnd: return "RND";
       IsprFlags: return "FLAGS";
       IsprUrnd: return "URND";
+`ifdef TOWARDS_KMAC
       IsprKmacCfg: return "KMAC_CFG";
       IsprKmacMsg: return "KMAC_MSG";
       IsprKmacStatus: return "KMAC_STATUS";
       IsprKmacDigest: return "KMAC_DIGEST";
+`endif // TOWARDS_KMAC
       default: return "UNKNOWN_ISPR";
     endcase
   endfunction

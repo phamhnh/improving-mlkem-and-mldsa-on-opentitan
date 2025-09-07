@@ -363,6 +363,7 @@ package otbn_pkg;
     CsrMod6        = 12'h7D6,
     CsrMod7        = 12'h7D7,
     CsrRndPrefetch = 12'h7D8,
+`ifdef TOWARDS_KMAC
     CsrKmacCfg     = 12'h7D9,
     CsrKmacMsg0    = 12'h7DA,
     CsrKmacMsg1    = 12'h7DB,
@@ -381,6 +382,7 @@ package otbn_pkg;
     CsrKmacDigestW5 = 12'h7E8,
     CsrKmacDigestW6 = 12'h7E9,
     CsrKmacDigestW7 = 12'h7EA,
+`endif // TOWARDS_KMAC
 
     // 0xFC0-0xFFF Custom read-only
     CsrRnd         = 12'hFC0,
@@ -389,9 +391,17 @@ package otbn_pkg;
 
   // Wide Special Purpose Registers (WSRs)
 `ifdef BNMULV_ACCH
+  `ifdef TOWARDS_KMAC
   parameter int NWsr = 12; // Number of WSRs
+  `else
+  parameter int NWsr = 9; // Number of WSRs
+  `endif // TOWARDS_KMAC
 `else
+  `ifdef TOWARDS_KMAC
   parameter int NWsr = 11; // Number of WSRs
+  `else
+  parameter int NWsr = 8; // Number of WSRs
+  `endif // TOWARDS_KMAC
 `endif
   parameter int WsrNumWidth = $clog2(NWsr);
   typedef enum logic [WsrNumWidth-1:0] {
@@ -399,48 +409,60 @@ package otbn_pkg;
     WsrRnd    = 'd1,
     WsrUrnd   = 'd2,
     WsrAcc    = 'd3,
+`ifdef BNMULV_ACCH
+    WsrAccH   = 'd11,
+`endif // BNMULV_ACCH
     WsrKeyS0L = 'd4,
     WsrKeyS0H = 'd5,
     WsrKeyS1L = 'd6,
+`ifdef TOWARDS_KMAC
     WsrKeyS1H = 'd7,
     WsrKmacCfg    = 'd8,
     WsrKmacMsg    = 'd9,
-`ifdef BNMULV_ACCH
-    WsrKmacDigest = 'd10,
-    WsrAccH   = 'd11
-`else
     WsrKmacDigest = 'd10
-`endif
+`else
+    WsrKeyS1H = 'd7
+`endif // TOWARDS_KMAC
   } wsr_e;
 
   // Internal Special Purpose Registers (ISPRs)
   // CSRs and WSRs have some overlap into what they map into. ISPRs are the actual registers in the
   // design which CSRs and WSRs are mapped on to.
 `ifdef BNMULV_ACCH
+  `ifdef TOWARDS_KMAC
   parameter int NIspr = 14;
+  `else
+  parameter int NIspr = 10;
+  `endif // TOWARDS_KMAC
 `else
+  `ifdef TOWARDS_KMAC
   parameter int NIspr = 13;
+  `else
+  parameter int NIspr = 9;
+  `endif // TOWARDS_KMAC
 `endif
   parameter int IsprNumWidth = $clog2(NIspr);
   typedef enum logic [IsprNumWidth-1:0] {
     IsprMod    = 'd0,
     IsprRnd    = 'd1,
     IsprAcc    = 'd2,
+`ifdef BNMULV_ACCH
+    IsprAccH   = 'd13,
+`endif
     IsprFlags  = 'd3,
     IsprUrnd   = 'd4,
     IsprKeyS0L = 'd5,
     IsprKeyS0H = 'd6,
     IsprKeyS1L = 'd7,
+`ifdef TOWARDS_KMAC
     IsprKeyS1H = 'd8,
     IsprKmacCfg     = 'd9,
     IsprKmacMsg     = 'd10,
     IsprKmacStatus  = 'd11,
-`ifdef BNMULV_ACCH
-    IsprKmacDigest  = 'd12,
-    IsprAccH        = 'd13
-`else
     IsprKmacDigest  = 'd12
-`endif
+`else
+    IsprKeyS1H = 'd8
+`endif // TOWARDS_KMAC
   } ispr_e;
 
 `ifdef BNMULV

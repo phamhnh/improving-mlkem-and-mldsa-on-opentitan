@@ -31,8 +31,13 @@ module kmac
 
   // Accept SW message when idle and before receiving a START command. Useful for SCA only.
   parameter bit SecIdleAcceptSwMsg          = 1'b0,
+`ifdef TOWARDS_KMAC
   parameter int unsigned NumAppIntf         = 4,
   parameter app_config_t AppCfg[NumAppIntf] = '{AppCfgKeyMgr, AppCfgLcCtrl, AppCfgRomCtrl, AppCfgDynamic},
+`else
+  parameter int unsigned NumAppIntf         = 3,
+  parameter app_config_t AppCfg[NumAppIntf] = '{AppCfgKeyMgr, AppCfgLcCtrl, AppCfgRomCtrl},
+`endif
 
   parameter lfsr_perm_t RndCnstLfsrPerm = RndCnstLfsrPermDefault,
   parameter lfsr_seed_t RndCnstLfsrSeed = RndCnstLfsrSeedDefault,
@@ -157,7 +162,11 @@ module kmac
   prim_mubi_pkg::mubi4_t sha3_done;
   prim_mubi_pkg::mubi4_t sha3_done_d;
   prim_mubi_pkg::mubi4_t sha3_absorbed;
+`ifdef TOWARDS_KMAC
   prim_mubi_pkg::mubi4_t sha3_squeezing;
+`else
+  logic unused_sha3_squeeze;
+`endif
 
   // Indicate one block processed
   logic sha3_block_processed;
@@ -964,7 +973,11 @@ module kmac
     .lc_escalate_en_i (lc_escalate_en[2]),
 
     .absorbed_o  (sha3_absorbed),
+`ifdef TOWARDS_KMAC
     .squeezing_o (sha3_squeezing),
+`else
+    .squeezing_o (unused_sha3_squeeze),
+`endif
 
     .block_processed_o (sha3_block_processed),
 
@@ -1108,8 +1121,10 @@ module kmac
     .keymgr_key_en_i      (reg2hw.cfg_shadowed.sideload.q),
 
     .absorbed_i  (sha3_absorbed),  // from SHA3
-    .squeezing_i (sha3_squeezing), // from SHA3
     .absorbed_o  (app_absorbed),   // to SW
+`ifdef TOWARDS_KMAC
+    .squeezing_i (sha3_squeezing), // from SHA3
+`endif
 
     .app_active_o(app_active),
 

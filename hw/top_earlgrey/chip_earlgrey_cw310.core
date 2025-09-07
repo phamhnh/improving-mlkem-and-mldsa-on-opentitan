@@ -91,6 +91,9 @@ parameters:
   TOWARDS_MAC:
     datatype: bool
     paramtype: vlogdefine
+  TOWARDS_KMAC:
+    datatype: bool
+    paramtype: vlogdefine
   MAC_DDER:
     datatype: bool
     paramtype: vlogdefine
@@ -123,6 +126,7 @@ targets:
       - AST_BYPASS_CLK=true
       - old_adder ? (TOWARDS_ADDER=true)
       - old_mac ? (TOWARDS_MAC=true)
+      - TOWARDS_KMAC=true
       - MAC_ADDER
       - ALU_ADDER
       - bnmulv_ver1 ? (BNMULV=true)

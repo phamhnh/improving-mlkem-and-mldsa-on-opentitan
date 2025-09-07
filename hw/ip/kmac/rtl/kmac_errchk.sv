@@ -124,7 +124,9 @@ module kmac_errchk
   // Minimum Hamming weight: 2
   // Maximum Hamming weight: 4
   //
+`ifdef TOWARDS_KMAC
   /* verilator lint_off VARHIDDEN */
+`endif
   localparam int StateWidth = 6;
   typedef enum logic [StateWidth-1:0] {
     StIdle = 6'b001101,
@@ -135,7 +137,9 @@ module kmac_errchk
     StTerminalError = 6'b011011
   } st_e;
   st_e st, st_d;
+`ifdef TOWARDS_KMAC
   /* verilator lint_on VARHIDDEN */
+`endif
 
   localparam int StateWidthL = 3;
   typedef enum logic [StateWidthL-1:0] {

@@ -113,7 +113,9 @@ module otbn_alu_bignum
   output logic                        reg_intg_violation_err_o,
 
   input  logic                        sec_wipe_mod_urnd_i,
+`ifdef TOWARDS_KMAC
   input logic                         sec_wipe_kmac_regs_urnd_i,
+`endif
   input  logic                        sec_wipe_running_i,
   output logic                        sec_wipe_err_o,
 
@@ -126,6 +128,7 @@ module otbn_alu_bignum
   input  logic [1:0][SideloadKeyWidth-1:0] sideload_key_shares_i,
 
   output logic alu_predec_error_o,
+`ifdef TOWARDS_KMAC
   output logic ispr_predec_error_o,
 
   output logic kmac_msg_write_ready_o,
@@ -133,6 +136,9 @@ module otbn_alu_bignum
 
   output kmac_pkg::app_req_t kmac_app_req_o,
   input  kmac_pkg::app_rsp_t kmac_app_rsp_i
+`else
+    output logic ispr_predec_error_o
+`endif // TOWARDS_KMAC
 );
 
 `ifndef TOWARDS_BASE
@@ -366,18 +372,27 @@ module otbn_alu_bignum
   logic [BaseWordsPerWLEN-1:0] mod_ispr_wr_en;
   logic [BaseWordsPerWLEN-1:0] mod_wr_en;
 
+`ifdef TOWARDS_KMAC
   logic [ExtWLEN-1:0] ispr_mod_kmac_bignum_wdata_intg_blanked;
 
   logic ispr_mod_kmac_en;
   assign ispr_mod_kmac_en = ispr_predec_bignum_i.ispr_wr_en[IsprMod] |
                             ispr_predec_bignum_i.ispr_wr_en[IsprKmacMsg] |
                             ispr_predec_bignum_i.ispr_wr_en[IsprKmacCfg];
+`else
+  logic [ExtWLEN-1:0] ispr_mod_bignum_wdata_intg_blanked;
+`endif // TOWARDS_KMAC
 
   // SEC_CM: DATA_REG_SW.SCA
   prim_blanker #(.Width(ExtWLEN)) u_ispr_mod_bignum_wdata_blanker (
     .in_i (ispr_bignum_wdata_intg_i),
+`ifdef TOWARDS_KMAC
     .en_i (ispr_mod_kmac_en),
     .out_o(ispr_mod_kmac_bignum_wdata_intg_blanked)
+`else
+    .en_i (ispr_predec_bignum_i.ispr_wr_en[IsprMod]),
+    .out_o(ispr_mod_bignum_wdata_intg_blanked)
+`endif // TOWARDS_KMAC
   );
   // If the blanker is enabled, the output will not carry the correct ECC bits.  This is not
   // a problem because a blanked value should never be written to the register.  If the blanked
@@ -417,8 +432,12 @@ module otbn_alu_bignum
           mod_no_intg_d[i_word*32+:32] = urnd_data_i[i_word*32+:32];
           mod_intg_d[i_word*39+:39]  = mod_intg_calc[i_word*39+:39];
         end
+      `ifdef TOWARDS_KMAC
         // Pre-encoded inputs can directly be written to the register.
         default: mod_intg_d[i_word*39+:39] = ispr_mod_kmac_bignum_wdata_intg_blanked[i_word*39+:39];
+      `else
+        default: mod_intg_d[i_word*39+:39] = ispr_mod_bignum_wdata_intg_blanked[i_word*39+:39];
+      `endif // TOWARDS_KMAC
       endcase
 
       unique case (1'b1)
@@ -447,6 +466,7 @@ module otbn_alu_bignum
   assign mod_o = mod_no_intg_q[63:0];
 `endif
 
+`ifdef TOWARDS_KMAC
   //////////
   // KMAC //
   //////////
@@ -796,6 +816,7 @@ module otbn_alu_bignum
   assign kmac_app_req_o.last  = kmac_msg_fifo_rvalid & kmac_msg_last;
   assign kmac_app_req_o.next  = kmac_digest_rd & ispr_predec_bignum_i.ispr_rd_en[IsprKmacDigest];
   assign kmac_app_req_o.hold  = kmac_cfg_active_q & ~kmac_new_cfg_q;
+`endif // TOWARDS_KMAC
 
   /////////
   // ACC //
@@ -852,15 +873,28 @@ module otbn_alu_bignum
   // IDs fpr ISPRs with integrity
   localparam int IsprModIntg = 0;
   localparam int IsprAccIntg = 1;
+`ifdef TOWARDS_KMAC
   localparam int IsprKmacMsgIntg  = 2;
   localparam int IsprKmacDigestIntg = 3;
+`endif // TOWARDS_KMAC
+
 `ifdef BNMULV_ACCH
   localparam int IsprAccHIntg = 4;
+  `ifdef TOWARDS_KMAC
   localparam int IsprNoIntg = 5; // ID representing all ISPRs with no integrity
   localparam int NIntgIspr = 5;  // Number of ISPRs that have integrity protection
+  `else
+  localparam int IsprNoIntg = 3; // ID representing all ISPRs with no integrity
+  localparam int NIntgIspr = 3;  // Number of ISPRs that have integrity protection
+  `endif // TOWARDS_KMAC
 `else
+  `ifdef TOWARDS_KMAC
   localparam int IsprNoIntg = 4; // ID representing all ISPRs with no integrity
   localparam int NIntgIspr = 4;  // Number of ISPRs that have integrity protection
+  `else
+  localparam int IsprNoIntg = 2; // ID representing all ISPRs with no integrity
+  localparam int NIntgIspr = 2;  // Number of ISPRs that have integrity protection
+  `endif // TOWARDS_KMAC
 `endif
 
   logic [NIntgIspr:0] ispr_rdata_intg_mux_sel;
@@ -871,8 +905,10 @@ module otbn_alu_bignum
   // MOD, ACC, KMAC_MSG and KMAC_DIGEST supply their own integrity so these values are unused
   assign ispr_rdata_no_intg_mux_in[IsprMod] = 0;
   assign ispr_rdata_no_intg_mux_in[IsprAcc] = 0;
+`ifdef TOWARDS_KMAC
   assign ispr_rdata_no_intg_mux_in[IsprKmacMsg] = 0;
   assign ispr_rdata_no_intg_mux_in[IsprKmacDigest]  = 0;
+`endif // TOWARDS_KMAC
 `ifdef BNMULV_ACCH
   assign ispr_rdata_no_intg_mux_in[IsprAccH] = 0;
 `endif
@@ -889,8 +925,10 @@ module otbn_alu_bignum
   assign ispr_rdata_no_intg_mux_in[IsprKeyS1H] = {{(WLEN - (SideloadKeyWidth - 256)){1'b0}},
                                                   sideload_key_shares_i[1][SideloadKeyWidth-1:256]};
 
+`ifdef TOWARDS_KMAC
   assign ispr_rdata_no_intg_mux_in[IsprKmacCfg] = {224'b0, kmac_cfg_intg_q[31:0]};
   assign ispr_rdata_no_intg_mux_in[IsprKmacStatus]  = {224'b0, kmac_status_intg_q[31:0]};
+`endif // TOWARDS_KMAC
 
   logic [WLEN-1:0]    ispr_rdata_no_intg;
   logic [ExtWLEN-1:0] ispr_rdata_intg_calc;
@@ -917,8 +955,10 @@ module otbn_alu_bignum
   // Second stage
   assign ispr_rdata_intg_mux_in[IsprModIntg] = mod_intg_q;
   assign ispr_rdata_intg_mux_in[IsprAccIntg] = ispr_acc_intg_i;
+`ifdef TOWARDS_KMAC
   assign ispr_rdata_intg_mux_in[IsprKmacMsgIntg]    = kmac_msg_intg_q;
   assign ispr_rdata_intg_mux_in[IsprKmacDigestIntg] = kmac_digest_intg_q;
+`endif // TOWARDS_KMAC
   assign ispr_rdata_intg_mux_in[IsprNoIntg]  = ispr_rdata_intg_calc;
 `ifdef BNMULV_ACCH
   assign ispr_rdata_intg_mux_in[IsprAccHIntg] = ispr_acch_intg_i;
@@ -926,8 +966,10 @@ module otbn_alu_bignum
 
   assign ispr_rdata_intg_mux_sel[IsprModIntg] = ispr_predec_bignum_i.ispr_rd_en[IsprMod];
   assign ispr_rdata_intg_mux_sel[IsprAccIntg] = ispr_predec_bignum_i.ispr_rd_en[IsprAcc];
+`ifdef TOWARDS_KMAC
   assign ispr_rdata_intg_mux_sel[IsprKmacMsgIntg]     = ispr_predec_bignum_i.ispr_rd_en[IsprKmacMsg];
   assign ispr_rdata_intg_mux_sel[IsprKmacDigestIntg] = ispr_predec_bignum_i.ispr_rd_en[IsprKmacDigest];
+`endif // TOWARDS_KMAC
 `ifdef BNMULV_ACCH
   assign ispr_rdata_intg_mux_sel[IsprAccHIntg] = ispr_predec_bignum_i.ispr_rd_en[IsprAccH];
 `endif
@@ -936,9 +978,14 @@ module otbn_alu_bignum
     |{ispr_predec_bignum_i.ispr_rd_en[IsprKeyS1H:IsprKeyS0L],
       ispr_predec_bignum_i.ispr_rd_en[IsprUrnd],
       ispr_predec_bignum_i.ispr_rd_en[IsprFlags],
+`ifdef TOWARDS_KMAC
       ispr_predec_bignum_i.ispr_rd_en[IsprRnd],
       ispr_predec_bignum_i.ispr_rd_en[IsprKmacCfg],
-      ispr_predec_bignum_i.ispr_rd_en[IsprKmacStatus]};
+      ispr_predec_bignum_i.ispr_rd_en[IsprKmacStatus]
+`else
+      ispr_predec_bignum_i.ispr_rd_en[IsprRnd]
+`endif // TOWARDS_KMAC
+    };
 
   // If we're reading from an ISPR we must be using the ispr_rdata_intg_mux
   `ASSERT(IsprRDataIntgMuxSelIfIsprRd_A,
@@ -2084,23 +2131,31 @@ module otbn_alu_bignum
   // not none. If `shift_mod_sel` is low, `mod_intg_q` flows into `adder_y_op_b` and from there
   // into `adder_y_res`.  In this case, `mod_intg_q` is used iff  `adder_y_res` flows into
   // `operation_result_o`.
-  logic mod_used, kmac_used;
+  logic mod_used;
   assign mod_used = operation_valid_i & (operation_i.op != AluOpBignumNone)
                     & !alu_predec_bignum_i.shift_mod_sel & adder_y_res_used;
+  `ASSERT_KNOWN(ModUsed_A, mod_used)
+
+`ifdef TOWARDS_KMAC
+  logic kmac_used;
   assign kmac_used = operation_valid_i & (operation_i.op != AluOpBignumNone) & (    |(ispr_predec_bignum_i.ispr_rd_en[IsprKmacMsg])     |
                                                                                     |(ispr_predec_bignum_i.ispr_rd_en[IsprKmacDigest])  |
                                                                                     |(ispr_predec_bignum_i.ispr_rd_en[IsprKmacCfg])     |
                                                                                     |(ispr_predec_bignum_i.ispr_rd_en[IsprKmacStatus])  );
-
-  `ASSERT_KNOWN(ModUsed_A, mod_used)
   `ASSERT_KNOWN(KmacUsed_A, kmac_used)
+`endif
+
 
   // Raise a register integrity violation error iff `mod_intg_q` is used and (at least partially)
   // invalid.
+`ifdef TOWARDS_KMAC
   assign reg_intg_violation_err_o = (mod_used & |(mod_intg_err)) | (kmac_used & ( |(kmac_msg_intg_err)    |
                                                                                   |(kmac_cfg_intg_err)    |
                                                                                   |(kmac_status_intg_err) |
                                                                                   |(kmac_digest_intg_err) ));
+`else
+  assign reg_intg_violation_err_o = mod_used & |(mod_intg_err);
+`endif // TOWARDS_KMAC
   `ASSERT_KNOWN(RegIntgErrKnown_A, reg_intg_violation_err_o)
 
   // Detect and signal unexpected secure wipe signals.
@@ -2160,9 +2215,15 @@ module otbn_alu_bignum
 
 
   // MOD ISPR Blanking
+`ifdef TOWARDS_KMAC
   `ASSERT(BlankingIsprMod_A,
           !((|mod_wr_en) | kmac_cfg_wr_en | (|kmac_digest_wr_en) | (|kmac_msg_wr_en) | ispr_mod_kmac_en) |-> ispr_mod_kmac_bignum_wdata_intg_blanked == '0,
           clk_i, !rst_ni || ispr_predec_error_o || alu_predec_error_o || !operation_commit_i)
+`else
+`ASSERT(BlankingIsprMod_A,
+          !(|mod_wr_en) |-> ispr_mod_bignum_wdata_intg_blanked == '0,
+          clk_i, !rst_ni || ispr_predec_error_o || alu_predec_error_o || !operation_commit_i)
+`endif // TOWARDS_KMAC
 
   // ACC ISPR Blanking
   `ASSERT(BlankingIsprACC_A,

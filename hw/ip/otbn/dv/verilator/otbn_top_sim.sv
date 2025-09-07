@@ -5,7 +5,9 @@
 // Copyright "Towards ML-KEM & ML-DSA on OpenTitan" Authors
 
 module otbn_top_sim #(
+`ifdef TOWARDS_KMAC
   parameter int NumAppIntf = 4
+`endif
 ) (
   input IO_CLK,
   input IO_RST_N
@@ -58,6 +60,7 @@ module otbn_top_sim #(
   logic                     edn_rnd_data_valid;
   logic                     edn_urnd_data_valid;
 
+`ifdef TOWARDS_KMAC
   // KMAC interface
   kmac_pkg::app_req_t                            otbn_kmac_app_req;
   kmac_pkg::app_rsp_t                            otbn_kmac_app_rsp;
@@ -77,6 +80,7 @@ module otbn_top_sim #(
   logic                               kmac_intr_kmac_done, kmac_intr_fifo_empty, kmac_intr_kmac_err;
   prim_mubi_pkg::mubi4_t              kmac_idle;
   logic                               kmac_en_masking;
+`endif // TOWARDS_KMAC
 
   // Instruction counter (feeds into otbn.INSN_CNT in full block)
   logic [31:0]              insn_cnt;
@@ -147,12 +151,17 @@ module otbn_top_sim #(
     .software_errs_fatal_i       ( 1'b0                       ),
 
     .sideload_key_shares_i       ( sideload_key_shares        ),
+`ifdef TOWARDS_KMAC
     .sideload_key_shares_valid_i ( 2'b11                      ),
 
     .kmac_app_rsp_i              ( otbn_kmac_app_rsp          ),
     .kmac_app_req_o              ( otbn_kmac_app_req          )
+`else
+    .sideload_key_shares_valid_i ( 2'b11                      )
+`endif // TOWARDS_KMAC
   );
 
+`ifdef TOWARDS_KMAC
   kmac #(
     .EnMasking(1),
     .SwKeyMasked(1)
@@ -237,6 +246,7 @@ module otbn_top_sim #(
       kmac_edn_rsp.edn_bus <= $urandom();
     end
   end
+`endif // TOWARDS_KMAC
 
   // The values returned by the mock EDN must match those set in `standalonesim.py`.
   localparam logic [1:0][WLEN-1:0] FixedEdnVals = {{4{64'hCCCC_CCCC_BBBB_BBBB}},

@@ -122,8 +122,10 @@ module rom_ctrl
     assign kmac_data_o = '{valid: kmac_rom_vld,
                            data: kmac_rom_data,
                            strb: kmac_pkg::MsgStrbW'({NumBytes{1'b1}}),
+                           `ifdef TOWARDS_KMAC
                            hold: 1'b0,
                            next: 1'b0,
+                           `endif
                            last: kmac_rom_last};
 
     assign kmac_rom_rdy = kmac_data_i.ready;

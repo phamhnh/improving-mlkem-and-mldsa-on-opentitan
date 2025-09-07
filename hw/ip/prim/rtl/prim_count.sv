@@ -44,9 +44,13 @@ module prim_count
   // To avoid this, we the instantiation to specify the actions which might happen. If this is not
   // '1, we will have an assertion which assert the corresponding action is never triggered. We can
   // then use this to avoid the unreachable assertions.
+`ifdef TOWARDS_KMAC
   /* verilator lint_off WIDTH */
+`endif
   parameter action_mask_t     PossibleActions = {$bits(action_mask_t){1'b1}}
+`ifdef TOWARDS_KMAC
   /* verilator lint_on WIDTH */
+`endif
 ) (
   input clk_i,
   input rst_ni,

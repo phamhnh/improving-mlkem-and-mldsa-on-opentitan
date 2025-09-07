@@ -206,11 +206,15 @@ package kmac_pkg;
     // In KMAC mode, the secret key always comes from sideload.
     // KMAC mode needs uniformly distributed entropy. The request will be
     // silently discarded in Reset state.
+`ifdef TOWARDS_KMAC
     AppKMAC   = 2,
 
     // In the configurable mode, the hash function (SHA3, SHAKE, cSHAKE)
     // is chosen according to the first transmitted word.
     AppConfigDynamic = 3
+`else
+    AppKMAC   = 2
+`endif
   } app_mode_e;
 
   // Predefined encoded_string
@@ -262,6 +266,7 @@ package kmac_pkg;
     Prefix: NSPrefixW'({EncodedStringRomCtrl, EncodedStringEmpty})
   };
 
+`ifdef TOWARDS_KMAC
   parameter app_config_t AppCfgDynamic = '{
     Mode: AppConfigDynamic,
     KeccakStrength: sha3_pkg::L256,   // Ignored
@@ -374,6 +379,106 @@ package kmac_pkg;
     // This state is used for terminal errors
     StTerminalError = 11'b01011101100
   } st_e;
+`else
+  // Exporting the app internal mux selection enum into the package. So that DV
+  // can use this enum in its scoreboard.
+  // Encoding generated with:
+  // $ ./util/design/sparse-fsm-encode.py -d 3 -m 4 -n 5 \
+  //      -s 713832113 --language=sv
+  //
+  // Hamming distance histogram:
+  //
+  //  0: --
+  //  1: --
+  //  2: --
+  //  3: |||||||||||||||||||| (66.67%)
+  //  4: |||||||||| (33.33%)
+  //  5: --
+  //
+  // Minimum Hamming distance: 3
+  // Maximum Hamming distance: 4
+  // Minimum Hamming weight: 1
+  // Maximum Hamming weight: 4
+  //
+  localparam int AppMuxWidth = 5;
+  typedef enum logic [AppMuxWidth-1:0] {
+    SelNone   = 5'b10100,
+    SelApp    = 5'b11001,
+    SelOutLen = 5'b00010,
+    SelSw     = 5'b01111
+  } app_mux_sel_e ;
+
+// Encoding generated with:
+  // $ ./util/design/sparse-fsm-encode.py -d 3 -m 14 -n 10 \
+  //     -s 2454278799 --language=sv
+  //
+  // Hamming distance histogram:
+  //
+  //  0: --
+  //  1: --
+  //  2: --
+  //  3: |||||||||| (14.29%)
+  //  4: |||||||||||||||||||| (27.47%)
+  //  5: ||||||||||||| (18.68%)
+  //  6: |||||||||||||||| (21.98%)
+  //  7: |||||||| (10.99%)
+  //  8: |||| (6.59%)
+  //  9: --
+  // 10: --
+  //
+  // Minimum Hamming distance: 3
+  // Maximum Hamming distance: 8
+  // Minimum Hamming weight: 3
+  // Maximum Hamming weight: 8
+  //
+  localparam int AppStateWidth = 10;
+  typedef enum logic [AppStateWidth-1:0] {
+    StIdle = 10'b1010111110,
+
+    // Application operation.
+    //
+    // if start request comes from an App first, until the operation ends by the
+    // requested App, all operations are granted to the specific App. SW
+    // requests and other Apps requests will be ignored.
+    //
+    // App interface does not have control signals. When first data valid occurs
+    // from an App, this logic asserts the start command to the downstream. When
+    // last beat pulse comes, this logic asserts the process to downstream
+    // (after the transaction is accepted regardless of partial writes or not)
+    // When absorbed by SHA3 core, the logic sends digest to the requested App
+    // and right next cycle, it triggers done command to downstream.
+
+    // In StAppCfg state, it latches the cfg from AppCfg parameter to determine
+    // the kmac_mode, sha3_mode, keccak strength.
+    StAppCfg = 10'b1010101101,
+
+    StAppMsg = 10'b1110001011,
+
+    // In StKeyOutLen, this module pushes encoded outlen to the MSG_FIFO.
+    // Assume the length is 256 bit, the data will be 48'h 02_0100
+    StAppOutLen  = 10'b1010011000,
+    StAppProcess = 10'b1110110010,
+    StAppWait    = 10'b1001010000,
+
+    // SW Controlled
+    // If start request comes from SW first, until the operation ends, all
+    // requests from KeyMgr will be discarded.
+    StSw = 10'b0010111011,
+
+    // Error KeyNotValid
+    // When KeyMgr operates, the secret key is not ready yet.
+    StKeyMgrErrKeyNotValid = 10'b0111011111,
+
+    StError = 10'b1110010111,
+    StErrorAwaitSw = 10'b0110001100,
+    StErrorAwaitApp = 10'b1011100000,
+    StErrorWaitAbsorbed = 10'b0010100100,
+    StErrorServiceRejected = 10'b1101000111,
+
+    // This state is used for terminal errors
+    StTerminalError = 10'b0101110110
+  } st_e;
+`endif // TOWARDS_KMAC
 
   // MsgWidth : 64
   // MsgStrbW : 8
@@ -385,8 +490,10 @@ package kmac_pkg;
     logic [MsgWidth-1:0] data;
     logic [MsgStrbW-1:0] strb;
     logic last;
+  `ifdef TOWARDS_KMAC
     logic hold;
     logic next;
+  `endif
   } app_req_t;
 
   typedef struct packed {
@@ -404,9 +511,13 @@ package kmac_pkg;
     valid: 1'b 0,
     data: '0,
     strb: '0,
+  `ifdef TOWARDS_KMAC
     last: 1'b 0,
     hold: 1'b 0,
     next: 1'b 0
+  `else
+    last: 1'b 0
+  `endif
   };
   parameter app_rsp_t APP_RSP_DEFAULT = '{
     ready: 1'b1,
@@ -473,10 +584,14 @@ package kmac_pkg;
     ErrPackerIntegrity = 8'h C2,
 
     // Error due to the counter integrity check failure inside MsgFifo.Fifo
+  `ifdef TOWARDS_KMAC
     ErrMsgFifoIntegrity = 8'h C3,
 
     // Error in the packer that is connected for the app intf to OTBN
     ErrAppIntfPacker = 8'h C4
+  `else
+    ErrMsgFifoIntegrity = 8'h C3
+  `endif
   } err_code_e;
 
   typedef struct packed {

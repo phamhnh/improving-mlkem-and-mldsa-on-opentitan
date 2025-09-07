@@ -15,8 +15,13 @@ module kmac_app
   parameter  bit          EnMasking          = 1'b0,
   localparam int          Share              = (EnMasking) ? 2 : 1, // derived parameter
   parameter  bit          SecIdleAcceptSwMsg = 1'b0,
+`ifdef TOWARDS_KMAC
   parameter  int unsigned NumAppIntf         = 4,
   parameter  app_config_t AppCfg[NumAppIntf] = '{AppCfgKeyMgr, AppCfgLcCtrl, AppCfgRomCtrl, AppCfgDynamic}
+`else
+  parameter  int unsigned NumAppIntf         = 3,
+  parameter  app_config_t AppCfg[NumAppIntf] = '{AppCfgKeyMgr, AppCfgLcCtrl, AppCfgRomCtrl}
+`endif
 ) (
   input clk_i,
   input rst_ni,
@@ -87,7 +92,9 @@ module kmac_app
 
   // from SHA3
   input prim_mubi_pkg::mubi4_t absorbed_i,
+`ifdef TOWARDS_KMAC
   input prim_mubi_pkg::mubi4_t squeezing_i,
+`endif
 
   // to KMAC
   output kmac_cmd_e cmd_o,
@@ -190,7 +197,10 @@ module kmac_app
   // the other responses are controled in separate logic. So define the signals
   // here and merge them to the response.
   logic app_data_ready, fsm_data_ready;
-  logic app_digest_done, sha3_digest_done, fsm_digest_done_q, fsm_digest_done_d;
+  logic app_digest_done, fsm_digest_done_q, fsm_digest_done_d;
+`ifdef TOWARDS_KMAC
+  logic sha3_digest_done;
+`endif
   logic [AppDigestW-1:0] app_digest [2];
 
   // One more slot for value NumAppIntf. It is the value when no app intf is
@@ -202,6 +212,7 @@ module kmac_app
   logic [AppIdxW-1:0] app_id, app_id_d;
   logic               clr_appid, set_appid;
 
+`ifdef TOWARDS_KMAC
   // Dynamic SHA3 mode for AppCfgDynamic
   logic                       set_dynamic_sha3_mode;
   sha3_pkg::sha3_mode_e       dynamic_sha3_mode_q;
@@ -213,6 +224,7 @@ module kmac_app
   logic                       pack_digest_word;
   logic                       shift_and_pack_digest;
   logic [2:0]                 digest_word_idx_q, digest_word_idx_d;
+`endif
 
   // Output length
   logic [OutLenW-1:0] encoded_outlen, encoded_outlen_mask;
@@ -238,6 +250,7 @@ module kmac_app
     else if (service_rejected_error_clr) service_rejected_error <= 1'b 0;
   end
 
+`ifdef TOWARDS_KMAC
   // Digest packer for KMAC-OTBN interface
   logic [255:0] digest_word;
   logic [255:0] packed_digest_word;
@@ -249,11 +262,13 @@ module kmac_app
   logic [1:0]   permutation_ctr;
   logic         incr_permutation_ctr, reset_permutation_ctr;
   logic         otbn_app_intf_done;
+`endif
 
   ////////////////////////////
   // Application Mux/ Demux //
   ////////////////////////////
 
+`ifdef TOWARDS_KMAC
   // AppCfgDynamic
   always_ff @(posedge clk_i) begin
     if (app_i[3].valid && set_appid) begin
@@ -278,12 +293,17 @@ module kmac_app
     else if ((app_i[3].valid && set_appid) || reset_digest_word) digest_word_idx_q <= 3'h0;
     else if (next_digest_word) digest_word_idx_q <= digest_word_idx_d + 3'h1;
   end
+`endif
 
   // Processing return data.
   // sends to only selected app intf.
   // clear digest right after done to not leak info to other interface
   always_comb begin
+`ifdef TOWARDS_KMAC
     for (int unsigned i = 0 ; i < NumAppIntf - 1; i++) begin
+`else
+    for (int unsigned i = 0 ; i < NumAppIntf; i++) begin
+`endif
       if (i == app_id) begin
         app_o[i] = '{
           ready:         app_data_ready  | fsm_data_ready,
@@ -306,6 +326,7 @@ module kmac_app
     end // for {i, NumAppIntf, i++}
   end // aiways_comb
 
+`ifdef TOWARDS_KMAC
   // Special case KMAC-OTBN interface
   always_comb begin
     if (app_id == 3) begin
@@ -327,6 +348,7 @@ module kmac_app
       };
     end
   end
+`endif
 
   // app_id latch
   always_ff @(posedge clk_i or negedge rst_ni) begin
@@ -401,7 +423,9 @@ module kmac_app
     // app_id control
     set_appid = 1'b 0;
     clr_appid = 1'b 0;
+  `ifdef TOWARDS_KMAC
     set_dynamic_sha3_mode = 1'b 0;
+  `endif
 
     // Commands
     cmd_o = CmdNone;
@@ -422,6 +446,7 @@ module kmac_app
     fsm_data_ready = 1'b 0;
     fsm_digest_done_d = 1'b 0;
 
+  `ifdef TOWARDS_KMAC
     // digest word control
     next_digest_word = 1'b 0;
     shift_and_pack_digest = 1'b 0;
@@ -429,6 +454,7 @@ module kmac_app
     digest_valid = 1'b 0;
     incr_permutation_ctr = 1'b 0;
     reset_permutation_ctr = 1'b 0;
+  `endif
 
     unique case (st)
       StIdle: begin
@@ -458,9 +484,11 @@ module kmac_app
 
           service_rejected_error_set = 1'b 1;
 
+      `ifdef TOWARDS_KMAC
         end else if ((AppCfg[app_id].Mode == AppConfigDynamic)) begin
           st_d = StAppDynamicCfg;
           set_dynamic_sha3_mode = 1'b 1;
+      `endif
 
         end else begin
           // As Cfg is stable now, it sends cmd
@@ -471,11 +499,13 @@ module kmac_app
         end
       end
 
+    `ifdef TOWARDS_KMAC
       StAppDynamicCfg: begin
         cmd_o = CmdStart;
         st_d = StAppMsg;
         mux_sel = SelDynamicAppCfg;
       end
+    `endif
 
       StAppMsg: begin
         mux_sel = SelApp;
@@ -505,6 +535,7 @@ module kmac_app
         st_d = StAppWait;
       end
 
+    `ifdef TOWARDS_KMAC
       StAppShiftDigest: begin
         st_d = StAppShiftDigest;
         if (digest_packer_ready) begin
@@ -563,6 +594,18 @@ module kmac_app
           st_d = StAppWait;
         end
       end
+    `else
+      StAppWait: begin
+        if (prim_mubi_pkg::mubi4_test_true_strict(absorbed_i)) begin
+          // Send digest to KeyMgr and complete the op
+          st_d = StIdle;
+          cmd_o = CmdDone;
+          clr_appid = 1'b 1;
+        end else begin
+          st_d = StAppWait;
+        end
+     end
+    `endif // TOWARDS_KMAC
 
       StSw: begin
         mux_sel = SelSw;
@@ -782,11 +825,13 @@ module kmac_app
         sw_ready_o   = kmac_ready_i ;
       end
 
+    `ifdef TOWARDS_KMAC
       SelDynamicAppCfg: begin
         // Ready to consume next word on app iface,
         // since the first word sets only the config
         app_data_ready = 1'b1;
       end
+    `endif // TOWARDS_KMAC
 
       default: begin // Incl. SelNone
         kmac_valid_o = 1'b 0;
@@ -886,6 +931,7 @@ module kmac_app
     end
   end
 
+`ifdef TOWARDS_KMAC
   assign digest_word_mask = (dynamic_keccak_strength_q == sha3_pkg::L128 && digest_word_idx_q == 3'h5)  ? { {192{1'b0}}, {64{1'b1}} } :
                             ((dynamic_keccak_strength_q == sha3_pkg::L256 && digest_word_idx_q == 3'h4) ? { {192{1'b0}}, {64{1'b1}} } : {256{1'b1}});
 
@@ -952,14 +998,22 @@ module kmac_app
     .flush_done_o (),
     .err_o        (digest_packer_error)
   );
+`endif // TOWARDS_KMAC
 
   // Keccak state --> KeyMgr
+`ifdef TOWARDS_KMAC
   assign sha3_digest_done = (prim_mubi_pkg::mubi4_test_true_strict(absorbed_i) || prim_mubi_pkg::mubi4_test_true_strict(squeezing_i)) && digest_valid;
+`endif
   always_comb begin
     app_digest_done = 1'b 0;
     app_digest = '{default:'0};
+  `ifndef TOWARDS_KMAC
+    if (st == StAppWait && prim_mubi_pkg::mubi4_test_true_strict(absorbed_i) &&
+       lc_ctrl_pkg::lc_tx_test_false_strict(lc_escalate_en_i)) begin
+  `else
     if (st == StAppWait && sha3_digest_done &&
        lc_ctrl_pkg::lc_tx_test_false_strict(lc_escalate_en_i)) begin
+  `endif // TOWARDS_KMAC
       // SHA3 engine has calculated the hash. Return the data to KeyMgr
       app_digest_done = 1'b 1;
 
@@ -1071,6 +1125,7 @@ module kmac_app
     endcase
   end
 
+`ifdef TOWARDS_KMAC
   always_comb begin
     unique case (keccak_strength_o)
       sha3_pkg::L128: max_digest_words = 3'h5;
@@ -1081,6 +1136,7 @@ module kmac_app
       default:        max_digest_words = 3'h0;
     endcase
   end
+`endif
 
   // KMAC en / SHA3 mode / Strength
   //  by default, it uses reg cfg. When app intf reqs come, it uses AppCfg.
@@ -1094,10 +1150,12 @@ module kmac_app
       kmac_en_o         <= reg_kmac_en_i;
       sha3_mode_o       <= reg_sha3_mode_i;
       keccak_strength_o <= reg_keccak_strength_i;
+  `ifdef TOWARDS_KMAC
     end else if (set_dynamic_sha3_mode) begin
       kmac_en_o         <= 1'b 0;
       sha3_mode_o       <= dynamic_sha3_mode_q;
       keccak_strength_o <= dynamic_keccak_strength_q;
+  `endif
     end else if (set_appid) begin
       kmac_en_o         <= AppCfg[arb_idx].Mode == AppKMAC ? 1'b 1 : 1'b 0;
       sha3_mode_o       <= AppCfg[arb_idx].Mode == AppSHA3
@@ -1111,11 +1169,17 @@ module kmac_app
   end
 
   // Status
+`ifdef TOWARDS_KMAC
   assign app_active_o = (st inside {StAppCfg, StAppDynamicCfg, StAppMsg,
                                     StAppOutLen, StAppProcess, StAppWait,
                                     StAppShiftDigest, StAppManualRun});
+`else
+  assign app_active_o = (st inside {StAppCfg, StAppMsg, StAppOutLen,
+                                    StAppProcess, StAppWait});
+`endif
 
   // Error Reporting ==========================================================
+`ifdef TOWARDS_KMAC
   always_comb begin
     priority casez ({fsm_err.valid, mux_err.valid, digest_packer_error})
       3'b ?1: error_o = mux_err;
@@ -1124,6 +1188,15 @@ module kmac_app
       default: error_o = '{valid: 1'b0, code: ErrNone, info: '0};
     endcase
   end
+`else
+ always_comb begin
+    priority casez ({fsm_err.valid, mux_err.valid})
+      2'b ?1: error_o = mux_err;
+      2'b 10: error_o = fsm_err;
+      default: error_o = '{valid: 1'b0, code: ErrNone, info: '0};
+    endcase
+  end
+`endif
 
   ////////////////
   // Assertions //

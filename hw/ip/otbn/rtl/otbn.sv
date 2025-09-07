@@ -74,11 +74,15 @@ module otbn
   output otp_ctrl_pkg::otbn_otp_key_req_t otbn_otp_key_o,
   input  otp_ctrl_pkg::otbn_otp_key_rsp_t otbn_otp_key_i,
 
+`ifdef TOWARDS_KMAC
   input keymgr_pkg::otbn_key_req_t keymgr_key_i,
 
   // KMAC interface
   input  kmac_pkg::app_rsp_t kmac_data_i,
   output kmac_pkg::app_req_t kmac_data_o
+`else
+    input keymgr_pkg::otbn_key_req_t keymgr_key_i
+`endif // TOWARDS_KMAC
 );
 
   import prim_mubi_pkg::*;
@@ -1086,12 +1090,14 @@ module otbn
     .edn_i      ( edn_urnd_i    )
   );
 
+`ifdef TOWARDS_KMAC
   // KMAC Interface ============================================================
   kmac_pkg::app_req_t kmac_req;
   kmac_pkg::app_rsp_t kmac_rsp;
 
   assign kmac_data_o = kmac_req;
   assign kmac_rsp    = kmac_data_i;
+`endif
 
   // OTBN Core =================================================================
 
@@ -1166,10 +1172,15 @@ module otbn
     .software_errs_fatal_i       (software_errs_fatal_q),
 
     .sideload_key_shares_i       (keymgr_key_i.key),
+`ifdef TOWARDS_KMAC
+
     .sideload_key_shares_valid_i ({2{keymgr_key_i.valid}}),
 
     .kmac_app_req_o              (kmac_req),
     .kmac_app_rsp_i              (kmac_rsp)
+`else
+    .sideload_key_shares_valid_i ({2{keymgr_key_i.valid}})
+`endif // TOWARDS_KMAC
   );
 
   always_ff @(posedge clk_i or negedge rst_n) begin

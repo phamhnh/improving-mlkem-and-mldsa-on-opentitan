@@ -38,6 +38,10 @@ parameters:
     datatype: str
     paramtype: vlogdefine
     default: "buffer_bit"
+  TOWARDS_KMAC:
+    datatype: bool
+    paramtype: vlogdefine
+    default: false
 
 targets:
   default: &default_target
@@ -65,6 +69,7 @@ targets:
     parameters:
       - MAC_ADDER
       - ALU_ADDER
+      - TOWARDS_KMAC=true
     tools:
       vcs:
         vcs_options:

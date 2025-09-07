@@ -113,7 +113,9 @@ module kmac_entropy
   localparam int StateWidth = 10;
 
   // States
+`ifdef TOWARDS_KMAC
   /* verilator lint_off VARHIDDEN */
+`endif
   typedef enum logic [StateWidth-1:0] {
     // Reset: Reset state. The entropy is not ready. The state machine should
     // get new entropy from EDN or the seed should be feeded by the software.
@@ -173,7 +175,9 @@ module kmac_entropy
 
     StTerminalError = 10'b0010011000
   } rand_st_e;
+`ifdef TOWARDS_KMAC
   /* verilator lint_off VARHIDDEN */
+`endif
 
   /////////////
   // Signals //

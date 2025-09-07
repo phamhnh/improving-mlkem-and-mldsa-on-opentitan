@@ -64,7 +64,9 @@ module otbn_start_stop_control
 `ifdef TOWARDS_MAC
   output logic sec_wipe_tmp_urnd_o,
 `endif
+`ifdef TOWARDS_KMAC
   output logic sec_wipe_kmac_regs_urnd_o,
+`endif
   output logic sec_wipe_zero_o,
 
   output logic ispr_init_o,
@@ -172,7 +174,9 @@ module otbn_start_stop_control
 `ifdef TOWARDS_MAC
     sec_wipe_tmp_urnd_o       = 1'b0;
 `endif
+`ifdef TOWARDS_KMAC
     sec_wipe_kmac_regs_urnd_o = 1'b0;
+`endif
     sec_wipe_zero_o           = 1'b0;
     addr_cnt_inc              = 1'b0;
     secure_wipe_ack_o         = 1'b0;
@@ -311,7 +315,9 @@ module otbn_start_stop_control
         `ifdef TOWARDS_MAC
         sec_wipe_tmp_urnd_o   = (addr_cnt_q == 6'b000001);
         `endif
+        `ifdef TOWARDS_KMAC
         sec_wipe_kmac_regs_urnd_o = (addr_cnt_q == 6'b000001);
+        `endif
         // Supress writes to the zero register and the call stack.
         sec_wipe_base_o       = (addr_cnt_q > 6'b000001);
         sec_wipe_base_urnd_o  = (addr_cnt_q > 6'b000001);

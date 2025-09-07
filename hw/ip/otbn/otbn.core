@@ -144,6 +144,9 @@ parameters:
   TOWARDS_MAC:
     datatype: bool
     paramtype: vlogdefine
+  TOWARDS_KMAC:
+    datatype: bool
+    paramtype: vlogdefine
   MAC_ADDER:
     datatype: str
     paramtype: vlogdefine
@@ -197,6 +200,7 @@ targets:
       - MAC_ADDER
       - ALU_ADDER
       - SYNTHESIS=true
+      - old_kmac ? (TOWARDS_KMAC=true)
       - old_mac ? (TOWARDS_BASE=true)
       - old_mac ? (TOWARDS_MAC=true)
       - old_adder ? (TOWARDS_ADDER=true)
@@ -235,6 +239,7 @@ targets:
     default_tool: icarus
     parameters:
       - SYNTHESIS=true
+      - TOWARDS_KMAC=true
       - old_mac ? (TOWARDS_MAC=true)
       - old_adder ? (TOWARDS_ADDER=true)
       - bnmulv_ver1 ? (TOWARDS_BASE=true)
@@ -284,6 +289,7 @@ targets:
     default_tool: icarus
     parameters:
       - SYNTHESIS=true
+      - TOWARDS_KMAC=true
       - MAC_ADDER
       - ALU_ADDER
       - old_mac ? (TOWARDS_MAC=true)
@@ -309,6 +315,7 @@ targets:
     default_tool: icarus
     parameters:
       - SYNTHESIS=true
+      - TOWARDS_KMAC=true
       - MAC_ADDER
       - ALU_ADDER
       - old_mac ? (TOWARDS_MAC=true)
