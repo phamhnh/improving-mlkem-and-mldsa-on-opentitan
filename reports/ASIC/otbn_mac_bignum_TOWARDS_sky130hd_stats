@@ -1,7 +1,8 @@
 name: otbn_mac_bignum
-in2out_slack: -8.078218
-in2out_required: 25.400000
-shortest_slack: -8.078218
-instances: 41759
-design_area: 332270
+Fmax: 30 (33.333333333333336)
+in2out_slack: 0.878561
+in2out_required: 33.333332
+shortest_slack: 0.878561
+instances: 41992
+design_area: 335058
 utilization: 50

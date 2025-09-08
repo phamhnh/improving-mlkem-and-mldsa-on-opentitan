@@ -1,0 +1,8 @@
+name: otbn_bignum_mul
+Fmax: 875 (1142.857142857143)
+in2out_slack: 5.478618
+in2out_required: 1142.857178
+shortest_slack: 5.478618
+instances: 19163
+design_area: 1991
+utilization: 45

@@ -58,19 +58,25 @@ PDKS = [
 
 # List of top modules to be synthesized.
 TOP_MODULES = [
+    "otbn",
     "otbn_alu_bignum",
     "otbn_mac_bignum"
 ]
 
 # List of adders used in the design.
+MULTIPLIERS = ["unified_mul", "otbn_bignum_mul"]
+
+# List of adders used in the design.
 ADDERS = ["buffer_bit", "brent_kung", "sklansky", "kogge_stone"]
 
-# Manually established minimum clock period on sky130hd per adder.
-ADDERS_CLOCK_PERIOD = {
+# Manually established minimum clock period on sky130hd.
+CLOCK_PERIOD = {
   "buffer_bit":  "4.3",
   "brent_kung":  "4.1",
   "sklansky":    "4.0",
-  "kogge_stone": "5.1"
+  "kogge_stone": "5.1",
+  "unified_mul": "10.5",
+  "otbn_bignum_mul": "10.5"
 }
 
 # List of different versions for our design.
@@ -197,7 +203,7 @@ STAGE_ARGS = {
             IO_PLACER_ASAP7 if pdk == "asap7" else IO_PLACER_SKY130HD
         ) |
         {
-            "CLOCK_PERIOD": ADDERS_CLOCK_PERIOD[base_name],
+            "CLOCK_PERIOD": CLOCK_PERIOD[base_name],
         },
         stage_arguments = STAGE_ARGS,
         pdk = "@docker_orfs//:{}".format(pdk),
@@ -207,7 +213,7 @@ STAGE_ARGS = {
         variant="{}".format(pdk),
         verilog_files = [":VER1_files"],
     )
-    for pdk in PDKS for base_name in ADDERS
+    for pdk in PDKS for base_name in ADDERS + MULTIPLIERS
 ]
 
 [
@@ -239,7 +245,7 @@ STAGE_ARGS = {
             "OUTPUT": _ADDER_OUTPUT.format(base_name, pdk),
         },
         script = "//hw/ip/otbn/sta:results_tcl",
-    ) for pdk in PDKS for base_name in ADDERS
+    ) for pdk in PDKS for base_name in ADDERS + MULTIPLIERS
 ]
 
 [

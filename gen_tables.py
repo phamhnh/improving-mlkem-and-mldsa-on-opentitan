@@ -44,11 +44,12 @@ def extract_delay_FPGA(file_path):
 
 def extract_ORFS(file_path):
     utilization_data = {
-        "in2out_required": None,
+        "Fmax": None,
         "design_area": None,
     }
 
     shortest_slack = 0
+    in2out_required = 0
 
     try:
       with open(file_path, "r") as file:
@@ -56,13 +57,13 @@ def extract_ORFS(file_path):
           for key in utilization_data.keys():
             # Extract values for specific components
             if f"{key}" in line:
-                utilization_data[key] = float(line.split(": ")[1].strip())
+                utilization_data[key] = float(line.split(" ")[1].strip())
           if "shortest_slack" in line:
             shortest_slack = float(line.split(": ")[1].strip())
     except FileNotFoundError: pass
 
     if shortest_slack < 0:
-      utilization_data["in2out_required"] = str(utilization_data["in2out_required"]) + "!"
+      utilization_data["Fmax"] = str(utilization_data["Fmax"]) + "!"
 
     return utilization_data
 
@@ -74,8 +75,8 @@ def extract(top_module, flag_group):
 
   timing = extract_delay_FPGA(f"reports/FPGA/{outdir}/timing.txt")
 
-  asap7 = extract_ORFS(f"reports/ASIC/{top_module}_{flag_group}_asap7_stats")
-  sky130hd = extract_ORFS(f"reports/ASIC/{top_module}_{flag_group}_sky130hd_stats")
+  asap7 = extract_ORFS(f"reports/ASIC/{top_module}{'_' + flag_group if flag_group else ''}_asap7_stats")
+  sky130hd = extract_ORFS(f"reports/ASIC/{top_module}{'_' + flag_group if flag_group else ''}_sky130hd_stats")
 
   data = [top_module.replace("_", "\_") + (" " + flag_group if flag_group else "")] + list(result.values()) + [1000/timing if timing else 0] + list(asap7.values()) + list(sky130hd.values())
 
@@ -101,7 +102,7 @@ def report(data):
 
 
 def synthesize_ASIC(top_module, outdir, flags = []):
-  command = f"bazel build //hw/ip/otbn:{top_module}_{flags}_asap7_all_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}_{flags}_asap7_stats {outdir}/"
+  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags != '' else ''}_asap7{'_all' if flags != '' else ''}_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags != '' else ''}_asap7_stats {outdir}/"
 
   # //hw/ip/otbn:otbn_mac_bignum_TOWARDS_asap7_all_results
 
@@ -109,7 +110,7 @@ def synthesize_ASIC(top_module, outdir, flags = []):
 
   result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
 
-  command = f"bazel build //hw/ip/otbn:{top_module}_{flags}_sky130hd_all_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}_{flags}_sky130hd_stats {outdir}"
+  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags != '' else ''}_sky130hd{'_all' if flags != '' else ''}_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags != '' else ''}_sky130hd_stats {outdir}"
 
   print(f"Command: {command}")
 
@@ -160,6 +161,13 @@ if __name__ == "__main__":
   )
 
   parser.add_argument(
+      "--otbn",
+      action="store_true",
+      default=False,
+      help="Output for the otbn module. (default: False)"
+  )
+
+  parser.add_argument(
       "--otbn_sub",
       action="store_true",
       default=False,
@@ -189,11 +197,18 @@ if __name__ == "__main__":
   modules = [args.top_module]
 
   if args.mul:
-    modules = ["unified_mul", "otbn_bignum_mul"]
+    modules = ["otbn_bignum_mul", "unified_mul"]
   elif args.adders:
-    modules = ["brent_kung_adder_256", "kogge_stone_adder_256", "sklansky_adder_256", "buffer_bit", "csa_carry4"]
+    modules = ["ref_add", "buffer_bit", "csa_carry4", "brent_kung", "kogge_stone", "sklansky"]
   elif args.cond_sub:
     modules = ["cond_sub", "cond_sub_buffer_bit"]
+  elif args.otbn:
+    modules = ["otbn"]
+    flags = {"KMAC": ["kmac"],
+             "TOWARDS": ["old_adder", "old_mac"],
+             "VER1": ["bnmulv_ver1"],
+             "VER2": ["bnmulv_ver2"],
+             "VER3": ["bnmulv_ver3"]}
   elif args.otbn_sub:
     modules = ["otbn_mac_bignum", "otbn_alu_bignum"]
     flags = {"KMAC": ["kmac"],

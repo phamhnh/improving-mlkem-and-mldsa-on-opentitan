@@ -1,0 +1,8 @@
+name: otbn_mac_bignum
+Fmax: 65 (15.384615384615385)
+in2out_slack: 0.968893
+in2out_required: 15.384615
+shortest_slack: 0.968893
+instances: 30724
+design_area: 246441
+utilization: 52
