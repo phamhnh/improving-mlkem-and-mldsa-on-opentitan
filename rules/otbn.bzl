@@ -16,6 +16,13 @@ def _otbn_assemble_sources(ctx, additional_srcs = []):
     cc_toolchain = find_cc_toolchain(ctx)
     copts = ctx.attr.copts + ctx.fragments.cpp.copts
 
+    # Set BNMULV_VER as bazel env variable
+    bnmulv_version_id = "0"
+    for copt in copts:
+        if "--bnmulv_version_id" in copt:
+            bnmulv_version_id = copt.replace("--bnmulv_version_id=", "")
+            break
+
     # if there are C preprocessor options set, prefix the object file names
     # with the target name so that we can assemble the same file with different
     # options in different targets.
@@ -35,6 +42,7 @@ def _otbn_assemble_sources(ctx, additional_srcs = []):
             env = {
                 "RV32_TOOL_AS": ctx.executable._riscv32_as.path,
                 "RV32_TOOL_GCC": ctx.executable._riscv32_gcc.path,
+                "BNMULV_VER": bnmulv_version_id,
             },
             arguments = copts + ["-o", obj.path, src.path] + ctx.attr.args,
             executable = ctx.executable._otbn_as,
@@ -90,6 +98,12 @@ def _otbn_binary(ctx, additional_srcs = []):
 
     deps = [f for dep in ctx.attr.deps for f in dep.files.to_list()]
 
+    bnmulv_version_id = "0"
+    for copt in ctx.attr.copts:
+        if "--bnmulv_version_id" in copt:
+            bnmulv_version_id = copt.replace("--bnmulv_version_id=", "")
+            break
+
     # Run the otbn_build.py script to link object files from the sources and
     # dependencies.
     ctx.actions.run(
@@ -105,6 +119,7 @@ def _otbn_binary(ctx, additional_srcs = []):
             "RV32_TOOL_GCC": ctx.executable._riscv32_gcc.path,
             "RV32_TOOL_LD": ctx.executable._riscv32_ld.path,
             "RV32_TOOL_OBJCOPY": ctx.executable._riscv32_objcopy.path,
+            "BNMULV_VER": bnmulv_version_id,
         },
         arguments = [
             "--app-name={}".format(ctx.attr.name),
