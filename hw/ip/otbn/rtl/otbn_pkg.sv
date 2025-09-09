@@ -465,14 +465,13 @@ package otbn_pkg;
 `endif // TOWARDS_KMAC
   } ispr_e;
 
-`ifdef BNMULV
+// Required for BNMULV adders.
   typedef enum logic [1:0] {
     VecType_h16  = 2'b00,
     VecType_s32  = 2'b01,
     VecType_d64  = 2'b10,
     VecType_v256 = 2'b11
   } vec_type_e;
-`endif
 
   typedef logic [$clog2(NFlagGroups)-1:0] flag_group_t;
 

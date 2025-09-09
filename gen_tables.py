@@ -131,7 +131,7 @@ def synthesize(top_module, outdir, flags = []):
 #  command = f"fusesoc --cores-root . run --flag=fileset_top --target=sta --flag +bnmulv_ver1 --no-export --tool=vivado --setup --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn:0.1; cd build/lowrisc_ip_otbn_0.1/sta-vivado; vivado -mode batch -source timing.tcl -notrace -tclargs --top_module {top_module} --start_freq 10 --outdir ../../../{outdir}"
 #  command = f"fusesoc --cores-root . run --flag=fileset_top --target=sta --flag +bnmulv_ver2 --no-export --tool=vivado --setup --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn:0.1; cd build/lowrisc_ip_otbn_0.1/sta-vivado; vivado -mode batch -source timing.tcl -notrace -tclargs --top_module {top_module} --start_freq 10 --outdir ../../../{outdir}"
 #  command = f"fusesoc --cores-root . run --flag=fileset_top --target=sta --flag +bnmulv_ver3 --no-export --tool=vivado --setup --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn:0.1; cd build/lowrisc_ip_otbn_0.1/sta-vivado; vivado -mode batch -source timing.tcl -notrace -tclargs --top_module {top_module} --start_freq 10 --outdir ../../../{outdir}"
-  command = f"fusesoc --cores-root . run --flag=fileset_top --target=sta {' '.join(['--flag +' + flag for flag in flags])} --no-export --tool=vivado --setup --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn:0.1; cd build/lowrisc_ip_otbn_0.1/sta-vivado; vivado -mode batch -source timing.tcl -notrace -tclargs --top_module {top_module} --start_freq 10 --outdir ../../../{outdir}"
+  command = f"fusesoc --cores-root . run --flag=fileset_top --target=sta {' '.join(['--flag +' + flag for flag in flags])} --no-export --tool=vivado --setup --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn:0.1; mkdir -p {outdir}; cd build/lowrisc_ip_otbn_0.1/sta-vivado; vivado -mode batch -source timing.tcl -notrace -tclargs --top_module {top_module} --start_freq 10 --outdir ../../../{outdir}"
 
   print(f"Command: {command})")
 
@@ -207,8 +207,8 @@ if __name__ == "__main__":
   if args.mul:
     modules = [("otbn_bignum_mul", {None: []}),
                ("unified_mul",     {None: ["bnmulv_ver1"]})]
-  #elif args.adders:
-  #  modules = ["ref_add", "buffer_bit", "csa_carry4", "brent_kung"] #, "kogge_stone", "sklansky"]
+  elif args.adders:
+    modules = [(top_module, {"": []}) for top_module in ["ref_add", "buffer_bit", "csa_carry4", "brent_kung", "kogge_stone", "sklansky"]]
   #elif args.cond_sub:
   #  modules = ["cond_sub", "cond_sub_buffer_bit"]
   elif args.otbn:

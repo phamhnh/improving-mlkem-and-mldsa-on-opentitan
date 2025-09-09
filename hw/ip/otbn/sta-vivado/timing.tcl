@@ -76,52 +76,50 @@ proc set_timing_paths {clk clk_period} {
   set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_ports [all_outputs]] -datapath_only
 }
 
+proc roundWithinPercent {x percent} {
+    if {$x == 0} {return 0}
+    set tol [expr {$percent/100.0 * abs($x)}]
+    set d   [expr {int(floor(-log10($tol)))}]
+    set scale [expr {pow(10,$d)}]
+    return [expr {round($x*$scale)/$scale}]
+}
+
+proc withinOnePercent {a b} {
+    if {$a == 0 && $b == 0} {return 1}
+    if {$a == 0 || $b == 0} {return 0}
+    return [expr {abs($a - $b) <= 0.01 * max(abs($a), abs($b))}]
+}
+
 # Set clock port name
 set clk "clk_i"
+set scale_factor 1000.0
 
-set_timing_paths $clk [expr {1000.0/$start_f}]
+set_timing_paths $clk [expr {$scale_factor/$start_f}]
 
 
-# Define search range
-set slow_f    1
-set fast_f 1000
+set slow_f -1
+set fast_f -1
 
 set best_f $slow_f
 set max_freq $best_f
 
-set mid_f [expr {$start_f/2}]
+set mid_f $start_f
 
 
 # Binary search for max frequency
 while {1} {
-
-    if {$fast_f - $slow_f <= 5} {
-      break
-    }
-
-    if {$fast_f == 1000} {
-       set mid_f [expr {2*$mid_f}]
-    } else {
-      set mid_f [expr {1000.0/((1000.0/$slow_f + 1000.0/$fast_f) / 2.0)}]
-    }
-
-    if {$mid_f >= $fast_f} {
-       puts "$mid_f >= $fast_f"
-       exit -1
-    }
-
-    set mid_f [expr {((int($mid_f) + 4) / 5) * 5}]
+    set mid_f [roundWithinPercent $mid_f 0.1]
 
     puts "\n\n***********************************************"
     puts "***********************************************"
-    puts "Slow frequency: $slow_f MHz (period: [expr {1000.0/$slow_f}] ns)"
-    puts "Fast frequency: $fast_f MHz (period: [expr {1000.0/$fast_f}] ns)"
-    puts "Testing clock period: $mid_f MHz (Frequency: [expr {1000.0/$mid_f}] ns)"
+    puts "Slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] ns)"
+    puts "Fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] ns)"
+    puts "Testing clock period: $mid_f MHz (Frequency: [expr {$scale_factor/$mid_f}] ns)"
     puts "***********************************************"
     puts "***********************************************\n\n"
 
     # Apply new clock constraint
-    set_timing_paths $clk [expr {1000.0/$mid_f}]
+    set_timing_paths $clk [expr {$scale_factor/$mid_f}]
 
     opt_design
     set ACTIVE_STEP opt_design
@@ -145,9 +143,9 @@ while {1} {
 
     puts "\n\n***********************************************"
     puts "***********************************************"
-    puts "Slow frequency: $slow_f MHz (period: [expr {1000.0/$slow_f}] ns)"
-    puts "Fast frequency: $fast_f MHz (period: [expr {1000.0/$fast_f}] ns)"
-    puts "Tested clock period: $mid_f MHz (Frequency: [expr {1000.0/$mid_f}] ns)"
+    puts "Slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] ns)"
+    puts "Fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] ns)"
+    puts "Tested clock period: $mid_f MHz (Frequency: [expr {$scale_factor/$mid_f}] ns)"
     puts "***********************************************"
     puts "Slack: $slack ns"
 
@@ -162,16 +160,30 @@ while {1} {
       set fast_f $mid_f
     }
 
-    puts "New best frequency: $best_f MHz (period: [expr {1000.0/$best_f}] ns)"
-    puts "New slow frequency: $slow_f MHz (period: [expr {1000.0/$slow_f}] ns)"
-    puts "New fast frequency: $fast_f MHz (period: [expr {1000.0/$fast_f}] ns)"
+    puts "New best frequency: $best_f MHz (period: [expr {$scale_factor/$best_f}] ns)"
+    puts "New slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] ns)"
+    puts "New fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] ns)"
     puts "***********************************************"
     puts "***********************************************\n\n"
+
+    if {$fast_f > 0} {
+      if {[withinOnePercent $slow_f $fast_f]} {
+        break
+      }
+    }
+
+    if {$fast_f == -1} {
+       set mid_f [expr {2*$mid_f}]
+    } elseif {$slow_f == -1} {
+       set mid_f [expr {0.5*$mid_f}]
+    } else {
+      set mid_f [expr {$scale_factor/(($scale_factor/$slow_f + $scale_factor/$fast_f) / 2.0)}]
+    }
 
     open_checkpoint $outdir/synth.dcp
 }
 
-set best_period [expr {1000.0/$max_freq}]
+set best_period [expr {$scale_factor/$max_freq}]
 
 puts "\n\n================================================"
 puts "Maximum Achievable Frequency: $max_freq MHz"

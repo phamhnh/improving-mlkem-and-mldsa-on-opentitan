@@ -96,7 +96,7 @@ filesets:
 
   files_sta:
     files:
-      - ../../../vivado_timing_scripts/timing.tcl:
+      - sta-vivado/timing.tcl:
           copyto: timing.tcl
 
   files_sv_sta:

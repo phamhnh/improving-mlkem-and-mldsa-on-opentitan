@@ -1,4 +1,3 @@
-`ifdef BNMULV
 module sklansky
   import otbn_pkg::*;
 (
@@ -151,4 +150,3 @@ module sklansky
     endgenerate
 
 endmodule
-`endif
