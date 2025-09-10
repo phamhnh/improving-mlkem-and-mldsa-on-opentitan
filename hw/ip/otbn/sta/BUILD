@@ -25,7 +25,13 @@ filegroup(
     srcs = ["constraints_noclk_sky130hd.sdc"],
 )
 
-filegroup(
-    name = "results_tcl",
-    srcs = ["results.tcl"],
+genrule(
+    name = "openroad_combined_tcl",
+    srcs = [":openroad.tcl",
+      ":rounding.tcl",
+      ":timing.tcl"
+    ],
+    outs = ["openroad_combined.tcl"],
+    cmd  = "cat $(location rounding.tcl) $(location timing.tcl) $(location openroad.tcl) > $@",
+    visibility = ["//visibility:public"],
 )

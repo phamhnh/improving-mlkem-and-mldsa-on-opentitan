@@ -53,7 +53,7 @@ _ADDER_OUTPUT = "$(location :{}_{}_stats)"
 # List of PKDs
 PDKS = [
     "sky130hd",
-    "asap7",
+#    "asap7",
 ]
 
 # List of top modules to be synthesized.
@@ -244,7 +244,7 @@ STAGE_ARGS = {
         arguments = {
             "OUTPUT": _ADDER_OUTPUT.format(base_name, pdk),
         },
-        script = "//hw/ip/otbn/sta:results_tcl",
+        script = "//hw/ip/otbn/sta:openroad_combined_tcl",
     ) for pdk in PDKS for base_name in ADDERS + MULTIPLIERS
 ]
 
@@ -258,7 +258,7 @@ STAGE_ARGS = {
         arguments = {
             "OUTPUT": _TOP_MODULE_OUTPUT.format(base_name, name, pdk),
         },
-        script = "//hw/ip/otbn/sta:results_tcl",
+        script = "//hw/ip/otbn/sta:openroad_combined_tcl",
     )
     for pdk in PDKS for name in VERSION.keys() for base_name in TOP_MODULES
 ]
