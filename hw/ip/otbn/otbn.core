@@ -225,7 +225,8 @@ targets:
     toplevel: otbn
     tools:
       vivado:
-        part: "xc7a200tfbg676-3"
+#        part: "xc7a200tfbg676-3" # license-free device
+        part: "xc7k160tfbg676-1" # CW310 with K410T
       genus:
         genus_script: "genus.tcl"
         jobs: "8"

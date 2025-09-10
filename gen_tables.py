@@ -143,15 +143,15 @@ def report(data):
 
 
 def synthesize_ORFS(top_module, outdir, flags = []):
-  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags != '' else ''}_asap7{'_all' if flags != '' else ''}_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags != '' else ''}_asap7_stats {outdir}/"
+#  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags else ''}_asap7{'_all' if flags else ''}_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_asap7_stats {outdir}/"
+#
+#  # //hw/ip/otbn:otbn_mac_bignum_TOWARDS_asap7_all_results
+#
+#  print(f"Command: {command}")
+#
+#  result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
 
-  # //hw/ip/otbn:otbn_mac_bignum_TOWARDS_asap7_all_results
-
-  print(f"Command: {command}")
-
-  result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
-
-  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags != '' else ''}_sky130hd{'_all' if flags != '' else ''}_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags != '' else ''}_sky130hd_stats {outdir}"
+  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags else ''}_sky130hd{'_all' if flags else ''}_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_sky130hd_stats {outdir}"
 
   print(f"Command: {command}")
 
