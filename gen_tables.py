@@ -67,6 +67,41 @@ def extract_ORFS(file_path):
 
     return utilization_data
 
+def extract_Genus(file_path):
+    print(file_path)
+
+    utilization_data = {
+        "Fmax": None,
+    }
+
+    try:
+      with open(file_path + "/summary.txt", "r") as file:
+        for line in file:
+          for key in utilization_data.keys():
+            # Extract values for specific components
+            if f"{key}" in line:
+                utilization_data[key] = float(line.split(" ")[1].strip())
+    except FileNotFoundError: pass
+
+    try:
+      with open(file_path + "/area.rpt", "r") as f:
+          for line in f:
+              # Match the line with instance/module metrics
+              # Example line:
+              # unified_mul              30553  45966.424 23545.851    69512.275
+              match = re.match(
+                  r'^\s*\S+\s+(\d+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)',
+                  line
+              )
+              if match:
+                  #utilization_data["Cell Count"] = int(match.group(1))
+                  #utilization_data["Cell Area"] = float(match.group(2))
+                  #utilization_data["Net Area"] = float(match.group(3))
+                  utilization_data["Total Area"] = float(match.group(4))
+    except FileNotFoundError: pass
+
+    return utilization_data
+
 
 def extract(top_module, flag_group):
   outdir = top_module + ("_" + flag_group if flag_group else "")
@@ -75,18 +110,24 @@ def extract(top_module, flag_group):
 
   timing = extract_delay_FPGA(f"reports/FPGA/{outdir}/timing.txt")
 
-  asap7 = extract_ORFS(f"reports/ASIC/{top_module}{'_' + flag_group if flag_group else ''}_asap7_stats")
+  #asap7 = extract_ORFS(f"reports/ASIC/{top_module}{'_' + flag_group if flag_group else ''}_asap7_stats")
   sky130hd = extract_ORFS(f"reports/ASIC/{top_module}{'_' + flag_group if flag_group else ''}_sky130hd_stats")
 
-  data = [top_module.replace("_", "\_") + (" " + flag_group if flag_group else "")] + list(result.values()) + [1000/timing if timing else 0] + list(asap7.values()) + list(sky130hd.values())
+  genus = extract_Genus(f"reports/ASIC-Genus/{outdir}")
+
+  data = [top_module.replace("_", "\_") + (" " + flag_group if flag_group else "")] +\
+          list(result.values()) + \
+          list(sky130hd.values()) + \
+          list(genus.values())
+          #[1000/timing if timing else 0] + list(asap7.values()) + \
 
   return data
 
 def report(data):
-  headers = ["top\\_module", "LUT", "DSP", "CARRY4", "FF", "BRAM", "Fmax", "F", "area", "F", "area"]
+  headers = ["top\\_module", "LUT", "DSP", "CARRY4", "FF", "BRAM", "Fmax", "Fmax", "area", "Fmax", "area"]
   
   latex_table = tabulate(data, headers, tablefmt="latex_raw",
-                         floatfmt=["", "g", "g", "g", "g", ".1f", ".0f", "g", "g"], #, ".3f", ".3f"],
+                         floatfmt=["", "g", "g", "g", "g", "g", "g", "g", ".3f"], #, ".3f", ".3f"],
                          missingval="{---}")
   
   print("""
