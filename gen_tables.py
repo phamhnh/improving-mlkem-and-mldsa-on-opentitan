@@ -12,16 +12,27 @@ def extract_utilization_FPGA(file_path):
         "CARRY4": None,
         "Slice Registers": None,
         "Block RAM Tile": None,
+        "Fmax": None,
     }
 
     try:
-      with open(file_path, "r") as file:
+      with open(file_path + "/utilization.txt", "r") as file:
         for line in file:
           for key in utilization_data.keys():
             # Extract values for specific components
             if f"| {key}" in line:
                 utilization_data[key] = float(line.split("|")[2].strip())
     except FileNotFoundError: pass
+
+    try:
+      with open(file_path + "/summary.txt", "r") as file:
+        for line in file:
+          for key in utilization_data.keys():
+            # Extract values for specific components
+            if f"{key}" in line:
+                utilization_data[key] = float(line.split(" ")[1].strip())
+    except FileNotFoundError: pass
+
 
     return utilization_data
 
@@ -68,7 +79,7 @@ def extract_ORFS(file_path):
     return utilization_data
 
 def extract_Genus(file_path):
-    print(file_path)
+    #print(file_path)
 
     utilization_data = {
         "Fmax": None,
@@ -106,9 +117,13 @@ def extract_Genus(file_path):
 def extract(top_module, flag_group):
   outdir = top_module + ("_" + flag_group if flag_group else "")
 
-  result = extract_utilization_FPGA(f"reports/FPGA/{outdir}/utilization.txt")
+  result = extract_utilization_FPGA(f"reports/FPGA/{outdir}")
 
-  timing = extract_delay_FPGA(f"reports/FPGA/{outdir}/timing.txt")
+#  timing = extract_delay_FPGA(f"reports/FPGA/{outdir}/timing.txt")
+
+  #print(timing, type(timing), result)
+
+#  result["Fmax"] = 1000.0 / timing if timing else timing
 
   #asap7 = extract_ORFS(f"reports/ASIC/{top_module}{'_' + flag_group if flag_group else ''}_asap7_stats")
   sky130hd = extract_ORFS(f"reports/ASIC/{top_module}{'_' + flag_group if flag_group else ''}_sky130hd_stats")
@@ -158,7 +173,7 @@ def synthesize_ORFS(top_module, outdir, flags = []):
   result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
 
 def synthesize_Genus(top_module, outdir, flags = []):
-  print("flags:" + str(flags))
+  #print("flags:" + str(flags))
 
   command = f"fusesoc --cores-root . run --flag=fileset_top --target=sta {' '.join(['--flag +' + flag for flag in flags])} --no-export --tool=genus --setup --mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn:0.1; mkdir -p {outdir}; cd build/lowrisc_ip_otbn_0.1/sta-genus/; source /opt/cadence/CIC/genus.cshrc ; setenv TOP_MODULE {top_module} ; setenv START_F 400 ; setenv OUTDIR ../../../{outdir}; make "
 
@@ -246,7 +261,7 @@ if __name__ == "__main__":
     modules = [("otbn_bignum_mul", {None: []}),
                ("unified_mul",     {None: ["bnmulv_ver1"]})]
   elif args.adders:
-    modules = [(top_module, {"": []}) for top_module in ["ref_add", "buffer_bit", "csa_carry4", "brent_kung", "kogge_stone", "sklansky"]]
+    modules = [(top_module, {"": []}) for top_module in ["ref_add", "towards_alu_adder", "towards_mac_adder", "buffer_bit", "brent_kung", "kogge_stone", "sklansky"]]
   #elif args.cond_sub:
   #  modules = ["cond_sub", "cond_sub_buffer_bit"]
   elif args.otbn:

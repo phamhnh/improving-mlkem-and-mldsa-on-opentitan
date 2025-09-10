@@ -21,10 +21,11 @@
 # All procs avoid lsort/lassign/dict for maximum tool portability.
 
 namespace eval rounding {
-  variable STEPS {1.0 2.5 5.0 10.0 25.0 50.0}
+  variable STEPS {1.0 2.5 5.0 10.0}
+  variable PERC 0.025
 }
 
-proc rounding::set_steps {steps} {
+proc rounding::set_steps {steps perc} {
   # Basic validation (optional)
   if {[llength $steps] == 0} {
     error "rounding::set_steps: step list must not be empty"
@@ -37,6 +38,8 @@ proc rounding::set_steps {steps} {
   }
   variable STEPS
   set STEPS $steps
+  variable PERC
+  set PERC $perc
 }
 
 # ---- math helpers (no lsort/lassign) ----
@@ -68,10 +71,11 @@ proc rounding::_pct {part total} {
 proc rounding::round_grid_first {x} {
   if {$x == 0.0} { return 0.0 }
   variable STEPS
+  variable PERC
 
   set ax     [expr {abs($x)}]
   set u      [rounding::_unit3sf $x]
-  set tol    [expr {0.05 * $ax}]
+  set tol    [expr {$PERC * $ax}]
   set eps    [expr {1e-12 * ($ax > 1.0 ? $ax : 1.0)}]
 
   # Find smallest grid >= 1%·|x|; track also smallest grid overall
@@ -105,10 +109,11 @@ proc rounding::round_grid_first {x} {
 proc rounding::chosen_grid_gridfirst {x} {
   if {$x == 0.0} { return 0.0 }
   variable STEPS
+  variable PERC
 
   set ax     [expr {abs($x)}]
   set u      [rounding::_unit3sf $x]
-  set tol    [expr {0.05 * $ax}]
+  set tol    [expr {$PERC * $ax}]
 
   set chosen_g ""
   set best_over 1e300
@@ -133,10 +138,11 @@ proc rounding::chosen_grid_gridfirst {x} {
 proc rounding::round_largest_error {x} {
   if {$x == 0.0} { return 0.0 }
   variable STEPS
+  variable PERC
 
   set ax     [expr {abs($x)}]
   set u      [rounding::_unit3sf $x]
-  set tol    [expr {0.05 * $ax}]
+  set tol    [expr {$PERC * $ax}]
   set eps    [expr {1e-12 * ($ax > 1.0 ? $ax : 1.0)}]
 
   # Track best under-1% by largest error; tie: larger grid, then larger |y|
@@ -196,10 +202,11 @@ proc rounding::round_largest_error {x} {
 proc rounding::chosen_grid_largesterr {x} {
   if {$x == 0.0} { return 0.0 }
   variable STEPS
+  variable PERC
 
   set ax     [expr {abs($x)}]
   set u      [rounding::_unit3sf $x]
-  set tol    [expr {0.05 * $ax}]
+  set tol    [expr {$PERC * $ax}]
 
   set have_under 0
   set best_err_under -1.0
@@ -252,7 +259,7 @@ proc rounding::report {x strategy} {
   }
   set ax     [expr {abs($x)}]
   set u      [rounding::_unit3sf $x]
-  set tol    [expr {0.05 * $ax}]
+  set tol    [expr {$PERC * $ax}]
 
   if {$strategy eq "gridfirst"} {
     set y [rounding::round_grid_first_ge_1pct $x]

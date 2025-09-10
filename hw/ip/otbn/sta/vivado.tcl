@@ -50,6 +50,10 @@ set file_clocks $outdir/clocks.txt
 puts "top_module=$top_module, start_freq=$start_f"
 
 proc set_timing_paths {clk clk_period} {
+  global outdir
+
+  open_checkpoint $outdir/synth.dcp
+
   if {[llength [get_ports -quiet $clk]] > 0} {
     # Create clock to attach it to a clock buffer.
     create_clock -name $clk -period $clk_period [get_ports $clk]
@@ -66,10 +70,13 @@ proc set_timing_paths {clk clk_period} {
   set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_ports [all_outputs]] -datapath_only
 }
 
+proc get_slack {} {
+  set slack [get_property SLACK [get_timing_paths -nworst 1]]
+
+  return $slack
+}
+
 proc place_and_route {} {
-  opt_design
-  set ACTIVE_STEP opt_design
-  
   place_design
   set ACTIVE_STEP place_design
   
@@ -80,12 +87,6 @@ proc place_and_route {} {
   set ACTIVE_STEP route_design
 }
 
-proc get_slack {} {
-  set slack [get_property SLACK [get_timing_paths -nworst 1]]
-
-  return $slack
-}
-
 source lowrisc_ip_otbn_0.1.tcl
 
 source rounding.tcl
@@ -94,6 +95,12 @@ source timing.tcl
 
 synth_design -mode out_of_context -top $top_module
 
+opt_design
+set ACTIVE_STEP opt_design
+ 
+write_checkpoint -force $outdir/synth.dcp
+
+
 # Set clock port name
 set clk "clk_i"
 set scale_factor 1000.0
@@ -101,7 +108,9 @@ set scale_factor 1000.0
 # Get maxium frequency using binary search
 set max_f [timing::get_max_freq $clk $start_f $scale_factor]
 
-set_timing_paths $clk [expr {$scale_factor/$max_f}]
+set best_period [expr {$scale_factor/$max_f}]
+
+set_timing_paths $clk $best_period
 
 place_and_route
 
@@ -117,20 +126,15 @@ report_timing_summary -file $file_timing_summary
 report_clocks -file $file_clocks
 
 
-set rpt [report_utilization -return_string]
-puts "==== Resource Overview ===="
-puts $rpt
+set f [open ${outdir}/summary.txt w]
 
+puts "Fmax: $max_f MHz"
+puts $f "Fmax: $max_f MHz"
 
-set p [lindex [get_timing_paths -from [get_clocks $clk] -to [get_clocks $clk] -setup -nworst 1] 0]
-report_timing -of_objects $p
-
-set p [lindex [get_timing_paths -from [get_ports [all_inputs]] -to [get_ports [all_outputs]] -setup -nworst 1] 0]
-report_timing -of_objects $p
-
+close $f
 
 puts "================================================\n"
-puts "Maximum Achievable Frequency: $max_freq MHz"
+puts "Maximum Achievable Frequency: $max_f MHz"
 puts "Clock Period: $best_period ns"
 puts "\n================================================\n"
 
