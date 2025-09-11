@@ -1,13 +1,13 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
--------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.1.1 (lin64) Build 2960000 Wed Aug  5 22:57:21 MDT 2020
-| Date         : Thu Sep 11 07:11:04 2025
+| Date         : Thu Sep 11 06:52:06 2025
 | Host         : unicorn1 running 64-bit Ubuntu 22.04.4 LTS
-| Command      : report_utilization -file ../../../reports/FPGA/buffer_bit/utilization.txt
-| Design       : buffer_bit
+| Command      : report_utilization -file ../../../reports/FPGA/ref_add/utilization.txt
+| Design       : ref_add
 | Device       : 7k160tfbg676-1
 | Design State : Routed
--------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 
 Utilization Design Information
 
@@ -31,8 +31,8 @@ Table of Contents
 +-------------------------+------+-------+-----------+-------+
 |        Site Type        | Used | Fixed | Available | Util% |
 +-------------------------+------+-------+-----------+-------+
-| Slice LUTs              |  476 |     0 |    101400 |  0.47 |
-|   LUT as Logic          |  476 |     0 |    101400 |  0.47 |
+| Slice LUTs              |  449 |     0 |    101400 |  0.44 |
+|   LUT as Logic          |  449 |     0 |    101400 |  0.44 |
 |   LUT as Memory         |    0 |     0 |     35000 |  0.00 |
 | Slice Registers         |    0 |     0 |    202800 |  0.00 |
 |   Register as Flip Flop |    0 |     0 |    202800 |  0.00 |
@@ -67,13 +67,13 @@ Table of Contents
 +------------------------------------------+------+-------+-----------+-------+
 |                 Site Type                | Used | Fixed | Available | Util% |
 +------------------------------------------+------+-------+-----------+-------+
-| Slice                                    |  134 |     0 |     25350 |  0.53 |
-|   SLICEL                                 |   93 |     0 |           |       |
-|   SLICEM                                 |   41 |     0 |           |       |
-| LUT as Logic                             |  476 |     0 |    101400 |  0.47 |
-|   using O5 output only                   |    6 |       |           |       |
-|   using O6 output only                   |  388 |       |           |       |
-|   using O5 and O6                        |   82 |       |           |       |
+| Slice                                    |  131 |     0 |     25350 |  0.52 |
+|   SLICEL                                 |  118 |     0 |           |       |
+|   SLICEM                                 |   13 |     0 |           |       |
+| LUT as Logic                             |  449 |     0 |    101400 |  0.44 |
+|   using O5 output only                   |    0 |       |           |       |
+|   using O6 output only                   |  385 |       |           |       |
+|   using O5 and O6                        |   64 |       |           |       |
 | LUT as Memory                            |    0 |     0 |     35000 |  0.00 |
 |   LUT as Distributed RAM                 |    0 |     0 |           |       |
 |   LUT as Shift Register                  |    0 |     0 |           |       |
@@ -175,9 +175,9 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| LUT2     |  406 |                 LUT |
-| LUT3     |  152 |                 LUT |
-| CARRY4   |  103 |          CarryLogic |
+| LUT2     |  384 |                 LUT |
+| LUT3     |  129 |                 LUT |
+| CARRY4   |   99 |          CarryLogic |
 +----------+------+---------------------+
 
 

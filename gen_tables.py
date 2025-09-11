@@ -259,6 +259,7 @@ if __name__ == "__main__":
 
   if args.mul:
     modules = [("otbn_bignum_mul", {None: []}),
+               ("otbn_mul",        {None: ["towards"]}),
                ("unified_mul",     {None: ["bnmulv_ver1"]})]
   elif args.adders:
     modules = [(top_module, {"": []}) for top_module in ["ref_add", "towards_alu_adder", "towards_mac_adder", "buffer_bit", "brent_kung", "kogge_stone", "sklansky"]]
