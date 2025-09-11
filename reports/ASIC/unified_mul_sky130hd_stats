@@ -1,8 +1,7 @@
 name: unified_mul
-Fmax: 60 (16.666666666666668)
-in2out_slack: 0.963242
-in2out_required: 16.666666
-shortest_slack: 0.963242
+Fmax: 60.0 MHz (16.666666666666668 ns)
+slack: 0.963242
+required: 16.666666
 instances: 27641
 design_area: 227357
 utilization: 54

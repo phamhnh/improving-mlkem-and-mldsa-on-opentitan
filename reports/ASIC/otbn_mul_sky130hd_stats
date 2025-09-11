@@ -1,0 +1,7 @@
+name: otbn_mul
+Fmax: 69.0 MHz (14.492753623188406 ns)
+slack: 0.153701
+required: 14.492753
+instances: 22661
+design_area: 174530
+utilization: 45

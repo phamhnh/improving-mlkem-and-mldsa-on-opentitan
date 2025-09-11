@@ -1,8 +1,0 @@
-name: unified_mul
-Fmax: 540 (1851.851851851852)
-in2out_slack: 2.503664
-in2out_required: 1851.851929
-shortest_slack: 2.503664
-instances: 26026
-design_area: 2608
-utilization: 43

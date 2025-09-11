@@ -1,0 +1,7 @@
+name: kogge_stone
+Fmax: 250.0 MHz (4.0 ns)
+slack: 0.236426
+required: 4.000000
+instances: 7796
+design_area: 65861
+utilization: 79

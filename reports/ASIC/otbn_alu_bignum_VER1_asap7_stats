@@ -1,7 +1,0 @@
-name: otbn_alu_bignum
-in2out_slack: 2146.803711
-in2out_required: 4000.000000
-shortest_slack: 2146.803711
-instances: 48189
-design_area: 5837
-utilization: 43
