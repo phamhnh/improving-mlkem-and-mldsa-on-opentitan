@@ -1,5 +1,3 @@
-`timescale 1ns/1ps
-
 module ref_add (
     input  logic [255:0] A,
     input  logic [255:0] B,

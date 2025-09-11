@@ -45,6 +45,8 @@ filesets:
       - rtl/bn_vec_core/brent_kung.sv
       - rtl/bn_vec_core/sklansky.sv
       - rtl/bn_vec_core/kogge_stone.sv
+      - rtl/bn_vec_core/towards_mac_adder.sv
+      - rtl/bn_vec_core/towards_alu_adder.sv
       - carry4 ? (rtl/bn_vec_core/csa_carry4.sv)
       - carry4 ? (rtl/bn_vec_core/CARRY4.v)
       - rtl/bn_vec_core/ref_add.sv

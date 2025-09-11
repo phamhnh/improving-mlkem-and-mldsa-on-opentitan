@@ -1293,7 +1293,7 @@ module otbn_alu_bignum
   logic [16:0] adder_y_op_a [15:0];
   logic [16:0] adder_y_op_b [15:0];
 
-  logic [15:0] adder_x_vcarry_in;
+//  logic [15:0] adder_x_vcarry_in;
   logic [15:0] adder_y_vcarry_in;
 
   logic [15:0] adder_x_sum [15:0];
@@ -1305,7 +1305,7 @@ module otbn_alu_bignum
   logic [15:0] adder_x_carry2mux;
   logic [15:0] adder_y_carry2mux;
 
-  logic [15:0] adder_x_carry_in_unused;
+//  logic [15:0] adder_x_carry_in_unused;
   logic [15:0] adder_y_carry_in_unused;
 
   logic        adder_selvector_i;
@@ -1321,12 +1321,6 @@ module otbn_alu_bignum
   );
 
   for (genvar i=0; i<16; ++i) begin
-    // Depending on mode, select carry input for the 16-bit adders
-    assign adder_x_vcarry_in[i] =
-        adder_vector_i ?
-            (adder_selvector_i ? adder_x_carry_in_blanked : ((i%2==0) ? adder_x_carry_in_blanked : adder_x_carry_out[i-1])) :
-            ((i==0) ? adder_x_carry_in_blanked : adder_x_carry_out[i-1]);
-
     assign adder_x_op_a[i] = operation_i.operand_a[i*16+:16];
 
     // SEC_CM: DATA_REG_SW.SCA
@@ -1345,13 +1339,22 @@ module otbn_alu_bignum
       .en_i (alu_predec_bignum_i.adder_x_en),
       .out_o(adder_x_op_b_blanked[i][16:1])
     );
-    assign adder_x_op_b_blanked[i][0] = adder_x_vcarry_in[i];
 
-    assign {adder_x_carry_out[i],adder_x_sum[i],adder_x_carry_in_unused[i]} =
-        adder_x_op_a_blanked[i] + adder_x_op_b_blanked[i];
+    assign adder_x_op_b_blanked[i][0] = 1'b0;
+  end
 
-    // Combine all sums to 256-bit vector
-    assign adder_x_res[i*16+:16] = adder_x_sum[i][15:0];
+  towards_alu_adder adder
+  (
+    .A(adder_x_op_a_blanked),
+    .B(adder_x_op_b_blanked),
+    .word_mode({adder_vector_i, adder_selvector_i}),
+    .cin(adder_x_carry_in_blanked),
+    .sum(adder_x_res),
+    .cout(adder_x_carry_out)
+  );
+
+  for (genvar i=0; i<16; ++i) begin
+    assign adder_x_sum[i][15:0] = adder_x_res[i*16+:16];
   end
 
   /* verilator lint_on UNOPTFLAT */

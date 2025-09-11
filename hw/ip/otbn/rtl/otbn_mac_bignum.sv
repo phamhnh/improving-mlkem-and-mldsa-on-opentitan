@@ -580,75 +580,25 @@ module otbn_mac_bignum
   assign adder_op_a = (operation_i.mac_mulv_en) ? {128'b0, mul_res} : mul_res_shifted;
   assign adder_op_b = (operation_i.mac_mulv_en) ? {128'b0, p_tmp_blanked} : acc_blanked;
 
-  // Splitt 256-bit addition into 16 x 16-bit additions
-  logic  adder_x_carry_in;
-  assign adder_x_carry_in = 'b0;
-
-  logic  adder_x_op_b_invert;
-  assign adder_x_op_b_invert = 'b0;
-
-  logic [WLEN:0] adder_x_res;
-  logic [31:0]   adder_x_op_a [7:0];
-  logic [32:0]   adder_x_op_b [7:0];
-  logic [32:0]   adder_x_op_a_blanked [7:0];
-  logic [32:0]   adder_x_op_b_blanked [7:0];
-  logic [7:0]    adder_x_vcarry_in;
-  logic [31:0]   adder_x_sum [7:0];
+  /* verilator lint_off UNUSEDSIGNAL */
   logic [7:0]    adder_x_carry_out;
-  logic [7:0]    adder_x_carry2mux;
-  logic [7:0]    unused_adder_x_carry2mux;
-  logic [7:0]    adder_x_carry_in_unused;
+  /* verilator lint_on UNUSEDSIGNAL */
 
-  assign adder_x_carry2mux = 'b0;
-  assign unused_adder_x_carry2mux = adder_x_carry2mux;
+  towards_mac_adder adder (
+    .A(adder_op_a),
+    .B(adder_op_b),
+    .word_mode({operation_i.mac_mulv_en, operation_i.vector_type[0]}),
+    .cin(1'b0),
+    .sum(adder_result),
+    .cout(adder_x_carry_out)
+  );
 
-  logic adder_selvector_i;
-  logic adder_vector_i;
+  logic [31:0]   adder_x_sum [7:0];
 
-  assign adder_selvector_i = operation_i.vector_type[0];
-  assign adder_vector_i    = operation_i.mac_mulv_en;
-
-  // For Kyber :    32-bit + 16-bit addition
-  // For Dilitihum: 64-bit + 32-bit addition
-  // Support for 32-bit additions(Kyber) and 64-bit additions(Dilitihum)
   for (genvar i = 0; i < 8; ++i) begin
-    // Depending on mode, select carry input for the 16-bit adders
-    assign adder_x_vcarry_in[i] = adder_vector_i ?
-        (adder_selvector_i ? adder_x_carry_in : ((i%2 == 0) ? adder_x_carry_in : adder_x_carry_out[i - 1])) :
-        ((i == 0) ? adder_x_carry_in : adder_x_carry_out[i-1]);
-
-    assign adder_x_op_a[i] = adder_op_a[i*32 +: 32];
-
-    // SEC_CM: DATA_REG_SW.SCA
-    prim_blanker #(.Width(33)) u_adder_op_a_blanked (
-      .in_i ({adder_x_op_a[i], 1'b1}),
-      .en_i (1'b1),
-      .out_o(adder_x_op_a_blanked[i])
-    );
-
-    assign adder_x_op_b[i] = {adder_x_op_b_invert ? ~adder_op_b[i*32 +: 32] : adder_op_b[i*32 +: 32],
-                              adder_x_vcarry_in[i]};
-
-    // SEC_CM: DATA_REG_SW.SCA
-    prim_blanker #(.Width(33)) u_adder_op_b_blanked (
-      .in_i (adder_x_op_b[i]),
-      .en_i (1'b1),
-      .out_o(adder_x_op_b_blanked[i])
-    );
-
-    assign {adder_x_carry_out[i], adder_x_sum[i], adder_x_carry_in_unused[i]} =
-        adder_x_op_a_blanked[i] + adder_x_op_b_blanked[i];
-
-    // Combine all sums to 256-bit vector
-    assign adder_x_res[1 + i*32 +: 32] = adder_x_sum[i][31:0];
+    assign adder_x_sum[i][31:0] = adder_result[i*32 +: 32];
   end
-
-  // The LSb of the adder results are unused.
-  logic unused_adder_x_res_lsb;
-  assign unused_adder_x_res_lsb = adder_x_res[0];
-  assign adder_x_res[0]         = 1'b0;
-  assign adder_result           = adder_x_res[WLEN:1];
-`endif
+`endif // TOWARDS_MAC
 
 `ifndef TOWARDS_MAC
   // Add shifted multiplier result to current accumulator.

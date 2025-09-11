@@ -95,6 +95,7 @@ module otbn_mul
   logic [WLEN/2-1:0] sum [NOF_CSASTAGES-1:0];
 
   // Build CSA tree for addition of (NOF_DSP_W x NOF_DSP_H) operands
+  /* verilator lint_off SIDEEFFECT */
   generate
     for (genvar i=0; i<NOF_CSASTAGES; ++i) begin
       if (i == 0) begin : g_inital_stage
@@ -104,6 +105,7 @@ module otbn_mul
       end : g_intermediate_stage
     end
   endgenerate
+  /* verilator lint_on SIDEEFFECT */
 
   assign multiplier_res_o = sum[$left(sum)] + carry[$left(carry)];
 endmodule

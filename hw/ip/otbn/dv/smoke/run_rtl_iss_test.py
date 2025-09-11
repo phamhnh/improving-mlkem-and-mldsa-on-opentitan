@@ -223,7 +223,7 @@ def main() -> int:
             flags += '--flag=csa_carry4 '
     elif bnmulv_ver == 0:
         print_info(f'INFO: Set BNMULV_VER = {bnmulv_ver}')
-        flags = ' --flag=old_adder --flag=old_mac'
+        flags = '--flag=towards '
     else:
         print_info(f'ERROR: BNMULV_VER = {bnmulv_ver} is not valid. Valid versions are 0,1,2,3')
         return 1
