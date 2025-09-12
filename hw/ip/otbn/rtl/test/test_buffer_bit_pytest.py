@@ -107,7 +107,15 @@ def test_buffer_bit_sim(variant, word_mode, addition):
                     "../../lc_ctrl/rtl/lc_ctrl_pkg.sv",
                     "../../otp_ctrl/rtl/otp_ctrl_pkg.sv",
                     "otbn_pkg.sv"]
-
+    vivado_prim = [
+        "bn_vec_core/CARRY4.v",
+        "bn_vec_core/LUT3.v",
+        "bn_vec_core/LUT5.v",
+        "bn_vec_core/LUT6.v",
+        "bn_vec_core/LUT6_2.v",
+        "bn_vec_core/csa_carry4_top_cin0.sv",
+        "bn_vec_core/csa_carry4_top_cin1.sv",
+    ]
     run(
         toplevel=variant,
         module="test_buffer_bit_pytest",
@@ -119,7 +127,7 @@ def test_buffer_bit_sim(variant, word_mode, addition):
                     "-I../../../../otp_ctrl/rtl/",
                     "-I../../../../prim_generic/rtl/",
                     "-DBNMULV"],
-        verilog_sources=verilog_pkgs + [f"bn_vec_core/{variant}.sv"] + ["bn_vec_core/CARRY4.v"],
+        verilog_sources=verilog_pkgs + [f"bn_vec_core/{variant}.sv"] + vivado_prim,
         extra_env={
             "WORD_MODE": str(int(word_mode)),
             "ADDITION":  str(addition),
