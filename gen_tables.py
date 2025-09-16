@@ -55,8 +55,8 @@ def extract_delay_FPGA(file_path):
 
 def extract_ORFS(file_path):
     utilization_data = {
-        "Fmax": None,
         "design_area": None,
+        "Fmax": None
     }
 
     shortest_slack = 0
@@ -82,8 +82,8 @@ def extract_Genus(file_path):
     #print(file_path)
 
     utilization_data = {
-        "Fmax": None,
-        "Total Area": None
+        "Total Area": None,
+        "Fmax": None
     }
 
     try:
@@ -146,12 +146,12 @@ def report(data, tool):
     floatfmt += ["g", "g", "g", "g", "g", "g"]
 
   if tool in ["all", "ORFS"]:
-    headers += ["Fmax", "area"]
-    floatfmt += ["g", ".3f"]
+    headers += ["area", "Fmax"]
+    floatfmt += [".3f", "g"]
 
   if tool in ["all", "Genus"]:
-    headers += ["Fmax", "area"]
-    floatfmt += ["g", ".3f"]
+    headers += ["area", "Fmax"]
+    floatfmt += [".3f", "g"]
   
   latex_table = tabulate(data, headers, tablefmt="latex_raw",
                          floatfmt=floatfmt, missingval="{---}")
@@ -281,7 +281,17 @@ if __name__ == "__main__":
                ("unified_mul",     None, []),
                ("unified_mul",     "wallace", ["wallace"])]
   elif args.adders:
-    modules = [(top_module, None, []) for top_module in ["ref_add", "towards_alu_adder", "towards_mac_adder", "buffer_bit", "brent_kung", "kogge_stone", "sklansky"]]
+    modules = [(top_module, None, []) for top_module in [
+                    "ref_add",
+                    "towards_alu_adder", "towards_mac_adder",
+                    "buffer_bit",
+                    "brent_kung_adder_256_mode0_only",
+                    "brent_kung",
+                    "kogge_stone_adder_256_mode0_only",
+                    "kogge_stone",
+                    "sklansky_adder_256_mode0_only",
+                    "sklansky"
+              ]]
     if args.tool in ["all", "Vivado"]:
       modules.insert(4, ("csa_carry4", None, "carry4"))
   #elif args.cond_sub:
