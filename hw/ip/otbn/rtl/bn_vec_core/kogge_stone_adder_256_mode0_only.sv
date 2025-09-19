@@ -1,19 +1,15 @@
 module kogge_stone_adder_256_mode0_only (
     input  logic [255:0] A,
     input  logic [255:0] B,
-    input  logic [1:0]   word_mode,   // 00: scalar, 01: vec32, 10: vec16
+    input  logic [1:0]   word_mode,
     input  logic         cin,
-    output logic [255:0] sum,
+    output logic [255:0] res,
     output logic         cout
 );
 
-    localparam MODE_64 = 2'b00;
-    localparam MODE_32 = 2'b11;
-    localparam MODE_16 = 2'b10;
-
     logic [255:0] g, p;
 
-    logic [255:0] g0, p0;           // Initial generate and propagate
+    logic [255:0] g0, p0; // Initial generate and propagate
     logic [255:0] carry;
 
     // Stage 0: Generate and Propagate
@@ -148,15 +144,15 @@ module kogge_stone_adder_256_mode0_only (
     endgenerate
 
     // Carry computation
-    assign carry[0] = (word_mode == MODE_64) ? cin : 1'b0;
+    assign carry[0] = cin;
     generate
         for (i = 1; i < 256; i = i + 1) begin
             assign carry[i] = g8[i-1];
         end
     endgenerate
 
-    // Final sum
-    assign sum = p ^ carry;
+    // Final res
+    assign res = p ^ carry;
     assign cout = g8[255];
 
 endmodule

@@ -1,9 +1,9 @@
 module brent_kung_adder_256_mode0_only (
     input  logic [255:0] A,
     input  logic [255:0] B,
-    input  logic [1:0]   word_mode,   // 00: scalar, 01: vec32, 10: vec16
+    input  logic [1:0]   word_mode,
     input  logic         cin,
-    output logic [255:0] sum,
+    output logic [255:0] res,
     output logic         cout
 );
 
@@ -388,10 +388,10 @@ module brent_kung_adder_256_mode0_only (
     end
 
 
-    // Step 4: Final sum
+    // Step 4: Final res
     generate
         for (i = 0; i < 256; i++) begin : sum_gen
-            assign sum[i] = P[i] ^ C[i];
+            assign res[i] = P[i] ^ C[i];
         end
     endgenerate
 
