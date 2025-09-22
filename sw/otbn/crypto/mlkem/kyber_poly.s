@@ -90,35 +90,31 @@ poly_frommsg:
 .globl poly_tomsg
 poly_tomsg:
   /* Set up registers for input and output */
-  li x4, 0
-  li x5, 1
+  li x5, 4
   li x6, 2
-  li x7, 3
-  li x8, 4
 
   /* Load const */
-  bn.lid x6, 0(x11)
-  bn.lid x7, 0(x13)
+  bn.lid x6++, 0(x11) /* w2 = (0x681)^16 */
+  bn.lid x6, 0(x13) /* w3 = 1290167 */
   
-  bn.rshi w3, w31, w3 >> 4 /* 80635 */
+  bn.rshi w3, w31, w3 >> 4 /* w3 = 80635 */
+  /* Zeroize w31 */
   bn.xor  w31, w31, w31
-  LOOPI 16, 15
-    bn.lid       x4, 0(x10++)  /* Load input */
-    bn.shv.16H   w0, w0 << 1   /* <= 1 */ 
-    bn.addv.16H  w0, w0, w2    /* += 1665 */
-    LOOPI 2, 10
-      LOOPI 8, 3
-        bn.rshi    w1, w0, w1 >> 16  /* write one coeff to w1 */
-        bn.rshi    w1, w31, w1 >> 16 /* make the coeff 32-bit */
-        bn.rshi    w0, w31, w0 >> 16 /* shift out used coeff */
-      bn.mulv.l.8S w1, w1, w3, 0     /* *= 80635 */
-      bn.shv.8S    w1, w1 >> 28      /* >>= 28 */
-      LOOPI 8, 2
-        bn.rshi    w4, w1, w4 >> 1
-        bn.rshi    w1, w31, w1 >> 32 
-      NOP
-    NOP 
-  bn.sid x8, 0(x12)
+  LOOPI 16, 13
+    bn.lid       x0, 0(x10++) /* Load input */
+    bn.shv.16H   w0, w0 << 1 /* <= 1 */ 
+    bn.addv.16H  w0, w0, w2 /* += 1665 */
+    bn.trn1.16H  w1, w0, w31 /* Put even coeffs in 32-bit slots */
+    bn.mulv.l.8S w1, w1, w3, 0 /* *= 80635 */
+    bn.trn2.16H  w0, w0, w31 /* Put odd coeffs in 32-bit slots */
+    bn.mulv.l.8S w0, w0, w3, 0 /* *= 80635 */
+    bn.trn2.16H  w1, w1, w0 /* Interleaving the results >> 16 to get original order */
+    bn.shv.16H   w1, w1 >> 12 /* Shift out the rest 12 bits */
+    LOOPI 16, 2
+      bn.rshi w4, w1, w4 >> 1
+      bn.rshi w1, w31, w1 >> 16
+    NOP
+  bn.sid x5, 0(x12)
 
   ret
 
