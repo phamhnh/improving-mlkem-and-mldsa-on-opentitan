@@ -1918,55 +1918,55 @@ otbn_binary(
 
 otbn_sim_py_test(
     name = "mlkem512_keypair_bench",
-    deps = [":kyber512_mlkem_keypair_test"],
+    deps = [":mlkem512_keypair_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
 otbn_sim_py_test(
     name = "mlkem512_encap_bench",
-    deps = [":kyber512_mlkem_enc_test"],
+    deps = [":mlkem512_encap_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
 otbn_sim_py_test(
     name = "mlkem512_decap_bench",
-    deps = [":kyber512_mlkem_dec_test"],
+    deps = [":mlkem512_decap_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
 otbn_sim_py_test(
     name = "mlkem768_keypair_bench",
-    deps = [":kyber768_mlkem_keypair_test"],
+    deps = [":mlkem768_keypair_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
 otbn_sim_py_test(
     name = "mlkem768_encap_bench",
-    deps = [":kyber768_mlkem_enc_test"],
+    deps = [":mlkem768_encap_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
 otbn_sim_py_test(
     name = "mlkem768_decap_bench",
-    deps = [":kyber768_mlkem_dec_test"],
+    deps = [":mlkem768_decap_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
 otbn_sim_py_test(
     name = "mlkem1024_keypair_bench",
-    deps = [":kyber1024_mlkem_keypair_test"],
+    deps = [":mlkem1024_keypair_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
 otbn_sim_py_test(
     name = "mlkem1024_encap_bench",
-    deps = [":kyber1024_mlkem_enc_test"],
+    deps = [":mlkem1024_encap_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
 otbn_sim_py_test(
     name = "mlkem1024_decap_bench",
-    deps = [":kyber1024_mlkem_dec_test"],
+    deps = [":mlkem1024_decap_test_ver0"],
     sim_test_wrapper = "kyberpy_bench_otbn/run_kyber.py",
 )
 
