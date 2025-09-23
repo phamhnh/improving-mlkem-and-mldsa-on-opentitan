@@ -239,7 +239,6 @@ indcpa_keypair:
     jal  x1, poly_gen_matrix
     addi a2, a2, 1
 
-    bn.wsrr w16, 0x0
     /* Mutliply this generated poly with sk */
     addi a1, a1, POLY /* point back to A[0][0] */
     li   x29, STACK_SKPV
@@ -254,7 +253,6 @@ indcpa_keypair:
       jal  x1, poly_gen_matrix
       addi a2, a2, 1
 
-      bn.wsrr w16, 0x0
       /* Mutliply this generated poly with sk */
       addi a1, a1, POLY /* points back to A[0][1] */
       addi a3, a1, POLY /* points back to A[0][0] for accumulation */
@@ -265,7 +263,6 @@ indcpa_keypair:
     addi a2, a2, KYBER_GEN_MATRIX_NONCE 
   .endr 
 
-  bn.wsrr w16, 0x0
   bn.xor  w31, w31, w31
   /*** poly_tomont ***/
   li  a0, STACK_A
@@ -288,7 +285,6 @@ indcpa_keypair:
     jal  x1, poly_getnoise_eta_1
     addi a2, a2, 1
 
-  bn.wsrr w16, 0x0
   /*** NTT e ***/
   li   a0, STACK_SKPV
   add  a0, fp, a0

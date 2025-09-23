@@ -240,7 +240,6 @@ indcpa_enc:
     jal x1, ntt
   .endr
 
-  bn.wsrr w16, 0x0
   /** v = sp * pkpv **/ 
   li   x29, STACK_ENC_PKPV 
   add  x29, fp, x29
@@ -256,7 +255,6 @@ indcpa_enc:
     jal  x1, basemul_acc 
   .endr
 
-  bn.wsrr w16, 0x0
   /*** INTT v ***/
   li  a0, STACK_ENC_V
   add a0, fp, a0 
@@ -296,7 +294,6 @@ indcpa_enc:
     jal  x1, poly_gen_matrix
     addi a2, a2, 0x0100
 
-    bn.wsrr w16, 0x0
     /* Mutliply this generated poly with sk */
     addi a1, a1, POLY /* point back to A[0][0] */
     li   x29, STACK_ENC_SP
@@ -310,7 +307,6 @@ indcpa_enc:
       jal  x1, poly_gen_matrix
       addi a2, a2, 0x0100
 
-      bn.wsrr w16, 0x0
       /* Mutliply this generated poly with sk */
       addi a1, a1, POLY /* points back to A[0][1] */
       addi a3, a1, POLY /* points back to A[0][0] for accumulation */
@@ -321,7 +317,6 @@ indcpa_enc:
     addi a2, a2, KYBER_GEN_MATRIX_AT_NONCE 
   .endr
 
-  bn.wsrr w16, 0x0
   /*** INTT ***/
   li  a0, STACK_ENC_AT
   add a0, fp, a0 

@@ -198,7 +198,6 @@ indcpa_dec:
     jal x1, ntt
   .endr 
 
-  bn.wsrr w16, 0x0
   /*** Vector vector multiplication ***/
   addi x29, a0, K_POLYS
   addi a1, a2, 512
@@ -211,7 +210,6 @@ indcpa_dec:
     jal  x1, basemul_acc 
   .endr 
 
-  bn.wsrr w16, 0x0
   /*** INTT ***/
   add a0, a0, K_POLYS 
   la  a1, twiddles_intt
