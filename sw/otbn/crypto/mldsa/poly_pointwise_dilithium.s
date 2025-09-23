@@ -23,17 +23,15 @@
 .globl poly_pointwise_dilithium
 poly_pointwise_dilithium:
     /* Set up constants for input/state */
-    li x4, 2
-    li x5, 3
-    li x6, 4
+    li x4, 1
 
     LOOPI 32, 4
-        bn.lid x4, 0(x10++)
-        bn.lid x5, 0(x11++)
+        bn.lid x0, 0(x10++)
+        bn.lid x4, 0(x11++)
         
-        bn.mulvm.8S w2, w2, w3, 0
+        bn.mulvm.8S w0, w0, w1, 0
         
-        bn.sid x4, 0(x12++)
+        bn.sid x0, 0(x12++)
 
     ret
 
@@ -57,20 +55,18 @@ poly_pointwise_dilithium:
 .globl poly_pointwise_acc_dilithium
 poly_pointwise_acc_dilithium:
     /* Set up constants for input/state */
-    li x4, 2
-    li x5, 3
-    li x6, 4
+    li x4, 1
 
     LOOPI 32, 6
-        bn.lid x4, 0(x10++)
-        bn.lid x5, 0(x11++)
+        bn.lid x0, 0(x10++)
+        bn.lid x4, 0(x11++)
         
-        bn.mulvm.8S w2, w2, w3
+        bn.mulvm.8S w0, w0, w1
         
         /* Accumulate onto output polynomial */
-        bn.lid x5, 0(x12)
-        bn.addvm.8S w2, w2, w3
+        bn.lid      x4, 0(x12)
+        bn.addvm.8S w0, w0, w1
         
-        bn.sid x4, 0(x12++)
+        bn.sid x0, 0(x12++)
 
     ret
