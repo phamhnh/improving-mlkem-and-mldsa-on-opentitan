@@ -230,7 +230,9 @@ indcpa_enc:
     add  a0, zero, a4
     addi a2, a2, 1  
 
-  bn.wsrr w16, 0x0
+  bn.wsrr   w16, 0x0 /* w16 = R | Q */
+  bn.shv.8S w0, w16 << 1 /* w0 = 2*R | 2*Q */
+  bn.wsrw   0x0, w0 /* MOD = 2*R | 2*Q */
   /*** NTT sp ***/
   li  a0, STACK_ENC_SP 
   add a0, fp, a0
@@ -240,6 +242,7 @@ indcpa_enc:
     jal x1, ntt
   .endr
 
+  /* After NTT, w6 is still R | Q and MOD is still 2*R | 2*Q */
   /** v = sp * pkpv **/ 
   li   x29, STACK_ENC_PKPV 
   add  x29, fp, x29
@@ -255,12 +258,14 @@ indcpa_enc:
     jal  x1, basemul_acc 
   .endr
 
+  /* After basemul, w16 is still R | Q and MOD is still 2*R | 2*Q */
   /*** INTT v ***/
-  li  a0, STACK_ENC_V
-  add a0, fp, a0 
-  add a2, zero, a0 
-  la  a1, twiddles_intt
-  jal x1, intt
+  li      a0, STACK_ENC_V
+  add     a0, fp, a0 
+  add     a2, zero, a0 
+  la      a1, twiddles_intt
+  jal     x1, intt
+  bn.wsrw 0x0, w16 /* Restore MOD = R | Q */
 
   /*** CBD epp ***/
   lw   a0, STACK_ENC_COINS_ADDR(fp)
@@ -284,6 +289,9 @@ indcpa_enc:
   addi a2, a2, POLY
   jal  x1, poly_add
 
+  /* w6 is still R | Q */
+  bn.shv.8S w0, w16 << 1 /* w0 = 2*R | 2*Q */
+  bn.wsrw   0x0, w0 /* MOD = 2*R | 2*Q */
   /*** Matrix vector multiplication ***/
   li   a1, STACK_ENC_AT
   add  a1, fp, a1
@@ -317,6 +325,7 @@ indcpa_enc:
     addi a2, a2, KYBER_GEN_MATRIX_AT_NONCE 
   .endr
 
+  /* After basemul, w16 is still R | Q and MOD is still 2*R | 2*Q */
   /*** INTT ***/
   li  a0, STACK_ENC_AT
   add a0, fp, a0 
@@ -325,6 +334,7 @@ indcpa_enc:
   .rept KYBER_K
     jal x1, intt
   .endr 
+  bn.wsrw 0x0, w16 /* Restore MOD = R | Q */
 
   /*** CBD ep ***/
   lw  a0, STACK_ENC_COINS_ADDR(fp)

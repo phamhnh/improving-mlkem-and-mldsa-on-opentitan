@@ -213,7 +213,9 @@ indcpa_keypair:
     jal  x1, poly_getnoise_eta_1
     addi a2, a2, 1
 
-  bn.wsrr w16, 0x0
+  bn.wsrr   w16, 0x0 /* w16 = MOD = R | Q */
+  bn.shv.8S w0, w16 << 1 /* w0 = 2*R | 2*Q */
+  bn.wsrw   0x0, w0 /* MOD = 2*R | 2*Q */
   /*** NTT skpv ***/
   li   a0, STACK_SKPV
   add  a0, fp, a0
@@ -223,12 +225,26 @@ indcpa_keypair:
     jal x1, ntt
   .endr
 
+  /* Reduce skpv */
+  bn.wsrw 0x0, w16 /* MOD = R | Q */
+  bn.xor  w31, w31, w31 /* Zeroize w31 */
+  li      a0, STACK_SKPV
+  add     a0, fp, a0
+  LOOPI KYBER_K, 5
+    LOOPI 16, 3
+      bn.lid       x0, 0(a0)
+      bn.addvm.16H w0, w0, w31
+      bn.sid       x0, 0(a0++)
+    NOP
+
   /*** Packing sk ***/
   li   a0, STACK_SKPV
   add  a0, fp, a0
   lw   a3, STACK_SK_ADDR(fp)
   jal  x1, pack_sk
 
+  bn.shv.8S w0, w16 << 1 /* w0 = 2*R | 2*Q */
+  bn.wsrw   0x0, w0 /* MOD = 2*R | 2*Q */
   /*** Matrix-vector multiplication ***/
   li   a1, STACK_A
   add  a1, fp, a1
@@ -262,8 +278,10 @@ indcpa_keypair:
     .endr 
     addi a2, a2, KYBER_GEN_MATRIX_NONCE 
   .endr 
+  bn.wsrw 0x0, w16 /* Restore MOD = R | Q */
 
-  bn.xor  w31, w31, w31
+  /* After basemul, w16 is still R | Q */
+  bn.xor w31, w31, w31
   /*** poly_tomont ***/
   li  a0, STACK_A
   add a0, fp, a0
@@ -285,7 +303,9 @@ indcpa_keypair:
     jal  x1, poly_getnoise_eta_1
     addi a2, a2, 1
 
-  bn.wsrr w16, 0x0
+  /* After cbd, w16 is still R | Q */
+  bn.shv.8S w0, w16 << 1 /* w0 = 2*R | 2*Q */
+  bn.wsrw   0x0, w0 /* MOD = 2*R | 2*Q */
   /*** NTT e ***/
   li   a0, STACK_SKPV
   add  a0, fp, a0
@@ -294,6 +314,18 @@ indcpa_keypair:
   .rept KYBER_K
     jal x1, ntt
   .endr
+
+  /* Reduce e */
+  bn.wsrw 0x0, w16 /* MOD = R | Q */
+  bn.xor  w31, w31, w31 /* Zeroize w31 */
+  li      a0, STACK_SKPV
+  add     a0, fp, a0
+  LOOPI KYBER_K, 5
+    LOOPI 16, 3
+      bn.lid       x0, 0(a0)
+      bn.addvm.16H w0, w0, w31
+      bn.sid       x0, 0(a0++)
+    NOP
 
   /* Polyvec add */
   li   a0, STACK_A
