@@ -22,12 +22,19 @@
  */
 
 poly_tobytes:
-  LOOPI 4, 33
+  LOOPI 4, 37
     /* Load inputs */
     bn.lid x4, 0(x10++)
     bn.lid x5, 0(x10++)
     bn.lid x6, 0(x10++)
     bn.lid x7, 0(x10++)
+
+    /* Reduce inputs to [0,q). This is because outputs of NTT without final conditional subtraction
+     * in Montgomery multiplication are in [0,2q). */
+    bn.addvm.16H w0, w0, w31
+    bn.addvm.16H w1, w1, w31
+    bn.addvm.16H w2, w2, w31
+    bn.addvm.16H w3, w3, w31
 
     /* First 32 bytes */
     LOOPI 16, 2                    /* 16 coeffs in w0 = 24 bytes: 8 bytes left */
@@ -96,6 +103,9 @@ pack_pk:
   li x7, 3
   li x9, 5
 
+  /* Zeroize w31 */
+  bn.xor w31, w31, w31
+
   /* Pack polyvec pk */
   .rept KYBER_K
     jal x1, poly_tobytes
@@ -133,6 +143,9 @@ pack_sk:
   li x6, 2
   li x7, 3
   li x9, 5
+
+  /* Zeroize w31 */
+  bn.xor w31, w31, w31
 
   /* Pack polyvec sk */
   .rept KYBER_K
