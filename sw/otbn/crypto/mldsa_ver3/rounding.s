@@ -164,6 +164,7 @@ decompose:
     /* "a", "a{0,1}" refer to the variable names from the reference code */ 
 
     /* Compute "a1" */
+    bn.addvm.8S w0, w0, bn0 /* Inputs are in [0,2q) so we reduce them to [0,q) */
     bn.addv.8S w2, w0, w5         /* "a" + 127 */
     bn.shv.8S  w2, w2 >> 7   /* ("a" + 127) >> 7 */
 #if GAMMA2 == (Q-1)/88

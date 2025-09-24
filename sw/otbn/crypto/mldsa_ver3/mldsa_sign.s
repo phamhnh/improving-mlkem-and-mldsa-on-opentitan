@@ -546,7 +546,7 @@ crypto_sign_signature_internal:
        push \reg
     .endr
 
-    bn.wsrr w16, 0x0
+    bn.wsrr w16, 0x0 /* w16 = MOD = R | Q */
     LOOPI L, 2
         jal x1, ntt
         addi a1, a1, -1024 /* Reset twiddle pointer */
@@ -555,6 +555,7 @@ crypto_sign_signature_internal:
         pop \reg
     .endr
 
+    /* After NTT(s1), w16 is still R | Q */
     /* NTT(s2) */
     li   a0, STACK_S2
     add  a0, fp, a0
@@ -564,7 +565,6 @@ crypto_sign_signature_internal:
        push \reg
     .endr
 
-    bn.wsrr w16, 0x0
     LOOPI K, 2
       jal  x1, ntt
       addi a1, a1, -1024 /* Reset twiddle pointer */
@@ -573,6 +573,7 @@ crypto_sign_signature_internal:
         pop \reg
     .endr
 
+    /* After NTT(s2), w16 is still R | Q */
     /* NTT(t0) */
     li   a0, STACK_T0
     add  a0, fp, a0
@@ -582,7 +583,6 @@ crypto_sign_signature_internal:
        push \reg
     .endr
 
-    bn.wsrr w16, 0x0
     LOOPI K, 2
         jal x1, ntt
         addi a1, a1, -1024 /* Reset twiddle pointer */
@@ -610,6 +610,7 @@ _rej_crypto_sign_signature_internal:
     
     addi s11, s11, L
 
+    /* w16 is still R | Q */
     /* NTT(Y) -> Z */
     li  a0, STACK_Y
     add a0, fp, a0 /* in */
@@ -621,7 +622,6 @@ _rej_crypto_sign_signature_internal:
      push \reg
   .endr
 
-    bn.wsrr w16, 0x0
     LOOPI L, 2
         jal x1, ntt
         addi a1, a1, -1024
@@ -630,6 +630,7 @@ _rej_crypto_sign_signature_internal:
       pop \reg
     .endr
 
+    /* w16 is still R | Q */
     /* Matrix-vector multiplication */
 
     /* Load source pointers */
@@ -645,7 +646,6 @@ _rej_crypto_sign_signature_internal:
     /* Load offset for resetting pointer */
     li s0, POLYVECL_BYTES
 
-    bn.wsrr w16, 0x0
     .rept K
         jal  x1, poly_pointwise
         addi a2, a2, -1024
@@ -658,6 +658,7 @@ _rej_crypto_sign_signature_internal:
         addi a2, a2, 1024
     .endr
 
+    /* w16 is still R | Q */
     /* Inverse NTT on w1 */
     li  a0, STACK_W1
     add a0, fp, a0
@@ -667,7 +668,6 @@ _rej_crypto_sign_signature_internal:
         push \reg
     .endr
 
-    bn.wsrr w16, 0x0
     LOOPI K, 3
         jal x1, intt
         /* Reset the twiddle pointer */
@@ -679,6 +679,8 @@ _rej_crypto_sign_signature_internal:
         pop \reg
     .endr
 
+    /* The outputs of INTT are in [0,2q). So the inputs in poly_decompose are first reduced mod q
+     * with bn.addvm with 0. */
     /* Load source pointers */
 
     /* Decompose */
@@ -815,6 +817,7 @@ _rej_crypto_sign_signature_internal:
     add  a0, fp, a0
     jal  x1, poly_challenge
 
+    /* w16 is still R | Q */
     /* NTT(cp) */
     li   a0, STACK_CP
     add  a0, fp, a0 /* Input */
@@ -825,7 +828,6 @@ _rej_crypto_sign_signature_internal:
         push \reg
     .endr
 
-    bn.wsrr w16, 0x0
     jal x1, ntt /* Only one polynomial */
 
     .irp reg,a7,a6,a5,a4,a3,a2,a1,a0,t6,t5,t4,t3,t2,t1,t0
@@ -840,7 +842,6 @@ _rej_crypto_sign_signature_internal:
     li  a2, STACK_Z
     add a2, fp, a2
 
-    bn.wsrr w16, 0x0
     LOOPI L, 2
         jal  x1, poly_pointwise
         addi a0, a0, -1024
@@ -854,7 +855,6 @@ _rej_crypto_sign_signature_internal:
         push \reg
     .endr
 
-    bn.wsrr w16, 0x0
     LOOPI L, 3
         jal  x1, intt
         /* Reset the twiddle pointer */
@@ -866,10 +866,11 @@ _rej_crypto_sign_signature_internal:
         pop \reg
     .endr
 
+    /* The outputs of INTT are in [0,2q) so z must be put on the second operand in poly_add. */
     /* z = z + y */
-    li  a0, STACK_Z
+    li  a0, STACK_Y
     add a0, fp, a0
-    li  a1, STACK_Y
+    li  a1, STACK_Z
     add a1, fp, a1
     li  a2, STACK_Z
     add a2, fp, a2
@@ -884,7 +885,6 @@ _rej_crypto_sign_signature_internal:
     li  a1, STACK_Z
     add a1, fp, a1
     
-    bn.wsrr w16, 0x0
     LOOPI L, 2
         jal x1, poly_reduce32
         nop
@@ -914,7 +914,6 @@ _rej_crypto_sign_signature_internal:
     li  a2, STACK_H
     add a2, fp, a2
 
-    bn.wsrr w16, 0x0
     LOOPI K, 2
         jal  x1, poly_pointwise
         addi a0, a0, -1024
@@ -928,7 +927,6 @@ _rej_crypto_sign_signature_internal:
         push \reg
     .endr
 
-    bn.wsrr w16, 0x0
     LOOPI K, 3
         jal  x1, intt
         /* Reset the twiddle pointer */
@@ -955,6 +953,7 @@ _rej_crypto_sign_signature_internal:
             bn.sid      x4, 0(a0++)
         NOP
 
+    /* The ouputs of INTT are in [0,2q) so h must be the second operand to poly_sub */
     li  a0, STACK_W0
     add a0, fp, a0
     li  a1, STACK_H
@@ -972,7 +971,6 @@ _rej_crypto_sign_signature_internal:
     li  a1, STACK_W0
     add a1, fp, a1
     
-    bn.wsrr w16, 0x0
     LOOPI K, 2
         jal x1, poly_reduce32
         nop
@@ -1001,7 +999,6 @@ _rej_crypto_sign_signature_internal:
     li  a2, STACK_H
     add a2, fp, a2
 
-    bn.wsrr w16, 0x0
     LOOPI K, 2
         jal  x1, poly_pointwise
         addi a0, a0, -1024
@@ -1015,7 +1012,6 @@ _rej_crypto_sign_signature_internal:
         push \reg
     .endr
 
-    bn.wsrr w16, 0x0
     LOOPI K, 3
         jal  x1, intt
         /* Reset the twiddle pointer */
@@ -1042,6 +1038,7 @@ _rej_crypto_sign_signature_internal:
             bn.sid      x4, 0(a0++)
         NOP
 
+    /* The output of INTT are in [0,2q) so h must be the second operand in poly_sub */
     li  a0, STACK_W0
     add a0, fp, a0
     li  a1, STACK_H
@@ -1053,13 +1050,13 @@ _rej_crypto_sign_signature_internal:
         jal x1, poly_add
         nop
 
+    /* Since h is reduced anyway, input range [0,2q) is acceptable. */
     /* reduce32(z) to move to mod^{+-} for bound check */
     li  a0, STACK_H
     add a0, fp, a0
     li  a1, STACK_H
     add a1, fp, a1
     
-    bn.wsrr w16, 0x0
     LOOPI K, 2
         jal x1, poly_reduce32
         nop

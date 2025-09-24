@@ -321,7 +321,7 @@ crypto_sign_keypair:
         push \reg
     .endr
 
-    bn.wsrr w16, 0x0
+    bn.wsrr w16, 0x0 /* w16 = MOD = R | Q */
     LOOPI L, 2
         jal x1, ntt
         addi a1, a1, -1024
@@ -345,7 +345,6 @@ crypto_sign_keypair:
     /* Load offset for resetting pointer */
     li s1, POLYVECL_BYTES
 
-    bn.wsrr w16, 0x0
     .rept K
         jal  x1, poly_pointwise
         addi a2, a2, -1024
@@ -368,7 +367,6 @@ crypto_sign_keypair:
         push \reg
     .endr
 
-    bn.wsrr w16, 0x0
     LOOPI K, 3
         jal  x1, intt
         addi a1, a1, -960 /* Reset the twiddle pointer */
@@ -379,6 +377,8 @@ crypto_sign_keypair:
         pop \reg
     .endr
 
+    /* The output of INTT are in range [0,2q) so t1 must be the second operand to poly_add, which
+     * uses bn.addvm.cond, to be put back to [0,q). */
     /* t1+s2 */
 
     /* Load source pointers */

@@ -25,18 +25,17 @@ poly_pointwise:
     /* Set up constants for input/state */
     li x4, 1
 
-    LOOPI 32, 10
+    LOOPI 32, 9
         bn.lid x0, 0(x10++)
         bn.lid x4, 0(x11++)
-        
+
         bn.mulv.8S.even.acc.z.lo w0, w0, w1
         bn.mulv.l.8S.even.lo     w0, w0, sw0.1
         bn.mulv.l.8S.even.acc.hi w0, w0, sw0.0
         bn.mulv.8S.odd.acc.z.lo  w0, w0, w1
         bn.mulv.l.8S.odd.lo      w0, w0, sw0.1
         bn.mulv.l.8S.odd.acc.hi  w0, w0, sw0.0
-        bn.addvm.8S              w0, w0, w31
-        
+
         bn.sid x0, 0(x12++)
 
     ret
