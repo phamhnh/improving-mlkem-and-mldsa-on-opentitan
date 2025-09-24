@@ -31,11 +31,13 @@ def bench_key_pair(operation, ref):
         print("Error: pks dont match!!!")
         print(pk.hex())
         print(pk_otbn.hex())
+        print(f"rand = {rand}")
         return -1
     if sk != sk_otbn:
         print("Error: sks dont match!!!")
         print(sk.hex())
         print(sk_otbn.hex())
+        print(f"rand = {rand}")
         return -1
     print("Iteration done")
     return stat_data

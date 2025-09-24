@@ -29,11 +29,15 @@ def bench_mlkem_keypair(operation, ref):
         print("Error: Encaps key do not match!!!")
         print(ek)
         print(ek_otbn)
+        print(f"d = {d}")
+        print(f"z = {z}")
         return -1
     if dk != dk_otbn:
         print("Error: Decaps keys do not match!!!")
         print(dk)
         print(dk_otbn)
+        print(f"d = {d}")
+        print(f"z = {z}")
         return -1
     print("Iteration done")
 
@@ -54,11 +58,17 @@ def bench_mlkem_encaps(operation, ref):
         print("Error: Ciphertext does not match!!!")
         print(c)
         print(c_otbn)
+        print(f"d = {d}")
+        print(f"z = {z}")
+        print(f"m = {m}")
         return -1
     if K != K_otbn:
         print("Error: Key does not match!!!")
         print(K)
         print(K_otbn)
+        print(f"d = {d}")
+        print(f"z = {z}")
+        print(f"m = {m}")
         return -1
     print("Iteration done")
 
@@ -80,6 +90,9 @@ def bench_mlkem_decaps(operation, ref):
         print("Error: Shared key does not match!!!")
         print(K_prime)
         print(K_prime_otbn)
+        print(f"d = {d}")
+        print(f"z = {z}")
+        print(f"m = {m}")
         return -1
     print("Iteration done")
 
