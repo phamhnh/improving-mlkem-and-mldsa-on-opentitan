@@ -24,15 +24,11 @@
 .globl poly_sub_dilithium
 poly_sub_dilithium:
     /* Set up constants for input/state */
-    li x4, 2
-    li x5, 3
+    li x4, 1
 
     LOOPI 32, 4
-        bn.lid x4, 0(x10++)
-        bn.lid x5, 0(x11++)
-        
-        bn.subvm.8S w2, w2, w3
-        
-        bn.sid x4, 0(x12++)
-
+        bn.lid      x0, 0(x10++)
+        bn.lid      x4, 0(x11++)
+        bn.subvm.8S w0, w0, w1
+        bn.sid      x0, 0(x12++)
     ret
