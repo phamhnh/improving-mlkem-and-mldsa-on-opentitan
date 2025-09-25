@@ -23,9 +23,6 @@
 
 .globl ntt
 ntt:
-  /* Empty w18 */
-  bn.xor w18, w18, w18
-
   /* Set up wide registers for input and intermediate states */
   li x4, 0
   li x5, 1
