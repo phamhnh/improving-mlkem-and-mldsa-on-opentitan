@@ -9,8 +9,7 @@ SRC=$4
 OUT_FILE=$5
 
 # Run sv2v
-sv2v --define=SYNTHESIS \
-   --define=SYNTHESIS_MEMORY_BLACK_BOXING --define=YOSYS \
+sv2v --define=SYNTHESIS --define=YOSYS \
    $DEFINES $PKGS $INC_FILES $SRC > $OUT_FILE
 
 # Make sure auto-generated primitives are resolved to generic or Xilinx-specific primitives

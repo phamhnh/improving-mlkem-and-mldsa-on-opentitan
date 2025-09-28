@@ -7,3 +7,23 @@ OTBN = opentitan_ip(
     name = "otbn",
     hjson = "//hw/ip/otbn/data:otbn.hjson",
 )
+
+SRC_Set = provider(
+    doc = "A provider containing source files as input to sv2v.",
+    fields = {
+        "name": "Name of source file set.",
+        "src": "A list of source elements.",
+        "defines": "A list of defines."
+    },
+)
+
+CORE_Set = provider(
+    doc = "A provider containing core definitions",
+    fields = {
+        "name": "Name of core set.",
+        "top_module": "Name of the top module.",
+        "src": "SRC_set of source elements.",
+        "defines": "A list of defines.",
+#        "start_f": "Starting frequency for Fmax search."
+    },
+)

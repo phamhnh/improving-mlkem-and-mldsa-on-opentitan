@@ -33,23 +33,6 @@ filegroup(
     ],
 )
 
-# Define paths to synthesis results, cts and stats.
-_TOP_MODULE_RESULTS = "{}_{}_{}_results"
-
-_TOP_MODULE_CTS = "{}_{}_{}_cts"
-
-_TOP_MODULE_STATS = "{}_{}_{}_stats"
-
-_TOP_MODULE_OUTPUT = "$(location :{}_{}_{}_stats)"
-
-_ADDER_RESULTS = "{}_{}_results"
-
-_ADDER_CTS = "{}_{}_cts"
-
-_ADDER_STATS = "{}_{}_stats"
-
-_ADDER_OUTPUT = "$(location :{}_{}_stats)"
-
 # List of PKDs
 PDKS = [
     "sky130hd",
@@ -63,67 +46,105 @@ TOP_MODULES = [
     "otbn_mac_bignum"
 ]
 
-# List of adders used in the design.
-MULTIPLIERS = ["unified_mul", "otbn_bignum_mul", "otbn_mul"]
+## List of adders used in the design.
+#MULTIPLIERS = ["unified_mul", "otbn_bignum_mul", "otbn_mul"]
+#
+## List of adders used in the design.
+#ADDERS = ["buffer_bit", "brent_kung", "sklansky", "kogge_stone"]
 
-# List of adders used in the design.
-ADDERS = ["buffer_bit", "brent_kung", "sklansky", "kogge_stone"]
+MULTIPLIERS = [
+   ("otbn_bignum_mul", [None]),
+   ("otbn_mul", [None]),
+   ("unified_mul", [None, ["WALLACE"]])
+]
 
-# Manually established minimum clock period on sky130hd.
-CLOCK_PERIOD = {
-  "buffer_bit":  "4.3",
-  "brent_kung":  "4.1",
-  "sklansky":    "4.0",
-  "kogge_stone": "5.1",
-  "otbn_mul": "10.5",
-  "unified_mul": "10.5",
-  "otbn_bignum_mul": "10.5"
-}
+ADDERS = [
+   ("ref_add", [None]),
+   ("towards_alu_adder", [None]),
+   ("towards_mac_adder", [None]),
+   ("buffer_bit", [None]),
+   ("brent_kung", [None]),
+   ("brent_kung_adder_256_mode0_only", [None]),
+   ("sklansky", [None]),
+   ("sklansky_adder_256_mode0_only", [None]),
+   ("kogge_stone", [None]),
+   ("kogge_stone_adder_256_mode0_only", [None]),
+]
+
+ARITH = MULTIPLIERS + ADDERS
+
+# # Manually established minimum clock period on sky130hd.
+# CLOCK_PERIOD = {
+#   "buffer_bit":  "4.3",
+#   "brent_kung":  "4.1",
+#   "sklansky":    "4.0",
+#   "kogge_stone": "5.1",
+#   "otbn_mul": "10.5",
+#   "unified_mul": "10.5",
+#   "otbn_bignum_mul": "10.5"
+# }
 
 # List of different versions for our design.
-VERSION = {
-    "KMAC": ["KMAC"],
-    "TOWARDS": ["TOWARDS_BASE", "TOWARDS_ADDER", "TOWARDS_MAC"],
-    "VER1": ["TOWARDS_BASE", "BNMULV", "BUFFER_BIT"],
-    "VER2": ["TOWARDS_BASE", "BNMULV", "BNMULV_ACCH", "BUFFER_BIT"],
-    "VER3": ["TOWARDS_BASE", "BNMULV", "BNMULV_ACCH", "BNMULV_COND_SUB", "BUFFER_BIT"],
-}
+VARIANT = [
+  (None,      ["SYNTHESIS_MEMORY_BLACK_BOXING"]),
+  ("KMAC",    ["KMAC", "SYNTHESIS_MEMORY_BLACK_BOXING"]),
+  ("TOWARDS", ["TOWARDS_BASE", "TOWARDS_ADDER", "TOWARDS_MAC", "SYNTHESIS_MEMORY_BLACK_BOXING"]),
+  ("VER1",    ["TOWARDS_BASE", "BNMULV", "BUFFER_BIT", "SYNTHESIS_MEMORY_BLACK_BOXING"]),
+  ("VER2",    ["TOWARDS_BASE", "BNMULV", "BNMULV_ACCH", "BUFFER_BIT", "SYNTHESIS_MEMORY_BLACK_BOXING"]),
+  ("VER3",    ["TOWARDS_BASE", "BNMULV", "BNMULV_ACCH", "BNMULV_COND_SUB", "BUFFER_BIT", "SYNTHESIS_MEMORY_BLACK_BOXING"]),
+]
 
-#VERSION = dicts.add({
-#    "TOWARDS": ["TOWARDS_ADDER"],
-#    "VER1": ["BNMULV", "BUFFER_BIT"],
-#    "VER2": ["BNMULV", "BNMULV_ACCH", "BUFFER_BIT"],
-#    "VER3": ["BNMULV", "BNMULV_ACCH", "BNMULV_COND_SUB", "BUFFER_BIT"],
-#}, {
-#    "VER1_" + adder: [
-#        "BNMULV",
-#        "BUFFER_BIT",
-#        "MAC_ADDER=" + adder,
-#    ]
-#    for adder in ADDERS
-#})
+load(":defs.bzl", "SRC_Set", "CORE_Set")
+
+ARITH_CORES = [
+  CORE_Set(
+    top_module = top_module,
+    name = "_".join([top_module] + defines) if defines else top_module,
+    src = SRC_Set(
+      name = "_".join([top_module] + defines) if defines else top_module,
+      src = ["rtl/bn_vec_core/{}.sv".format(top_module),
+             "//hw/ip/tlul:sta_files",
+             "//hw/ip/prim:sta_files",
+             "//hw/ip/prim_xilinx:sta_files",
+             "//hw/ip/prim_generic:sta_files"
+            ],
+      defines = defines
+    ),
+#    start_f = 10.0
+  )
+  for top_module, variants in ARITH for defines in variants
+]
+
+OTBN_CORES = [
+  CORE_Set(
+    top_module = top_module,
+    name = "_".join([top_module, variant]) if variant else top_module,
+    src = SRC_Set(
+      name = "_".join([top_module, variant]) if variant else top_module,
+      src = glob(["rtl/*.sv", "rtl/bn_vec_core/*.sv"]) +
+                 [
+                     "//hw/ip/tlul:sta_files",
+                     "//hw/ip/prim:sta_files",
+                     "//hw/ip/prim_xilinx:sta_files",
+                     "//hw/ip/prim_generic:sta_files"
+                 ],
+      defines = defines
+    ),
+#    start_f = 10.0
+  )
+  for top_module in TOP_MODULES for variant, defines in VARIANT
+]
 
 
-filegroup(
-  name = "compare_adders",
-  srcs = [
-    "//hw/ip/otbn:buffer_bit_sky130hd_results",
-    "//hw/ip/otbn:brent_kung_sky130hd_results",
-    "//hw/ip/otbn:sklansky_sky130hd_results",
-    "//hw/ip/otbn:kogge_stone_sky130hd_results",
-  ]
-)
+CORES = ARITH_CORES + OTBN_CORES
+
+SRCS = list({core.src.name: core.src for core in CORES}.values())
+
 
 [
     sv2v_build(
-        name = "rtl_sv2v_" + name,
-        srcs = glob(["rtl/*.sv", "rtl/bn_vec_core/*.sv"]) + 
-        [
-            "//hw/ip/tlul:sta_files",
-            "//hw/ip/prim:sta_files",
-            "//hw/ip/prim_xilinx:sta_files",
-            "//hw/ip/prim_generic:sta_files"
-        ],
+        name = "srcs_" + src.name,
+        srcs = src.src,
         pkgs = [
             "//hw/top_earlgrey:rtl_files",
             "//hw/ip/edn:rtl_files",
@@ -139,20 +160,21 @@ filegroup(
             "//hw/ip/otbn:rtl_files"
         ],
         includes = ["//hw/ip/prim:rtl_files"],
-        defines = defines,
-        outdir = "src/rtl_sv2v_{}".format(name),
+        defines = src.defines,
+        outdir = "src/rtl_sv2v_{}".format(src.name),
     )
-    for name, defines in VERSION.items()
+    for src in SRCS
 ]
 
 [
     filegroup(
-        name = name + "_files", 
-        srcs = [":rtl_sv2v_" + name],
+        name = src.name + "_files",
+        srcs = [":srcs_" + src.name],
         visibility = ["//visibility:public"],
     )
-    for name in VERSION.keys()
+    for src in SRCS
 ]
+
 
 FASTER = {
     # ignore timing repair for now
@@ -167,16 +189,16 @@ FASTER = {
 }
 
 OTHER_ARGS = {
-    "SETUP_SLACK_MARGIN": "0",
-    "SETUP_HOLD_MARGIN":  "0",
+    "SETUP_SLACK_MARGIN":  "0.05",
+    "SETUP_HOLD_MARGIN":  "-0.05",
     "SYNTH_HIERARCHICAL": "1",
     "PLACE_DENSITY": "0.5",
     "CORE_MARGIN": "1",
     "SYNTH_MEMORY_MAX_BITS": "16384",
-    # "PL_RESIZER_HOLD_MAX_BUFFER_PCT" : "50",
-    # "GRT_RESIZER_HOLD_MAX_BUFFER_PCT": "50",
-    # "PL_RESIZER_SETUP_MAX_BUFFER_PCT" : "50",
-    # "GRT_RESIZER_SETUP_MAX_BUFFER_PCT": "50",
+    #"PL_RESIZER_HOLD_MAX_BUFFER_PCT" : "10",
+    #"GRT_RESIZER_HOLD_MAX_BUFFER_PCT": "15",
+    #"PL_RESIZER_SETUP_MAX_BUFFER_PCT" : "30",
+    #"GRT_RESIZER_SETUP_MAX_BUFFER_PCT": "35",
 }
 
 IO_PLACER_ASAP7 = {
@@ -198,28 +220,7 @@ STAGE_ARGS = {
 
 [
     orfs_flow(
-        name = base_name,
-        arguments =  FASTER | OTHER_ARGS |
-        (
-            IO_PLACER_ASAP7 if pdk == "asap7" else IO_PLACER_SKY130HD
-        ) |
-        {
-            "CLOCK_PERIOD": CLOCK_PERIOD[base_name],
-        },
-        stage_arguments = STAGE_ARGS,
-        pdk = "@docker_orfs//:{}".format(pdk),
-        sources = {
-            "SDC_FILE": ["//hw/ip/otbn/sta:constraints_noclk_{}".format(pdk)],
-        },
-        variant="{}".format(pdk),
-        verilog_files = [":VER1_files"],
-    )
-    for pdk in PDKS for base_name in ADDERS + MULTIPLIERS
-]
-
-[
-    orfs_flow(
-        name = base_name,
+        name = core.top_module,
         arguments =  FASTER | OTHER_ARGS |
         (
             IO_PLACER_ASAP7 if pdk == "asap7" else IO_PLACER_SKY130HD
@@ -229,63 +230,53 @@ STAGE_ARGS = {
         sources = {
             "SDC_FILE": ["//hw/ip/otbn/sta:constraints_{}".format(pdk)],
         },
-        variant = "{}_{}".format(name, pdk),
-        verilog_files = [":" + name + "_files"],
+        variant="_".join([core.name] + [pdk]).replace(core.top_module + "_", ""),
+        verilog_files = [core.src.name + "_files"]
     )
-    for pdk in PDKS for name in VERSION.keys() for base_name in TOP_MODULES
+    for pdk in PDKS for core in CORES
 ]
 
 [
     orfs_run(
-        name = _ADDER_RESULTS.format(base_name, pdk),
-        src = _ADDER_CTS.format(base_name, pdk),
+        name = "{}_{}_results".format(core.name, pdk),
+        src = "{}_{}_cts".format(core.name, pdk),
         outs = [
-            _ADDER_STATS.format(base_name, pdk),
+            "{}_{}_stats".format(core.name, pdk),
+            "{}_{}_reports".format(core.name, pdk),
+	    #"{}_{}_checkpoint.db".format(core.name, pdk),
         ],
         arguments = {
-            "OUTPUT": _ADDER_OUTPUT.format(base_name, pdk),
-        },
-        script = "//hw/ip/otbn/sta:openroad_combined_tcl",
-    ) for pdk in PDKS for base_name in ADDERS + MULTIPLIERS
-]
-
-[
-    orfs_run(
-        name = _TOP_MODULE_RESULTS.format(base_name, name, pdk),
-        src = _TOP_MODULE_CTS.format(base_name, name, pdk),
-        outs = [
-            _TOP_MODULE_STATS.format(base_name, name, pdk),
-        ],
-        arguments = {
-            "OUTPUT": _TOP_MODULE_OUTPUT.format(base_name, name, pdk),
+            "OUTPUT": "$(location :{}_{}_stats)".format(core.name, pdk),
+            "REPORTS": "$(location :{}_{}_reports)".format(core.name, pdk),
+	    #"CHECKPOINT": "$(location :{}_{}_checkpoint.db)".format(core.name, pdk),
         },
         script = "//hw/ip/otbn/sta:openroad_combined_tcl",
     )
-    for pdk in PDKS for name in VERSION.keys() for base_name in TOP_MODULES
+    for pdk in PDKS for core in CORES
 ]
+
 
 filegroup(
     name = "all_adders",
     srcs = [
-        ":" + _ADDER_RESULTS.format(base_name, pdk)
-        for pdk in PDKS for base_name in ADDERS
+        ":" + "{}_{}_results".format("_".join([top_module] + defines) if defines else top_module, pdk)
+        for pdk in PDKS for top_module, variants in ADDERS for defines in variants
     ],
 )
-
-[
-    filegroup(
-        name = base_name + "_" + name + "_" + pdk + "_all_results",
-        srcs = [
-            ":" + _TOP_MODULE_RESULTS.format(base_name, name, pdk)
-        ],
-    )
-    for pdk in PDKS for name in VERSION.keys() for base_name in TOP_MODULES
-]
 
 filegroup(
-    name = "all_results",
+    name = "all_multipliers",
     srcs = [
-        ":" + _TOP_MODULE_RESULTS.format(base_name, name, pdk)
-        for pdk in PDKS for name in VERSION.keys() for base_name in TOP_MODULES
+        ":" + "{}_{}_results".format("_".join([top_module] + defines) if defines else top_module, pdk)
+        for pdk in PDKS for top_module, variants in MULTIPLIERS for defines in variants
     ],
 )
+
+filegroup(
+    name = "all_otbn",
+    srcs = [
+        ":" + "{}_{}_results".format("_".join(["otbn", variant]) if variant else "otbn", pdk)
+        for pdk in PDKS for variant, defines in VARIANT
+    ],
+)
+

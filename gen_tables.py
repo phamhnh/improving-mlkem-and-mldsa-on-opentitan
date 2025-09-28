@@ -177,7 +177,8 @@ def synthesize_ORFS(top_module, outdir, flags = []):
 #
 #  result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
 
-  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags else ''}_sky130hd{'_all' if flags else ''}_results; mkdir -p {outdir}; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_sky130hd_stats {outdir}"
+  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags else ''}_sky130hd_results; mkdir -p {outdir}; chmod u+w reports/ASIC/*; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_sky130hd_* {outdir}"
+  #command = f"mkdir -p {outdir}; chmod u+w reports/ASIC/*; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_sky130hd_* {outdir}"
 
   print(f"Command: {command}")
 
@@ -279,7 +280,7 @@ if __name__ == "__main__":
     modules = [("otbn_bignum_mul", None, []),
                ("otbn_mul",        None, ["towards"]),
                ("unified_mul",     None, []),
-               ("unified_mul",     "wallace", ["wallace"])]
+               ("unified_mul",     "WALLACE", ["wallace"])]
   elif args.adders:
     modules = [(top_module, None, []) for top_module in [
                     "ref_add",
@@ -315,7 +316,7 @@ if __name__ == "__main__":
 
   if args.flags:
     flags = args.flags.split(",")
-    modules = [(args.top_module, "_".join(flags), flags)]
+    modules = [(args.top_module, "_".join(flag.upper() for flag in flags), flags)]
 
   if args.run_synthesis:
     for top_module, flag_group, flag in modules:
