@@ -1,0 +1,70 @@
+SANDBOX_PATH=$PWD
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_keypair_bench_ver0_base
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_encap_bench_ver0_base
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_decap_bench_ver0_base
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_keypair_bench_ver0_base
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_encap_bench_ver0_base
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_decap_bench_ver0_base
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_keypair_bench_ver0_base
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_encap_bench_ver0_base
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_decap_bench_ver0_base
+
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_keypair_bench_ver0
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_encap_bench_ver0
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_decap_bench_ver0
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_keypair_bench_ver0
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_encap_bench_ver0
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_decap_bench_ver0
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_keypair_bench_ver0
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_encap_bench_ver0
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_decap_bench_ver0
+
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_keypair_bench_ver1_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_encap_bench_ver1_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_decap_bench_ver1_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_keypair_bench_ver1_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_encap_bench_ver1_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_decap_bench_ver1_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_keypair_bench_ver1_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_encap_bench_ver1_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_decap_bench_ver1_nold
+
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_keypair_bench_ver1
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_encap_bench_ver1
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_decap_bench_ver1
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_keypair_bench_ver1
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_encap_bench_ver1
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_decap_bench_ver1
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_keypair_bench_ver1
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_encap_bench_ver1
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_decap_bench_ver1
+
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_keypair_bench_ver2_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_encap_bench_ver2_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_decap_bench_ver2_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_keypair_bench_ver2_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_encap_bench_ver2_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_decap_bench_ver2_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_keypair_bench_ver2_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_encap_bench_ver2_nold
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_decap_bench_ver2_nold
+
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_keypair_bench_ver2
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_encap_bench_ver2
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_decap_bench_ver2
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_keypair_bench_ver2
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_encap_bench_ver2
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_decap_bench_ver2
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_keypair_bench_ver2
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_encap_bench_ver2
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_decap_bench_ver2
+
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_keypair_bench_ver3
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_encap_bench_ver3
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem512_decap_bench_ver3
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_keypair_bench_ver3
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_encap_bench_ver3
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem768_decap_bench_ver3
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_keypair_bench_ver3
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_encap_bench_ver3
+./bazelisk.sh test --cache_test_results=no --action_env=PATH --test_timeout=100000 --sandbox_writable_path="$SANDBOX_PATH" //sw/otbn/crypto/tests/mlkem:mlkem1024_decap_bench_ver3
