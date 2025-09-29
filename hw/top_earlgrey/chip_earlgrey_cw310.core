@@ -85,6 +85,9 @@ parameters:
   BNMULV_COND_SUB:
     datatype: bool
     paramtype: vlogdefine
+  TOWARDS_BASE:
+    datatype: bool
+    paramtype: vlogdefine
   TOWARDS_ADDER:
     datatype: bool
     paramtype: vlogdefine
@@ -124,14 +127,15 @@ targets:
       - OtpMacroMemInitFile
       - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
       - AST_BYPASS_CLK=true
-      - old_adder ? (TOWARDS_ADDER=true)
-      - old_mac ? (TOWARDS_MAC=true)
       - TOWARDS_KMAC=true
       - MAC_ADDER
       - ALU_ADDER
+      - bnmulv_ver1 ? (TOWARDS_BASE=true)
       - bnmulv_ver1 ? (BNMULV=true)
+      - bnmulv_ver2 ? (TOWARDS_BASE=true)
       - bnmulv_ver2 ? (BNMULV=true)
       - bnmulv_ver2 ? (BNMULV_ACCH=true)
+      - bnmulv_ver3 ? (TOWARDS_BASE=true)
       - bnmulv_ver3 ? (BNMULV=true)
       - bnmulv_ver3 ? (BNMULV_ACCH=true)
       - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
