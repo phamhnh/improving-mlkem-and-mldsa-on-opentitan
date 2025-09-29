@@ -36,12 +36,6 @@
 .equ x26, s10
 .equ x27, s11
 
-.equ x28, t3
-.equ x29, t4
-.equ x30, t5
-.equ x31, t6
-
-.equ w30, tmp
 .equ w31, bn0
 
 /* Index of the Keccak command special register. */
@@ -72,11 +66,11 @@
  * @param[in]  a2: i||j (2 bytes)
  * @param[out] a1: dmem pointer to polynomial
  *
- * clobbered registers: a0-a5, t0-t5, w8, w16
+ * clobbered registers: a0-a5, t0-s4, w8, w16
  */
 
-.globl poly_gen_matrix_base
-poly_gen_matrix_base:
+.globl poly_gen_matrix
+poly_gen_matrix:
   /* 32 byte align the sp */
   andi a5, sp, 31
   beq  a5, zero, _aligned
@@ -119,6 +113,7 @@ _aligned:
   li a6, 3 
 
   /* For masking coeff with 0xFFF */
+  bn.xor bn0, bn0, bn0
   #define coeff_mask w10
   bn.addi coeff_mask, bn0, 1
   bn.rshi coeff_mask, coeff_mask, bn0 >> 244
@@ -127,16 +122,16 @@ _aligned:
   #define cand w11
 
   #define mod w12
-  li      t3, 12
+  li      s2, 12
   la      t1, modulus_bn
-  bn.lid  t3, 0(t1)
+  bn.lid  s2, 0(t1)
   bn.rshi mod, bn0, mod >> 240 /* Only keep mod in lowest word */
 
   #define accumulator w13
-  li t5, 13
-  li t3, 16 /* 1 WDR stores 16 coeffs */
-  #define accumulator_count t6
-  li t6, 0
+  li s4, 13
+  li s2, 16 /* 1 WDR stores 16 coeffs */
+  #define accumulator_count s5
+  li s5, 0
 
   /* Loop until 256 coefficients have been written to the output */
 _rej_sample_loop:
@@ -174,8 +169,8 @@ _rej_sample_loop:
                                     NOT (q > cand) = (q <= cand) */
   bn.rshi    accumulator, w16, accumulator >> 16
   addi       accumulator_count, accumulator_count, 1
-  bne        accumulator_count, t3, _skip_store2a
-  bn.sid     t5, 0(a1++) /* Store to memory */
+  bne        accumulator_count, s2, _skip_store2a
+  bn.sid     s4, 0(a1++) /* Store to memory */
   li         accumulator_count, 0
   /* if we have written the last coefficient, exit */
   beq        a1, t0, _end_rej_sample_loop
@@ -188,8 +183,8 @@ _skip_store2a:
   bne        a4, a6, _skip_store2
   bn.rshi    accumulator, cand, accumulator >> 16
   addi       accumulator_count, accumulator_count, 1
-  bne        accumulator_count, t3, _skip_store2
-  bn.sid     t5, 0(a1++) /* Store to memory */
+  bne        accumulator_count, s2, _skip_store2
+  bn.sid     s4, 0(a1++) /* Store to memory */
   li         accumulator_count, 0
 
   /* if we have written the last coefficient, exit */
@@ -213,8 +208,8 @@ _skip_store2:
                                       NOT (q > cand) = (q <= cand) */
   bn.rshi    accumulator, w16, accumulator >> 16
   addi       accumulator_count, accumulator_count, 1
-  bne        accumulator_count, t3, _skip_store4a
-  bn.sid     t5, 0(a1++) /* Store to memory */
+  bne        accumulator_count, s2, _skip_store4a
+  bn.sid     s4, 0(a1++) /* Store to memory */
   li         accumulator_count, 0
   /* if we have written the last coefficient, exit */
   beq        a1, t0, _end_rej_sample_loop
@@ -228,8 +223,8 @@ _skip_store4a:
     
   bn.rshi    accumulator, cand, accumulator >> 16
   addi       accumulator_count, accumulator_count, 1
-  bne        accumulator_count, t3, _skip_store4
-  bn.sid     t5, 0(a1++) /* Store to memory */
+  bne        accumulator_count, s2, _skip_store4
+  bn.sid     s4, 0(a1++) /* Store to memory */
   li         accumulator_count, 0
   /* if we have written the last coefficient, exit */
   beq        a1, t0, _end_rej_sample_loop
@@ -249,7 +244,7 @@ _end_rej_sample_loop:
   ret
 
 _poly_uniform_inner_loop:
-  li t4, 1
+  li s3, 1
   LOOPI 20, 12
     beq        a1, t0, _skip_store1
 
@@ -264,13 +259,12 @@ _poly_uniform_inner_loop:
                                         NOT (q > cand) = (q <= cand) */
     bn.rshi    accumulator, cand, accumulator >> 16
     addi       accumulator_count, accumulator_count, 1
-    bne        accumulator_count, t3, _skip_store1 /* Accumulator not full yet */
+    bne        accumulator_count, s2, _skip_store1 /* Accumulator not full yet */
 
-    bn.sid     t5, 0(a1++)                      /* Store to memory */
+    bn.sid     s4, 0(a1++)                      /* Store to memory */
     li         accumulator_count, 0
 _skip_store1:
     /* Shift out the 12 bits we have read for the next potential coefficient */
     bn.rshi    shake_reg, bn0, shake_reg >> 12
   ret
-
 

@@ -43,8 +43,8 @@
 
 .equ w31, bn0
 
-.globl ntt_base_kyber
-ntt_base_kyber:
+.globl ntt
+ntt:
   #define coeff0 w0
   #define coeff1 w1
   #define coeff2 w2

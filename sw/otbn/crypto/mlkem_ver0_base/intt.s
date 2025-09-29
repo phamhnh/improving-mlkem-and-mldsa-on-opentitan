@@ -72,8 +72,8 @@
  *
  * clobbered registers: x4-x30, w0-w23, w30
  */
-.global intt_base_kyber
-intt_base_kyber:
+.global intt
+intt:
   /* save fp to stack */
   addi sp, sp, -32
   sw   fp, 0(sp)

@@ -57,8 +57,8 @@
   #define bufres_idx x26
   #define bufacc_idx x27
 
-.globl basemul_base_kyber
-basemul_base_kyber:
+.globl basemul
+basemul:
   /* save fp to stack */
   addi sp, sp, -32
   sw   fp, 0(sp)
@@ -527,8 +527,8 @@ basemul_base_kyber:
   addi sp, sp, 32
   ret
 
-.globl basemul_acc_base_kyber
-basemul_acc_base_kyber:
+.globl basemul_acc
+basemul_acc:
   /* save fp to stack */
   addi sp, sp, -32
   sw   fp, 0(sp)
