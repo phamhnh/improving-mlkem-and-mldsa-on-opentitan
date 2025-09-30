@@ -73,6 +73,10 @@ proc timing::get_max_freq { clk start_f scale_factor } {
       } else {
         set mid_f [expr {$scale_factor/(($scale_factor/$slow_f + $scale_factor/$fast_f) / 2.0)}]
       }
+
+      if {($mid_f < $start_f)} {
+         exit 1
+      }
   }
   
   set best_period [expr {$scale_factor/$max_freq}]

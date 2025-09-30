@@ -64,11 +64,11 @@ ADDERS = [
    ("towards_mac_adder", [None]),
    ("buffer_bit", [None]),
    ("brent_kung", [None]),
-   ("brent_kung_adder_256_mode0_only", [None]),
+   ("brent_kung_256", [None]),
    ("sklansky", [None]),
-   ("sklansky_adder_256_mode0_only", [None]),
+   ("sklansky_256", [None]),
    ("kogge_stone", [None]),
-   ("kogge_stone_adder_256_mode0_only", [None]),
+   ("kogge_stone_256", [None]),
 ]
 
 ARITH = MULTIPLIERS + ADDERS
@@ -102,7 +102,7 @@ ARITH_CORES = [
     name = "_".join([top_module] + defines) if defines else top_module,
     src = SRC_Set(
       name = "_".join([top_module] + defines) if defines else top_module,
-      src = ["rtl/bn_vec_core/{}.sv".format(top_module),
+      src = ["rtl/bn_vec_core/{}.sv".format(top_module) if top_module != "otbn_mul" else "rtl/{}.sv".format(top_module),
              "//hw/ip/tlul:sta_files",
              "//hw/ip/prim:sta_files",
              "//hw/ip/prim_xilinx:sta_files",

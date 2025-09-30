@@ -286,11 +286,11 @@ if __name__ == "__main__":
                     "ref_add",
                     "towards_alu_adder", "towards_mac_adder",
                     "buffer_bit",
-                    "brent_kung_adder_256_mode0_only",
+                    "brent_kung_256",
                     "brent_kung",
-                    "kogge_stone_adder_256_mode0_only",
+                    "kogge_stone_256",
                     "kogge_stone",
-                    "sklansky_adder_256_mode0_only",
+                    "sklansky_256",
                     "sklansky"
               ]]
     if args.tool in ["all", "Vivado"]:

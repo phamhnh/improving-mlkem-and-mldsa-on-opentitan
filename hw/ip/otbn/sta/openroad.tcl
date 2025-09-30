@@ -56,12 +56,31 @@ proc place_and_route {} {
   repair_timing -setup
   repair_timing -setup
 
+  set tns_setup [get_tns -max]
+
+  if {$tns_setup < 0.0 } {
+    write_both $f_search "first setup failed"
+    return 1
+  }
+ 
   repair_timing -hold
 
+  set tns_hold  [get_tns -min]
+
+  if {$tns_hold < 0.0 } {
+    write_both $f_search "hold failed"
+    return 1
+  }
+ 
   repair_timing -setup
 
   set tns_setup [get_tns -max]
   set tns_hold  [get_tns -min]
+
+  if {$tns_setup < 0.0 } {
+    write_both $f_search "second setup failed"
+    return 1
+  }
 
   write_both $f_search "setup: $tns_setup"
   write_both $f_search "hold:  $tns_hold"
