@@ -75,6 +75,8 @@ proc timing::get_max_freq { clk start_f scale_factor } {
       }
 
       if {($mid_f < $start_f)} {
+global f_search
+close $f_search
          exit 1
       }
   }

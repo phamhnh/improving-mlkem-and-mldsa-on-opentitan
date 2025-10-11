@@ -1,7 +1,7 @@
 name: otbn_mac_bignum
-Fmax: 69.0 MHz (14.492753623188406 ns)
-slack: 0.087446
-required: 14.492753
-instances: 30880
-design_area: 248600
-utilization: 52
+Fmax: 67.0 MHz (14.925373134328359 ns)
+slack: 0.160814
+required: 14.925373
+instances: 30796
+design_area: 250807
+utilization: 53

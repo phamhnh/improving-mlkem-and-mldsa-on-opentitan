@@ -139,7 +139,7 @@ def extract(top_module, flag_group, tool):
   return data
 
 def report(data, tool):
-  headers = ["top\\_module"]
+  headers = ["topmodule"]
   floatfmt= [""]
 
   if tool in ["all", "Vivado"]:
@@ -147,11 +147,11 @@ def report(data, tool):
     floatfmt += ["g", "g", "g", "g", "g", "g"]
 
   if tool in ["all", "ORFS"]:
-    headers += ["area", "Fmax"]
+    headers += ["areaORFS", "FmaxORFS"]
     floatfmt += [".3f", "g"]
 
   if tool in ["all", "Genus"]:
-    headers += ["area", "Fmax"]
+    headers += ["areaGenus", "FmaxGenus"]
     floatfmt += [".3f", "g"]
   
   latex_table = tabulate(data, headers, tablefmt="latex_raw",
@@ -180,8 +180,8 @@ def synthesize_ORFS(top_module, outdir, flags = []):
 #
 #  result = subprocess.run(command, shell=True) #, capture_output=True, text=True)
 
-  command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags else ''}_sky130hd_results; mkdir -p {outdir}; chmod u+w reports/ASIC-ORFS/*; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_sky130hd_* {outdir}"
-  #command = f"mkdir -p {outdir}; chmod u+w reports/ASIC-ORFS/*; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_sky130hd_* {outdir}"
+  #command = f"bazel build //hw/ip/otbn:{top_module}{'_' + flags if flags else ''}_sky130hd_results; mkdir -p {outdir}; chmod u+w reports/ASIC-ORFS/*; cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_sky130hd_* {outdir}"
+  command = f"mkdir -p {outdir}; chmod u+w reports/ASIC-ORFS/*;" + ";".join([f"cp bazel-bin/hw/ip/otbn/{top_module}{'_' + flags if flags else ''}_sky130hd_{f} {outdir}" for f in ["stats", "reports", "fsearch"]])
 
   print(f"Command: {command}")
 

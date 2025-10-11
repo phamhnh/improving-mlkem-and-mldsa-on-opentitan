@@ -19,16 +19,45 @@ proc set_timing_paths {clk clk_period} {
     create_clock -name $clk -period $clk_period [get_ports $clk]
     
     # ---- in2reg: inputs -> regs captured by clk
-    set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_clocks $clk]
+    set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_clocks $clk] -reset_path
+    set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_clocks $clk] -reset_path
     
     # ---- reg2out: regs launched by clk -> output ports
-    set_max_delay $clk_period -from [get_clocks $clk] -to [get_ports [all_outputs]]
+    set_max_delay $clk_period -from [get_clocks $clk] -to [get_ports [all_outputs]] -reset_path
   }
   
   # ---- in2out: pure combinational ports -> ports
-  set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_ports [all_outputs]]
+  set_max_delay $clk_period -from [get_ports [all_inputs]] -to [get_ports [all_outputs]] -reset_path
   # -datapath_only
 }
+
+#proc set_timing_paths {clk clk_period} {
+#  # Inputs excluding the clock port
+#  set in_ports  [get_ports -quiet -filter "direction == in && name != $clk"]
+#  
+#  # All outputs (safe to include clock since direction==out)
+#  set out_ports [all_outputs]
+#  
+#  # If clock port exists, create the clock
+#  if {[llength [get_ports -quiet $clk]] > 0} {
+#      create_clock -name $clk -period $clk_period [get_ports $clk]
+#  
+#      # I/O delays relative to this clock
+#      set_input_delay  -max 0 -clock [get_clocks $clk] $in_ports
+#      set_input_delay  -min 0 -clock [get_clocks $clk] $in_ports
+#      set_output_delay -max 0 -clock [get_clocks $clk] $out_ports
+#      set_output_delay -min 0 -clock [get_clocks $clk] $out_ports
+#  }
+#  #else {
+#      # Virtual clock if no physical pin
+# #     create_clock -name VIRTUAL_CLK -period $clk_period
+# # }
+#  
+#  # Pure combinational in->out constrained to one period
+##  if {[llength $in_ports] > 0 && [llength $out_ports] > 0} {
+#      set_max_delay $clk_period -from $in_ports -to $out_ports -reset_path
+##  }
+#}
 
 proc get_tns {which} {
   if {[llength [info commands sta::total_negative_slack]]} {
@@ -53,17 +82,26 @@ proc place_and_route {} {
 
   global f_search
 
-  repair_timing -setup
-  repair_timing -setup
+  repair_timing -setup -max_buffer_percent 50 -max_utilization 85
 
   set tns_setup [get_tns -max]
-
   if {$tns_setup < 0.0 } {
     write_both $f_search "first setup failed"
+
+    with_output_to_variable data { report_checks -path_delay max }
+
+    write_both $f_search $data
+  }
+ 
+  repair_timing -setup -max_buffer_percent 50 -max_utilization 85
+
+  set tns_setup [get_tns -max]
+  if {$tns_setup < 0.0 } {
+    write_both $f_search "second setup failed"
     return 1
   }
  
-  repair_timing -hold
+  repair_timing -hold -max_buffer_percent 50 -max_utilization 85
 
   set tns_hold  [get_tns -min]
 
@@ -72,7 +110,7 @@ proc place_and_route {} {
     return 1
   }
  
-  repair_timing -setup
+  repair_timing -setup -max_buffer_percent 50 -max_utilization 85
 
   set tns_setup [get_tns -max]
   set tns_hold  [get_tns -min]
@@ -152,7 +190,7 @@ if { [info exists ::env(PROCESS)] && $::env(PROCESS) eq "7" } {
 } else {
     # do something else
     puts "PROCESS is not asap7 $::env(PROCESS)"
-    set start_f 20.0
+    set start_f 10.0
     set scale_factor 1000.0
     set unit "ns"
 }
@@ -161,9 +199,16 @@ if { [info exists ::env(PROCESS)] && $::env(PROCESS) eq "7" } {
 # detailed_route
 # #write_db $::env(CHECKPOINT)
 
-
 # Set clock port name
 set clk "clk_i"
+
+#repair_timing -verbose -setup_margin 0.05 -repair_tns 0 -skip_last_gasp -match_cell_footprint
+
+set_timing_paths $clk [ expr {$scale_factor/$start_f} ]
+
+estimate_parasitics -placement
+repair_design
+repair_timing -setup -max_buffer_percent 50 -max_utilization 85
 
 # Get maxium frequency using binary search
 set max_f [timing::get_max_freq $clk $start_f $scale_factor]
@@ -176,10 +221,10 @@ close $f_search
 # Open output file
 set f [open $::env(REPORTS) w]
 
-with_output_to_variable data { repair_timing -setup }
+with_output_to_variable data { repair_timing -setup -max_buffer_percent 50 -max_utilization 85 }
 write_both $f $data
 
-with_output_to_variable data { repair_timing -hold }
+with_output_to_variable data { repair_timing -hold -max_buffer_percent 50 -max_utilization 85 }
 write_both $f $data
 
 with_output_to_variable data { report_tns -max }

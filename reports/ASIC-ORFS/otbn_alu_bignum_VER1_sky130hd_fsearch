@@ -1,0 +1,949 @@
+set clk: 100.0
+set clk: 100.0
+setup: 0.0
+hold:  0.0
+set clk: 50.0
+setup: 0.0
+hold:  0.0
+set clk: 25.0
+setup: 0.0
+hold:  0.0
+set clk: 12.5
+setup: 0.0
+hold:  0.0
+set clk: 6.25
+first setup failed
+Startpoint: operation_i[534] (input port)
+Endpoint: operation_result_o[170] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.15    0.33 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.09    0.41 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.64 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.79 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.13    0.92 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.03 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.15 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.26 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.13    1.39 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.49 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.59 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.69 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.81 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.94 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    2.09 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.24 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_0)
+   0.06    2.30 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.87 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.15    3.02 ^ adder_x/_3704_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.29    3.31 ^ adder_x/_3706_/X (sky130_fd_sc_hd__o31a_1)
+   0.13    3.44 v adder_x/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.33    3.77 ^ adder_x/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.11    3.88 v adder_x/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.16    4.04 v rebuffer115/X (sky130_fd_sc_hd__buf_6)
+   0.29    4.33 ^ adder_x/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.20    4.53 ^ rebuffer12/X (sky130_fd_sc_hd__buf_6)
+   0.11    4.64 v adder_x/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.24    4.87 ^ adder_x/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.10    4.98 v adder_x/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    5.42 v adder_x/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.26    5.68 ^ adder_x/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.17    5.85 ^ rebuffer83/X (sky130_fd_sc_hd__buf_4)
+   0.10    5.95 ^ rebuffer24/X (sky130_fd_sc_hd__buf_1)
+   0.07    6.02 v adder_x/_5353_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.19    6.21 v adder_x/_5354_/Y (sky130_fd_sc_hd__xnor2_1)
+   0.34    6.56 v _29263_/X (sky130_fd_sc_hd__mux2_8)
+   0.19    6.74 v adder_y/_6142_/COUT (sky130_fd_sc_hd__ha_4)
+   0.15    6.89 ^ adder_y/_3583_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.09    6.98 v adder_y/_3584_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.20    7.18 v adder_y/_4845_/X (sky130_fd_sc_hd__a21o_1)
+   0.25    7.44 ^ adder_y/_4849_/Y (sky130_fd_sc_hd__a221oi_2)
+   0.21    7.65 ^ adder_y/_4850_/X (sky130_fd_sc_hd__o21a_1)
+   0.10    7.74 v adder_y/_4851_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.42    8.16 ^ adder_y/_4874_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.18    8.34 v adder_y/_4875_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.25    8.59 ^ adder_y/_4887_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.21    8.80 ^ adder_y/_4898_/X (sky130_fd_sc_hd__and2_4)
+   0.07    8.86 v adder_y/_4929_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.16    9.03 ^ adder_y/_4933_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.08    9.10 v adder_y/_4963_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.26    9.37 v adder_y/_4964_/X (sky130_fd_sc_hd__a21o_4)
+   0.15    9.52 ^ _32216_/Y (sky130_fd_sc_hd__nor2_4)
+   0.12    9.64 ^ rebuffer9/X (sky130_fd_sc_hd__buf_6)
+   0.16    9.80 ^ _32217_/X (sky130_fd_sc_hd__a22o_1)
+   0.07    9.87 v _32219_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.17   10.04 v rebuffer38/X (sky130_fd_sc_hd__buf_6)
+   0.31   10.36 v clone18/X (sky130_fd_sc_hd__or2_4)
+   0.16   10.52 v rebuffer53/X (sky130_fd_sc_hd__buf_6)
+   0.15   10.67 v rebuffer5/X (sky130_fd_sc_hd__buf_4)
+   0.10   10.77 ^ _33413_/Y (sky130_fd_sc_hd__o221ai_4)
+   0.12   10.89 v _33568_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.15   11.04 ^ _33569_/Y (sky130_fd_sc_hd__nor2_2)
+   0.06   11.10 v _33570_/Y (sky130_fd_sc_hd__nor2_2)
+   0.25   11.35 ^ _33571_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.31   11.66 ^ _33572_/X (sky130_fd_sc_hd__a221o_4)
+   0.13   11.79 ^ output3270/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.79 ^ operation_result_o[170] (out)
+          11.79   data arrival time
+
+   6.25    6.25   max_delay
+   0.00    6.25   output external delay
+           6.25   data required time
+---------------------------------------------------------
+           6.25   data required time
+         -11.79   data arrival time
+---------------------------------------------------------
+          -5.54   slack (VIOLATED)
+
+
+Startpoint: operation_i[534] (input port)
+Endpoint: flags_q[3]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.15    0.33 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.09    0.41 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.64 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.79 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.13    0.92 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.03 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.15 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.26 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.13    1.39 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.49 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.59 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.69 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.81 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.94 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    2.09 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.24 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_0)
+   0.06    2.30 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.87 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.38    3.24 v adder_x/_5959_/COUT (sky130_fd_sc_hd__fa_2)
+   0.22    3.46 v adder_x/_3118_/Y (sky130_fd_sc_hd__nand2b_2)
+   0.20    3.66 ^ adder_x/_3121_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.13    3.78 v adder_x/_3128_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.21    4.00 ^ adder_x/_3132_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.16    4.15 ^ adder_x/_3134_/Y (sky130_fd_sc_hd__nand2b_4)
+   0.07    4.23 v adder_x/_3141_/Y (sky130_fd_sc_hd__a21oi_2)
+   0.22    4.44 v adder_x/_5429_/Y (sky130_fd_sc_hd__nand2b_2)
+   0.15    4.60 ^ adder_x/_5641_/Y (sky130_fd_sc_hd__nor3_4)
+   0.12    4.72 v adder_x/_5774_/Y (sky130_fd_sc_hd__a21oi_2)
+   0.19    4.91 ^ adder_x/_5789_/Y (sky130_fd_sc_hd__o211ai_1)
+   0.16    5.07 ^ rebuffer34/X (sky130_fd_sc_hd__buf_4)
+   0.08    5.15 v adder_x/_5830_/Y (sky130_fd_sc_hd__nand2_4)
+   0.35    5.50 ^ adder_x/_5882_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.11    5.62 v adder_x/_5883_/Y (sky130_fd_sc_hd__a2111oi_2)
+   0.19    5.81 v adder_x/_5884_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.30    6.11 v _29406_/X (sky130_fd_sc_hd__mux2_4)
+   0.29    6.40 ^ adder_y/_6028_/SUM (sky130_fd_sc_hd__ha_4)
+   0.11    6.51 v adder_y/_4311_/Y (sky130_fd_sc_hd__nand4_1)
+   0.43    6.94 v adder_y/_4378_/X (sky130_fd_sc_hd__or3_4)
+   0.15    7.09 ^ adder_y/_5070_/Y (sky130_fd_sc_hd__nor2_4)
+   0.11    7.19 v adder_y/_5084_/Y (sky130_fd_sc_hd__nand3_4)
+   0.34    7.54 ^ adder_y/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.19    7.72 ^ rebuffer39/X (sky130_fd_sc_hd__buf_6)
+   0.07    7.80 v adder_y/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.14    7.94 v rebuffer306/X (sky130_fd_sc_hd__buf_8)
+   0.27    8.21 ^ adder_y/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.13    8.34 v adder_y/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    8.79 v adder_y/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.29    9.07 ^ adder_y/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.16    9.23 ^ rebuffer77/X (sky130_fd_sc_hd__buf_6)
+   0.17    9.40 v adder_y/_5456_/Y (sky130_fd_sc_hd__o2111ai_1)
+   0.13    9.53 ^ adder_y/_5457_/Y (sky130_fd_sc_hd__nand2_2)
+   0.12    9.64 v adder_y/_5458_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.44   10.08 ^ _30925_/Y (sky130_fd_sc_hd__nor4_4)
+   0.35   10.43 v _30927_/Y (sky130_fd_sc_hd__nand4_1)
+   0.59   11.01 ^ _30933_/Y (sky130_fd_sc_hd__nor4_4)
+   0.43   11.45 ^ _30955_/X (sky130_fd_sc_hd__and4_4)
+   0.16   11.60 ^ g_flag_groups[1].u_flags_d_mux/g_in_mux_outer[3].u_mux_bit_and/_3_/X (sky130_fd_sc_hd__and2_0)
+   0.05   11.65 v g_flag_groups[1].u_flags_d_mux/_18_/Y (sky130_fd_sc_hd__nor3_1)
+   0.06   11.71 ^ g_flag_groups[1].u_flags_d_mux/_19_/Y (sky130_fd_sc_hd__nand2_1)
+   0.00   11.71 ^ flags_q[3]$_DFF_PN0_/D (sky130_fd_sc_hd__dfrtp_4)
+          11.71   data arrival time
+
+   6.25    6.25   max_delay
+   0.00    6.25   clock reconvergence pessimism
+  -0.03    6.22   library setup time
+           6.22   data required time
+---------------------------------------------------------
+           6.22   data required time
+         -11.71   data arrival time
+---------------------------------------------------------
+          -5.49   slack (VIOLATED)
+
+
+
+second setup failed
+set clk: 9.523809523809524
+first setup failed
+Startpoint: operation_i[534] (input port)
+Endpoint: operation_result_o[170] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.14    0.31 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.08    0.39 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.62 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.76 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.10    0.86 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.09    0.96 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.08 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.18 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.09    1.27 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.36 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.46 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.56 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.68 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.81 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    1.96 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.10 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_1)
+   0.06    2.16 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.73 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.15    2.88 ^ adder_x/_3704_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.29    3.17 ^ adder_x/_3706_/X (sky130_fd_sc_hd__o31a_1)
+   0.13    3.30 v adder_x/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.33    3.63 ^ adder_x/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.11    3.74 v adder_x/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.16    3.90 v rebuffer1418/X (sky130_fd_sc_hd__buf_6)
+   0.29    4.19 ^ adder_x/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.20    4.39 ^ rebuffer12/X (sky130_fd_sc_hd__buf_6)
+   0.12    4.51 v adder_x/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.23    4.74 ^ adder_x/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.10    4.85 v adder_x/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    5.29 v adder_x/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.26    5.55 ^ adder_x/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.17    5.72 ^ rebuffer83/X (sky130_fd_sc_hd__buf_4)
+   0.10    5.82 ^ rebuffer24/X (sky130_fd_sc_hd__buf_1)
+   0.07    5.89 v adder_x/_5353_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.19    6.08 v adder_x/_5354_/Y (sky130_fd_sc_hd__xnor2_1)
+   0.34    6.43 v _29263_/X (sky130_fd_sc_hd__mux2_8)
+   0.18    6.60 v adder_y/_6142_/COUT (sky130_fd_sc_hd__ha_4)
+   0.15    6.76 ^ adder_y/_3583_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.08    6.84 v adder_y/_3584_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.18    7.02 v adder_y/_4845_/X (sky130_fd_sc_hd__a21o_1)
+   0.25    7.27 ^ adder_y/_4849_/Y (sky130_fd_sc_hd__a221oi_2)
+   0.21    7.48 ^ adder_y/_4850_/X (sky130_fd_sc_hd__o21a_1)
+   0.09    7.57 v adder_y/_4851_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.42    7.99 ^ adder_y/_4874_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.18    8.16 v adder_y/_4875_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.25    8.42 ^ adder_y/_4887_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.21    8.63 ^ adder_y/_4898_/X (sky130_fd_sc_hd__and2_4)
+   0.07    8.69 v adder_y/_4929_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.16    8.85 ^ adder_y/_4933_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.08    8.93 v adder_y/_4963_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.26    9.19 v adder_y/_4964_/X (sky130_fd_sc_hd__a21o_4)
+   0.14    9.33 ^ _32216_/Y (sky130_fd_sc_hd__nor2_4)
+   0.11    9.45 ^ rebuffer9/X (sky130_fd_sc_hd__buf_6)
+   0.16    9.61 ^ _32217_/X (sky130_fd_sc_hd__a22o_1)
+   0.07    9.68 v _32219_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.17    9.85 v rebuffer38/X (sky130_fd_sc_hd__buf_6)
+   0.31   10.16 v clone18/X (sky130_fd_sc_hd__or2_4)
+   0.16   10.32 v rebuffer53/X (sky130_fd_sc_hd__buf_6)
+   0.15   10.47 v rebuffer5/X (sky130_fd_sc_hd__buf_4)
+   0.09   10.56 ^ _33413_/Y (sky130_fd_sc_hd__o221ai_4)
+   0.12   10.68 v _33568_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.15   10.83 ^ _33569_/Y (sky130_fd_sc_hd__nor2_2)
+   0.06   10.89 v _33570_/Y (sky130_fd_sc_hd__nor2_2)
+   0.25   11.14 ^ _33571_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.31   11.46 ^ _33572_/X (sky130_fd_sc_hd__a221o_4)
+   0.13   11.58 ^ output3270/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.58 ^ operation_result_o[170] (out)
+          11.58   data arrival time
+
+   9.52    9.52   max_delay
+   0.00    9.52   output external delay
+           9.52   data required time
+---------------------------------------------------------
+           9.52   data required time
+         -11.58   data arrival time
+---------------------------------------------------------
+          -2.06   slack (VIOLATED)
+
+
+Startpoint: operation_i[534] (input port)
+Endpoint: flags_q[3]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.14    0.31 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.08    0.39 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.62 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.76 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.10    0.86 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.09    0.96 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.08 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.18 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.09    1.27 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.36 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.46 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.56 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.68 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.81 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    1.96 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.10 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_1)
+   0.06    2.16 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.73 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.37    3.10 v adder_x/_5959_/COUT (sky130_fd_sc_hd__fa_2)
+   0.16    3.26 v adder_x/_3118_/Y (sky130_fd_sc_hd__nand2b_4)
+   0.19    3.44 ^ adder_x/_3121_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.10    3.55 ^ rebuffer984/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.62 ^ rebuffer982/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.70 ^ rebuffer950/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.77 ^ rebuffer949/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.85 ^ rebuffer948/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.92 ^ rebuffer947/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.00 ^ rebuffer946/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.08 ^ rebuffer945/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.16 ^ rebuffer781/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.23 ^ rebuffer780/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.31 ^ rebuffer779/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.39 ^ rebuffer778/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.47 ^ rebuffer777/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.55 ^ rebuffer776/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.62 ^ rebuffer775/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.70 ^ rebuffer774/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.78 ^ rebuffer773/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.86 ^ rebuffer772/X (sky130_fd_sc_hd__buf_1)
+   0.10    4.96 ^ rebuffer248/X (sky130_fd_sc_hd__buf_1)
+   0.06    5.01 v adder_x/_5888_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.13    5.14 ^ adder_x/_5929_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.11    5.25 v adder_x/_5930_/X (sky130_fd_sc_hd__xor2_1)
+   0.32    5.57 v _29432_/X (sky130_fd_sc_hd__mux2_8)
+   0.30    5.88 ^ adder_y/_5967_/SUM (sky130_fd_sc_hd__ha_4)
+   0.17    6.04 v adder_y/_3702_/Y (sky130_fd_sc_hd__nand4_1)
+   0.23    6.27 ^ adder_y/_4406_/Y (sky130_fd_sc_hd__nor3_2)
+   0.15    6.42 v adder_y/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.25    6.67 ^ adder_y/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.15    6.82 ^ rebuffer119/X (sky130_fd_sc_hd__buf_6)
+   0.13    6.95 v adder_y/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.33    7.28 ^ adder_y/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.19    7.47 ^ rebuffer39/X (sky130_fd_sc_hd__buf_6)
+   0.07    7.54 v adder_y/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.14    7.68 v rebuffer306/X (sky130_fd_sc_hd__buf_8)
+   0.27    7.96 ^ adder_y/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.13    8.09 v adder_y/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    8.53 v adder_y/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.29    8.82 ^ adder_y/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.16    8.98 ^ rebuffer77/X (sky130_fd_sc_hd__buf_6)
+   0.15    9.13 v adder_y/_5456_/Y (sky130_fd_sc_hd__o2111ai_2)
+   0.15    9.28 ^ adder_y/_5457_/Y (sky130_fd_sc_hd__nand2_2)
+   0.10    9.37 v adder_y/_5458_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.43    9.80 ^ _30925_/Y (sky130_fd_sc_hd__nor4_4)
+   0.35   10.15 v _30927_/Y (sky130_fd_sc_hd__nand4_1)
+   0.59   10.73 ^ _30933_/Y (sky130_fd_sc_hd__nor4_4)
+   0.43   11.17 ^ _30955_/X (sky130_fd_sc_hd__and4_4)
+   0.16   11.32 ^ g_flag_groups[1].u_flags_d_mux/g_in_mux_outer[3].u_mux_bit_and/_3_/X (sky130_fd_sc_hd__and2_0)
+   0.05   11.37 v g_flag_groups[1].u_flags_d_mux/_18_/Y (sky130_fd_sc_hd__nor3_1)
+   0.06   11.43 ^ g_flag_groups[1].u_flags_d_mux/_19_/Y (sky130_fd_sc_hd__nand2_1)
+   0.00   11.43 ^ flags_q[3]$_DFF_PN0_/D (sky130_fd_sc_hd__dfrtp_4)
+          11.43   data arrival time
+
+   9.52    9.52   max_delay
+   0.00    9.52   clock reconvergence pessimism
+  -0.03    9.49   library setup time
+           9.49   data required time
+---------------------------------------------------------
+           9.49   data required time
+         -11.43   data arrival time
+---------------------------------------------------------
+          -1.93   slack (VIOLATED)
+
+
+
+second setup failed
+set clk: 10.989010989010989
+first setup failed
+Startpoint: operation_i[534] (input port)
+Endpoint: operation_result_o[170] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.14    0.31 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.08    0.39 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.62 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.76 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.10    0.86 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.09    0.96 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.08 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.18 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.09    1.27 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.36 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.46 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.56 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.68 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.81 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    1.96 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.10 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_1)
+   0.06    2.16 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.73 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.15    2.88 ^ adder_x/_3704_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.29    3.17 ^ adder_x/_3706_/X (sky130_fd_sc_hd__o31a_1)
+   0.13    3.30 v adder_x/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.33    3.63 ^ adder_x/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.11    3.74 v adder_x/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.16    3.90 v rebuffer1418/X (sky130_fd_sc_hd__buf_6)
+   0.29    4.19 ^ adder_x/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.20    4.39 ^ rebuffer12/X (sky130_fd_sc_hd__buf_6)
+   0.12    4.51 v adder_x/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.23    4.74 ^ adder_x/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.10    4.85 v adder_x/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    5.29 v adder_x/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.26    5.55 ^ adder_x/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.17    5.72 ^ rebuffer83/X (sky130_fd_sc_hd__buf_4)
+   0.10    5.82 ^ rebuffer24/X (sky130_fd_sc_hd__buf_1)
+   0.07    5.89 v adder_x/_5353_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.19    6.08 v adder_x/_5354_/Y (sky130_fd_sc_hd__xnor2_1)
+   0.34    6.43 v _29263_/X (sky130_fd_sc_hd__mux2_8)
+   0.18    6.60 v adder_y/_6142_/COUT (sky130_fd_sc_hd__ha_4)
+   0.15    6.76 ^ adder_y/_3583_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.08    6.84 v adder_y/_3584_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.18    7.02 v adder_y/_4845_/X (sky130_fd_sc_hd__a21o_1)
+   0.25    7.27 ^ adder_y/_4849_/Y (sky130_fd_sc_hd__a221oi_2)
+   0.21    7.48 ^ adder_y/_4850_/X (sky130_fd_sc_hd__o21a_1)
+   0.09    7.57 v adder_y/_4851_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.42    7.99 ^ adder_y/_4874_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.18    8.16 v adder_y/_4875_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.25    8.42 ^ adder_y/_4887_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.21    8.63 ^ adder_y/_4898_/X (sky130_fd_sc_hd__and2_4)
+   0.07    8.69 v adder_y/_4929_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.16    8.85 ^ adder_y/_4933_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.08    8.93 v adder_y/_4963_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.26    9.19 v adder_y/_4964_/X (sky130_fd_sc_hd__a21o_4)
+   0.14    9.33 ^ _32216_/Y (sky130_fd_sc_hd__nor2_4)
+   0.11    9.45 ^ rebuffer9/X (sky130_fd_sc_hd__buf_6)
+   0.16    9.61 ^ _32217_/X (sky130_fd_sc_hd__a22o_1)
+   0.07    9.68 v _32219_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.17    9.85 v rebuffer38/X (sky130_fd_sc_hd__buf_6)
+   0.31   10.16 v clone18/X (sky130_fd_sc_hd__or2_4)
+   0.16   10.32 v rebuffer53/X (sky130_fd_sc_hd__buf_6)
+   0.15   10.47 v rebuffer5/X (sky130_fd_sc_hd__buf_4)
+   0.09   10.56 ^ _33413_/Y (sky130_fd_sc_hd__o221ai_4)
+   0.12   10.68 v _33568_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.15   10.83 ^ _33569_/Y (sky130_fd_sc_hd__nor2_2)
+   0.06   10.89 v _33570_/Y (sky130_fd_sc_hd__nor2_2)
+   0.25   11.14 ^ _33571_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.31   11.46 ^ _33572_/X (sky130_fd_sc_hd__a221o_4)
+   0.13   11.58 ^ output3270/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.58 ^ operation_result_o[170] (out)
+          11.58   data arrival time
+
+  10.99   10.99   max_delay
+   0.00   10.99   output external delay
+          10.99   data required time
+---------------------------------------------------------
+          10.99   data required time
+         -11.58   data arrival time
+---------------------------------------------------------
+          -0.59   slack (VIOLATED)
+
+
+Startpoint: operation_i[534] (input port)
+Endpoint: flags_q[3]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.14    0.31 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.08    0.39 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.62 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.76 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.10    0.86 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.09    0.96 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.08 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.18 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.09    1.27 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.36 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.46 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.56 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.68 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.81 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    1.96 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.10 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_1)
+   0.06    2.16 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.73 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.37    3.10 v adder_x/_5959_/COUT (sky130_fd_sc_hd__fa_2)
+   0.16    3.26 v adder_x/_3118_/Y (sky130_fd_sc_hd__nand2b_4)
+   0.19    3.44 ^ adder_x/_3121_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.10    3.55 ^ rebuffer984/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.62 ^ rebuffer982/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.70 ^ rebuffer950/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.77 ^ rebuffer949/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.85 ^ rebuffer948/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.92 ^ rebuffer947/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.00 ^ rebuffer946/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.08 ^ rebuffer945/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.16 ^ rebuffer781/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.23 ^ rebuffer780/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.31 ^ rebuffer779/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.39 ^ rebuffer778/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.47 ^ rebuffer777/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.55 ^ rebuffer776/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.62 ^ rebuffer775/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.70 ^ rebuffer774/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.78 ^ rebuffer773/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.86 ^ rebuffer772/X (sky130_fd_sc_hd__buf_1)
+   0.10    4.96 ^ rebuffer248/X (sky130_fd_sc_hd__buf_1)
+   0.06    5.01 v adder_x/_5888_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.13    5.14 ^ adder_x/_5929_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.11    5.25 v adder_x/_5930_/X (sky130_fd_sc_hd__xor2_1)
+   0.32    5.57 v _29432_/X (sky130_fd_sc_hd__mux2_8)
+   0.30    5.88 ^ adder_y/_5967_/SUM (sky130_fd_sc_hd__ha_4)
+   0.17    6.04 v adder_y/_3702_/Y (sky130_fd_sc_hd__nand4_1)
+   0.23    6.27 ^ adder_y/_4406_/Y (sky130_fd_sc_hd__nor3_2)
+   0.15    6.42 v adder_y/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.25    6.67 ^ adder_y/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.15    6.82 ^ rebuffer119/X (sky130_fd_sc_hd__buf_6)
+   0.13    6.95 v adder_y/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.33    7.28 ^ adder_y/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.19    7.47 ^ rebuffer39/X (sky130_fd_sc_hd__buf_6)
+   0.07    7.54 v adder_y/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.14    7.68 v rebuffer306/X (sky130_fd_sc_hd__buf_8)
+   0.27    7.96 ^ adder_y/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.13    8.09 v adder_y/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    8.53 v adder_y/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.29    8.82 ^ adder_y/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.16    8.98 ^ rebuffer77/X (sky130_fd_sc_hd__buf_6)
+   0.15    9.13 v adder_y/_5456_/Y (sky130_fd_sc_hd__o2111ai_2)
+   0.15    9.28 ^ adder_y/_5457_/Y (sky130_fd_sc_hd__nand2_2)
+   0.10    9.37 v adder_y/_5458_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.43    9.80 ^ _30925_/Y (sky130_fd_sc_hd__nor4_4)
+   0.35   10.15 v _30927_/Y (sky130_fd_sc_hd__nand4_1)
+   0.59   10.73 ^ _30933_/Y (sky130_fd_sc_hd__nor4_4)
+   0.43   11.17 ^ _30955_/X (sky130_fd_sc_hd__and4_4)
+   0.16   11.32 ^ g_flag_groups[1].u_flags_d_mux/g_in_mux_outer[3].u_mux_bit_and/_3_/X (sky130_fd_sc_hd__and2_0)
+   0.05   11.37 v g_flag_groups[1].u_flags_d_mux/_18_/Y (sky130_fd_sc_hd__nor3_1)
+   0.06   11.43 ^ g_flag_groups[1].u_flags_d_mux/_19_/Y (sky130_fd_sc_hd__nand2_1)
+   0.00   11.43 ^ flags_q[3]$_DFF_PN0_/D (sky130_fd_sc_hd__dfrtp_4)
+          11.43   data arrival time
+
+  10.99   10.99   max_delay
+   0.00   10.99   clock reconvergence pessimism
+  -0.03   10.96   library setup time
+          10.96   data required time
+---------------------------------------------------------
+          10.96   data required time
+         -11.43   data arrival time
+---------------------------------------------------------
+          -0.47   slack (VIOLATED)
+
+
+
+second setup failed
+set clk: 11.764705882352942
+setup: 0.0
+hold:  0.0
+set clk: 11.363636363636363
+first setup failed
+Startpoint: operation_i[534] (input port)
+Endpoint: operation_result_o[170] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.14    0.31 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.08    0.39 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.62 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.76 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.10    0.86 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.09    0.96 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.08 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.18 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.09    1.27 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.36 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.46 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.56 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.68 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.81 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    1.96 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.10 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_1)
+   0.06    2.16 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.73 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.15    2.88 ^ adder_x/_3704_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.29    3.17 ^ adder_x/_3706_/X (sky130_fd_sc_hd__o31a_1)
+   0.13    3.30 v adder_x/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.33    3.63 ^ adder_x/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.11    3.74 v adder_x/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.16    3.90 v rebuffer1418/X (sky130_fd_sc_hd__buf_6)
+   0.29    4.19 ^ adder_x/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.20    4.39 ^ rebuffer12/X (sky130_fd_sc_hd__buf_6)
+   0.12    4.51 v adder_x/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.23    4.74 ^ adder_x/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.10    4.85 v adder_x/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    5.29 v adder_x/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.26    5.55 ^ adder_x/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.17    5.72 ^ rebuffer83/X (sky130_fd_sc_hd__buf_4)
+   0.10    5.82 ^ rebuffer24/X (sky130_fd_sc_hd__buf_1)
+   0.07    5.89 v adder_x/_5353_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.19    6.08 v adder_x/_5354_/Y (sky130_fd_sc_hd__xnor2_1)
+   0.34    6.43 v _29263_/X (sky130_fd_sc_hd__mux2_8)
+   0.18    6.60 v adder_y/_6142_/COUT (sky130_fd_sc_hd__ha_4)
+   0.15    6.76 ^ adder_y/_3583_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.08    6.84 v adder_y/_3584_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.18    7.02 v adder_y/_4845_/X (sky130_fd_sc_hd__a21o_1)
+   0.25    7.27 ^ adder_y/_4849_/Y (sky130_fd_sc_hd__a221oi_2)
+   0.21    7.48 ^ adder_y/_4850_/X (sky130_fd_sc_hd__o21a_1)
+   0.09    7.57 v adder_y/_4851_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.42    7.99 ^ adder_y/_4874_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.18    8.16 v adder_y/_4875_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.25    8.42 ^ adder_y/_4887_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.21    8.63 ^ adder_y/_4898_/X (sky130_fd_sc_hd__and2_4)
+   0.07    8.69 v adder_y/_4929_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.16    8.85 ^ adder_y/_4933_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.08    8.93 v adder_y/_4963_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.26    9.19 v adder_y/_4964_/X (sky130_fd_sc_hd__a21o_4)
+   0.14    9.33 ^ _32216_/Y (sky130_fd_sc_hd__nor2_4)
+   0.11    9.45 ^ rebuffer9/X (sky130_fd_sc_hd__buf_6)
+   0.16    9.61 ^ _32217_/X (sky130_fd_sc_hd__a22o_1)
+   0.07    9.68 v _32219_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.17    9.85 v rebuffer38/X (sky130_fd_sc_hd__buf_6)
+   0.31   10.16 v clone18/X (sky130_fd_sc_hd__or2_4)
+   0.16   10.32 v rebuffer53/X (sky130_fd_sc_hd__buf_6)
+   0.15   10.47 v rebuffer5/X (sky130_fd_sc_hd__buf_4)
+   0.09   10.56 ^ _33413_/Y (sky130_fd_sc_hd__o221ai_4)
+   0.12   10.68 v _33568_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.15   10.83 ^ _33569_/Y (sky130_fd_sc_hd__nor2_2)
+   0.06   10.89 v _33570_/Y (sky130_fd_sc_hd__nor2_2)
+   0.25   11.14 ^ _33571_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.31   11.46 ^ _33572_/X (sky130_fd_sc_hd__a221o_4)
+   0.13   11.58 ^ output3270/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.58 ^ operation_result_o[170] (out)
+          11.58   data arrival time
+
+  11.36   11.36   max_delay
+   0.00   11.36   output external delay
+          11.36   data required time
+---------------------------------------------------------
+          11.36   data required time
+         -11.58   data arrival time
+---------------------------------------------------------
+          -0.22   slack (VIOLATED)
+
+
+Startpoint: operation_i[534] (input port)
+Endpoint: flags_q[3]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.14    0.31 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.08    0.39 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.62 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.76 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.10    0.86 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.09    0.96 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.08 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.18 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.09    1.27 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.36 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.46 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.56 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.68 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.81 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    1.96 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.10 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_1)
+   0.06    2.16 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.73 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.37    3.10 v adder_x/_5959_/COUT (sky130_fd_sc_hd__fa_2)
+   0.16    3.26 v adder_x/_3118_/Y (sky130_fd_sc_hd__nand2b_4)
+   0.19    3.44 ^ adder_x/_3121_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.10    3.55 ^ rebuffer984/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.62 ^ rebuffer982/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.70 ^ rebuffer950/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.77 ^ rebuffer949/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.85 ^ rebuffer948/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.92 ^ rebuffer947/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.00 ^ rebuffer946/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.08 ^ rebuffer945/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.16 ^ rebuffer781/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.23 ^ rebuffer780/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.31 ^ rebuffer779/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.39 ^ rebuffer778/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.47 ^ rebuffer777/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.55 ^ rebuffer776/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.62 ^ rebuffer775/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.70 ^ rebuffer774/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.78 ^ rebuffer773/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.86 ^ rebuffer772/X (sky130_fd_sc_hd__buf_1)
+   0.10    4.96 ^ rebuffer248/X (sky130_fd_sc_hd__buf_1)
+   0.06    5.01 v adder_x/_5888_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.13    5.14 ^ adder_x/_5929_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.11    5.25 v adder_x/_5930_/X (sky130_fd_sc_hd__xor2_1)
+   0.32    5.57 v _29432_/X (sky130_fd_sc_hd__mux2_8)
+   0.30    5.88 ^ adder_y/_5967_/SUM (sky130_fd_sc_hd__ha_4)
+   0.17    6.04 v adder_y/_3702_/Y (sky130_fd_sc_hd__nand4_1)
+   0.23    6.27 ^ adder_y/_4406_/Y (sky130_fd_sc_hd__nor3_2)
+   0.15    6.42 v adder_y/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.25    6.67 ^ adder_y/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.15    6.82 ^ rebuffer119/X (sky130_fd_sc_hd__buf_6)
+   0.13    6.95 v adder_y/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.33    7.28 ^ adder_y/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.19    7.47 ^ rebuffer39/X (sky130_fd_sc_hd__buf_6)
+   0.07    7.54 v adder_y/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.14    7.68 v rebuffer306/X (sky130_fd_sc_hd__buf_8)
+   0.27    7.96 ^ adder_y/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.13    8.09 v adder_y/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    8.53 v adder_y/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.29    8.82 ^ adder_y/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.16    8.98 ^ rebuffer77/X (sky130_fd_sc_hd__buf_6)
+   0.15    9.13 v adder_y/_5456_/Y (sky130_fd_sc_hd__o2111ai_2)
+   0.15    9.28 ^ adder_y/_5457_/Y (sky130_fd_sc_hd__nand2_2)
+   0.10    9.37 v adder_y/_5458_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.43    9.80 ^ _30925_/Y (sky130_fd_sc_hd__nor4_4)
+   0.35   10.15 v _30927_/Y (sky130_fd_sc_hd__nand4_1)
+   0.59   10.73 ^ _30933_/Y (sky130_fd_sc_hd__nor4_4)
+   0.43   11.17 ^ _30955_/X (sky130_fd_sc_hd__and4_4)
+   0.16   11.32 ^ g_flag_groups[1].u_flags_d_mux/g_in_mux_outer[3].u_mux_bit_and/_3_/X (sky130_fd_sc_hd__and2_0)
+   0.05   11.37 v g_flag_groups[1].u_flags_d_mux/_18_/Y (sky130_fd_sc_hd__nor3_1)
+   0.06   11.43 ^ g_flag_groups[1].u_flags_d_mux/_19_/Y (sky130_fd_sc_hd__nand2_1)
+   0.00   11.43 ^ flags_q[3]$_DFF_PN0_/D (sky130_fd_sc_hd__dfrtp_4)
+          11.43   data arrival time
+
+  11.36   11.36   max_delay
+   0.00   11.36   clock reconvergence pessimism
+  -0.03   11.33   library setup time
+          11.33   data required time
+---------------------------------------------------------
+          11.33   data required time
+         -11.43   data arrival time
+---------------------------------------------------------
+          -0.10   slack (VIOLATED)
+
+
+
+second setup failed
+set clk: 11.627906976744185
+setup: 0.0
+hold:  0.0
+set clk: 11.494252873563218
+first setup failed
+Startpoint: operation_i[534] (input port)
+Endpoint: operation_result_o[170] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.14    0.31 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.08    0.39 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.62 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.76 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.10    0.86 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.09    0.96 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.08 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.18 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.09    1.27 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.36 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.46 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.56 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.68 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.81 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    1.96 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.10 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_1)
+   0.06    2.16 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.73 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.15    2.88 ^ adder_x/_3704_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.29    3.17 ^ adder_x/_3706_/X (sky130_fd_sc_hd__o31a_1)
+   0.13    3.30 v adder_x/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.33    3.63 ^ adder_x/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.11    3.74 v adder_x/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.16    3.90 v rebuffer1418/X (sky130_fd_sc_hd__buf_6)
+   0.29    4.19 ^ adder_x/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.20    4.39 ^ rebuffer12/X (sky130_fd_sc_hd__buf_6)
+   0.12    4.51 v adder_x/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.23    4.74 ^ adder_x/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.10    4.85 v adder_x/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    5.29 v adder_x/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.26    5.55 ^ adder_x/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.17    5.72 ^ rebuffer83/X (sky130_fd_sc_hd__buf_4)
+   0.10    5.82 ^ rebuffer24/X (sky130_fd_sc_hd__buf_1)
+   0.07    5.89 v adder_x/_5353_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.19    6.08 v adder_x/_5354_/Y (sky130_fd_sc_hd__xnor2_1)
+   0.34    6.43 v _29263_/X (sky130_fd_sc_hd__mux2_8)
+   0.18    6.60 v adder_y/_6142_/COUT (sky130_fd_sc_hd__ha_4)
+   0.15    6.76 ^ adder_y/_3583_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.08    6.84 v adder_y/_3584_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.18    7.02 v adder_y/_4845_/X (sky130_fd_sc_hd__a21o_1)
+   0.25    7.27 ^ adder_y/_4849_/Y (sky130_fd_sc_hd__a221oi_2)
+   0.21    7.48 ^ adder_y/_4850_/X (sky130_fd_sc_hd__o21a_1)
+   0.09    7.57 v adder_y/_4851_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.42    7.99 ^ adder_y/_4874_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.18    8.16 v adder_y/_4875_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.25    8.42 ^ adder_y/_4887_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.21    8.63 ^ adder_y/_4898_/X (sky130_fd_sc_hd__and2_4)
+   0.07    8.69 v adder_y/_4929_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.16    8.85 ^ adder_y/_4933_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.08    8.93 v adder_y/_4963_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.26    9.19 v adder_y/_4964_/X (sky130_fd_sc_hd__a21o_4)
+   0.14    9.33 ^ _32216_/Y (sky130_fd_sc_hd__nor2_4)
+   0.11    9.45 ^ rebuffer9/X (sky130_fd_sc_hd__buf_6)
+   0.16    9.61 ^ _32217_/X (sky130_fd_sc_hd__a22o_1)
+   0.07    9.68 v _32219_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.17    9.85 v rebuffer38/X (sky130_fd_sc_hd__buf_6)
+   0.31   10.16 v clone18/X (sky130_fd_sc_hd__or2_4)
+   0.16   10.32 v rebuffer53/X (sky130_fd_sc_hd__buf_6)
+   0.15   10.47 v rebuffer5/X (sky130_fd_sc_hd__buf_4)
+   0.09   10.56 ^ _33413_/Y (sky130_fd_sc_hd__o221ai_4)
+   0.12   10.68 v _33568_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.15   10.83 ^ _33569_/Y (sky130_fd_sc_hd__nor2_2)
+   0.06   10.89 v _33570_/Y (sky130_fd_sc_hd__nor2_2)
+   0.25   11.14 ^ _33571_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.31   11.46 ^ _33572_/X (sky130_fd_sc_hd__a221o_4)
+   0.13   11.58 ^ output3270/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.58 ^ operation_result_o[170] (out)
+          11.58   data arrival time
+
+  11.49   11.49   max_delay
+   0.00   11.49   output external delay
+          11.49   data required time
+---------------------------------------------------------
+          11.49   data required time
+         -11.58   data arrival time
+---------------------------------------------------------
+          -0.09   slack (VIOLATED)
+
+
+Startpoint: operation_i[534] (input port)
+Endpoint: flags_q[3]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v operation_i[534] (in)
+   0.17    0.17 v input1226/X (sky130_fd_sc_hd__buf_16)
+   0.14    0.31 ^ _28857_/Y (sky130_fd_sc_hd__nor2_4)
+   0.08    0.39 v _28858_/Y (sky130_fd_sc_hd__nand2_4)
+   0.23    0.62 ^ _28865_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.14    0.76 ^ load_slew248/X (sky130_fd_sc_hd__buf_8)
+   0.10    0.86 ^ load_slew246/X (sky130_fd_sc_hd__buf_12)
+   0.09    0.96 ^ load_slew245/X (sky130_fd_sc_hd__buf_12)
+   0.12    1.08 ^ load_slew244/X (sky130_fd_sc_hd__buf_12)
+   0.10    1.18 ^ load_slew243/X (sky130_fd_sc_hd__buf_8)
+   0.09    1.27 ^ load_slew242/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.36 ^ load_slew241/X (sky130_fd_sc_hd__buf_12)
+   0.09    1.46 ^ load_slew235/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.56 ^ wire234/X (sky130_fd_sc_hd__buf_12)
+   0.11    1.68 ^ load_slew233/X (sky130_fd_sc_hd__buf_12)
+   0.13    1.81 ^ load_slew232/X (sky130_fd_sc_hd__buf_16)
+   0.15    1.96 ^ _28867_/X (sky130_fd_sc_hd__xor2_1)
+   0.14    2.10 ^ u_adder_x_op_b_blanked/u_blank_and/_000_/X (sky130_fd_sc_hd__and2_1)
+   0.06    2.16 v adder_x/_3108_/Y (sky130_fd_sc_hd__inv_1)
+   0.57    2.73 v adder_x/_5958_/COUT (sky130_fd_sc_hd__fa_4)
+   0.37    3.10 v adder_x/_5959_/COUT (sky130_fd_sc_hd__fa_2)
+   0.16    3.26 v adder_x/_3118_/Y (sky130_fd_sc_hd__nand2b_4)
+   0.19    3.44 ^ adder_x/_3121_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.10    3.55 ^ rebuffer984/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.62 ^ rebuffer982/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.70 ^ rebuffer950/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.77 ^ rebuffer949/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.85 ^ rebuffer948/X (sky130_fd_sc_hd__buf_1)
+   0.08    3.92 ^ rebuffer947/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.00 ^ rebuffer946/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.08 ^ rebuffer945/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.16 ^ rebuffer781/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.23 ^ rebuffer780/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.31 ^ rebuffer779/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.39 ^ rebuffer778/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.47 ^ rebuffer777/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.55 ^ rebuffer776/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.62 ^ rebuffer775/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.70 ^ rebuffer774/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.78 ^ rebuffer773/X (sky130_fd_sc_hd__buf_1)
+   0.08    4.86 ^ rebuffer772/X (sky130_fd_sc_hd__buf_1)
+   0.10    4.96 ^ rebuffer248/X (sky130_fd_sc_hd__buf_1)
+   0.06    5.01 v adder_x/_5888_/Y (sky130_fd_sc_hd__nor2b_2)
+   0.13    5.14 ^ adder_x/_5929_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.11    5.25 v adder_x/_5930_/X (sky130_fd_sc_hd__xor2_1)
+   0.32    5.57 v _29432_/X (sky130_fd_sc_hd__mux2_8)
+   0.30    5.88 ^ adder_y/_5967_/SUM (sky130_fd_sc_hd__ha_4)
+   0.17    6.04 v adder_y/_3702_/Y (sky130_fd_sc_hd__nand4_1)
+   0.23    6.27 ^ adder_y/_4406_/Y (sky130_fd_sc_hd__nor3_2)
+   0.15    6.42 v adder_y/_4407_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.25    6.67 ^ adder_y/_4967_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.15    6.82 ^ rebuffer119/X (sky130_fd_sc_hd__buf_6)
+   0.13    6.95 v adder_y/_5082_/Y (sky130_fd_sc_hd__o311ai_4)
+   0.33    7.28 ^ adder_y/_5085_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.19    7.47 ^ rebuffer39/X (sky130_fd_sc_hd__buf_6)
+   0.07    7.54 v adder_y/_5088_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.14    7.68 v rebuffer306/X (sky130_fd_sc_hd__buf_8)
+   0.27    7.96 ^ adder_y/_5089_/Y (sky130_fd_sc_hd__a2bb2oi_4)
+   0.13    8.09 v adder_y/_5090_/Y (sky130_fd_sc_hd__a221oi_4)
+   0.44    8.53 v adder_y/_5286_/X (sky130_fd_sc_hd__o41a_1)
+   0.29    8.82 ^ adder_y/_5319_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.16    8.98 ^ rebuffer77/X (sky130_fd_sc_hd__buf_6)
+   0.15    9.13 v adder_y/_5456_/Y (sky130_fd_sc_hd__o2111ai_2)
+   0.15    9.28 ^ adder_y/_5457_/Y (sky130_fd_sc_hd__nand2_2)
+   0.10    9.37 v adder_y/_5458_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.43    9.80 ^ _30925_/Y (sky130_fd_sc_hd__nor4_4)
+   0.35   10.15 v _30927_/Y (sky130_fd_sc_hd__nand4_1)
+   0.59   10.73 ^ _30933_/Y (sky130_fd_sc_hd__nor4_4)
+   0.43   11.17 ^ _30955_/X (sky130_fd_sc_hd__and4_4)
+   0.16   11.32 ^ g_flag_groups[1].u_flags_d_mux/g_in_mux_outer[3].u_mux_bit_and/_3_/X (sky130_fd_sc_hd__and2_0)
+   0.05   11.37 v g_flag_groups[1].u_flags_d_mux/_18_/Y (sky130_fd_sc_hd__nor3_1)
+   0.06   11.43 ^ g_flag_groups[1].u_flags_d_mux/_19_/Y (sky130_fd_sc_hd__nand2_1)
+   0.00   11.43 ^ flags_q[3]$_DFF_PN0_/D (sky130_fd_sc_hd__dfrtp_4)
+          11.43   data arrival time
+
+  11.49   11.49   max_delay
+   0.00   11.49   clock reconvergence pessimism
+  -0.03   11.46   library setup time
+          11.46   data required time
+---------------------------------------------------------
+          11.46   data required time
+         -11.43   data arrival time
+---------------------------------------------------------
+           0.04   slack (MET)
+
+
+
+second setup failed
+set clk: 11.627906976744185

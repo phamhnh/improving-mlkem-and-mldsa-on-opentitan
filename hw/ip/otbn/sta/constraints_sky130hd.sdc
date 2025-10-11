@@ -1,45 +1,79 @@
 report_units
 
+set clk clk_i
 set clk_name clk_i
 set clk_port_name clk_i
 
 # clk unit: ns
-set clk_period 25.4
+set clk_period 10
 # 25.4 ok  25.2 fail
 # 27.1 otbn_mac_bignum_VER1_buffer_bit_sky130hd
 # 27.2 otbn_mac_bignum_VER1_brent_kung_sky130hd
 # 27.4 otbn_mac_bignum_VER1_sklansky_sky130hd
 # 25.4 otbn_mac_bignum_VER1_kogge_stone_sky130hd
 
-set in2reg_max  $clk_period
-set reg2out_max $clk_period
-set in2out_max  $clk_period
-
-# The followig is adapted from:
-# source $::env(PLATFORM_DIR)/constraints.sdc
+# set in2reg_max  $clk_period
+# set reg2out_max $clk_period
+# set in2out_max  $clk_period
+# 
+# # The followig is adapted from:
+# # source $::env(PLATFORM_DIR)/constraints.sdc
 
 set sdc_version 2.0
 
 set non_clk_inputs [all_inputs -no_clocks]
 
-if {[llength [get_ports -quiet $clk_port_name]] > 0} {
-  set clk_port [get_ports $clk_port_name]
-  create_clock -period $clk_period -waveform [list 0 [expr $clk_period / 2]] -name $clk_name $clk_port
+# if {[llength [get_ports -quiet $clk_port_name]] > 0} {
+#   set clk_port [get_ports $clk_port_name]
+#   create_clock -period $clk_period -waveform [list 0 [expr $clk_period / 2]] -name $clk_name $clk_port
+# 
+#   set_max_delay [expr { $in2reg_max  }] -from $non_clk_inputs -to [all_registers]
+#   set_max_delay [expr { $reg2out_max }] -from [all_registers] -to [all_outputs]
+# 
+#   group_path -name in2reg -from $non_clk_inputs -to [all_registers]
+#   group_path -name reg2out -from [all_registers] -to [all_outputs]
+#   group_path -name reg2reg -from [all_registers] -to [all_registers]
+# }
+# 
+# set_max_delay [expr { $in2out_max  }] -from $non_clk_inputs -to [all_outputs]
+# 
+# # This allows us to view the different groups
+# # in the histogram in the GUI and also includes these
+# # groups in the report
+# group_path -name in2out -from $non_clk_inputs -to [all_outputs]
 
-  set_max_delay [expr { $in2reg_max  }] -from $non_clk_inputs -to [all_registers]
-  set_max_delay [expr { $reg2out_max }] -from [all_registers] -to [all_outputs]
 
-  group_path -name in2reg -from $non_clk_inputs -to [all_registers]
-  group_path -name reg2out -from [all_registers] -to [all_outputs]
-  group_path -name reg2reg -from [all_registers] -to [all_registers]
-}
-
-set_max_delay [expr { $in2out_max  }] -from $non_clk_inputs -to [all_outputs]
-
-# This allows us to view the different groups
-# in the histogram in the GUI and also includes these
-# groups in the report
-group_path -name in2out -from $non_clk_inputs -to [all_outputs]
+#  # Inputs excluding the clock port
+#  set in_ports  [get_ports -quiet -filter "direction == in && name != $clk"]
+#  
+#  # All outputs (safe to include clock since direction==out)
+#  set out_ports [all_outputs]
+#  
+#  # If clock port exists, create the clock
+#  if {[llength [get_ports -quiet $clk]] > 0} {
+#      create_clock -name $clk -period $clk_period [get_ports $clk]
+#  
+#      # I/O delays relative to this clock
+#      set_input_delay  -max 0 -clock [get_clocks $clk] $in_ports
+#      set_input_delay  -min 0 -clock [get_clocks $clk] $in_ports
+#      set_output_delay -max 0 -clock [get_clocks $clk] $out_ports
+#      set_output_delay -min 0 -clock [get_clocks $clk] $out_ports
+#
+#      group_path -name in2reg -from $non_clk_inputs -to [all_registers]
+#      group_path -name reg2out -from [all_registers] -to [all_outputs]
+#      group_path -name reg2reg -from [all_registers] -to [all_registers]
+#  } 
+#  #else {
+#      # Virtual clock if no physical pin
+#  #    create_clock -name VIRTUAL_CLK -period $clk_period
+#  #}
+#  
+#  # Pure combinational in→out constrained to one period
+##  if {[llength $in_ports] > 0 && [llength $out_ports] > 0} {
+#      set_max_delay $clk_period -from $in_ports -to $out_ports
+##  }
+#
+#  group_path -name in2out -from $non_clk_inputs -to [all_outputs]
 
 ## set clk_name clk_i
 ## set clk_port_name clk_i

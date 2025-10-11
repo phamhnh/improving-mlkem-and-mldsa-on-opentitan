@@ -1,3 +1,7 @@
+set clk: 100.0
+set clk: 100.0
+setup: 0.0
+hold:  0.0
 set clk: 50.0
 setup: 0.0
 hold:  0.0
@@ -12,6 +16,46 @@ setup: 0.0
 hold:  0.0
 set clk: 3.125
 first setup failed
+Startpoint: B[99] (input port)
+Endpoint: res[206] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v B[99] (in)
+   0.07    0.07 v input511/X (sky130_fd_sc_hd__buf_1)
+   0.33    0.41 v _2671_/SUM (sky130_fd_sc_hd__ha_1)
+   0.17    0.58 ^ _1655_/Y (sky130_fd_sc_hd__a21oi_2)
+   0.08    0.66 v _1656_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.33    0.99 v _1660_/X (sky130_fd_sc_hd__a221o_1)
+   0.49    1.49 v _1669_/X (sky130_fd_sc_hd__a2111o_2)
+   0.34    1.82 ^ _1790_/Y (sky130_fd_sc_hd__a221oi_2)
+   0.19    2.01 v _1791_/Y (sky130_fd_sc_hd__o221ai_4)
+   0.22    2.23 ^ _2126_/Y (sky130_fd_sc_hd__nor4_4)
+   0.22    2.45 ^ _2127_/X (sky130_fd_sc_hd__or2_4)
+   0.11    2.56 ^ rebuffer7/X (sky130_fd_sc_hd__buf_1)
+   0.14    2.70 ^ _2148_/X (sky130_fd_sc_hd__o21a_1)
+   0.05    2.75 v _2149_/Y (sky130_fd_sc_hd__inv_2)
+   0.27    3.03 v _2160_/X (sky130_fd_sc_hd__a311o_1)
+   0.53    3.55 ^ _2510_/SUM (sky130_fd_sc_hd__fa_2)
+   0.10    3.66 ^ output633/X (sky130_fd_sc_hd__buf_1)
+   0.00    3.66 ^ res[206] (out)
+           3.66   data arrival time
+
+   3.12    3.12   max_delay
+   0.00    3.12   output external delay
+           3.12   data required time
+---------------------------------------------------------
+           3.12   data required time
+          -3.66   data arrival time
+---------------------------------------------------------
+          -0.53   slack (VIOLATED)
+
+
+
+second setup failed
 set clk: 4.761904761904762
 setup: 0.0
 hold:  0.0
@@ -20,9 +64,50 @@ setup: 0.0
 hold:  0.0
 set clk: 3.5714285714285716
 first setup failed
+Startpoint: B[99] (input port)
+Endpoint: res[206] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 v input external delay
+   0.00    0.00 v B[99] (in)
+   0.07    0.07 v input511/X (sky130_fd_sc_hd__buf_1)
+   0.33    0.41 v _2671_/SUM (sky130_fd_sc_hd__ha_1)
+   0.17    0.58 ^ _1655_/Y (sky130_fd_sc_hd__a21oi_2)
+   0.08    0.66 v _1656_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.33    0.99 v _1660_/X (sky130_fd_sc_hd__a221o_1)
+   0.49    1.49 v _1669_/X (sky130_fd_sc_hd__a2111o_2)
+   0.34    1.82 ^ _1790_/Y (sky130_fd_sc_hd__a221oi_2)
+   0.19    2.01 v _1791_/Y (sky130_fd_sc_hd__o221ai_4)
+   0.22    2.23 ^ _2126_/Y (sky130_fd_sc_hd__nor4_4)
+   0.22    2.45 ^ _2127_/X (sky130_fd_sc_hd__or2_4)
+   0.11    2.56 ^ rebuffer7/X (sky130_fd_sc_hd__buf_1)
+   0.14    2.70 ^ _2148_/X (sky130_fd_sc_hd__o21a_1)
+   0.05    2.75 v _2149_/Y (sky130_fd_sc_hd__inv_2)
+   0.27    3.03 v _2160_/X (sky130_fd_sc_hd__a311o_1)
+   0.53    3.55 ^ _2510_/SUM (sky130_fd_sc_hd__fa_2)
+   0.10    3.66 ^ output633/X (sky130_fd_sc_hd__buf_1)
+   0.00    3.66 ^ res[206] (out)
+           3.66   data arrival time
+
+   3.57    3.57   max_delay
+   0.00    3.57   output external delay
+           3.57   data required time
+---------------------------------------------------------
+           3.57   data required time
+          -3.66   data arrival time
+---------------------------------------------------------
+          -0.09   slack (VIOLATED)
+
+
+
+second setup failed
 set clk: 3.8461538461538463
 setup: 0.0
 hold:  0.0
 set clk: 3.7037037037037037
-first setup failed
-set clk: 3.8461538461538463
+setup: 0.0
+hold:  0.0
+set clk: 3.7037037037037037

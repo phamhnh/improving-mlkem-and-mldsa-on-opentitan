@@ -1,0 +1,764 @@
+set clk: 100.0
+set clk: 100.0
+setup: 0.0
+hold:  0.0
+set clk: 50.0
+setup: 0.0
+hold:  0.0
+set clk: 25.0
+setup: 0.0
+hold:  0.0
+set clk: 12.5
+first setup failed
+Startpoint: u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk_i)
+Endpoint: tl_o[40] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_/CLK (sky130_fd_sc_hd__dfrtp_4)
+   0.57    0.57 v u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_/Q (sky130_fd_sc_hd__dfrtp_4)
+   0.86    1.42 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6354_/X (sky130_fd_sc_hd__xnor3_1)
+   0.14    1.56 v u_dmem/gen_par_scr[0].u_prim_prince/_6425_/Y (sky130_fd_sc_hd__inv_2)
+   0.32    1.88 ^ u_dmem/gen_par_scr[0].u_prim_prince/_8635_/SUM (sky130_fd_sc_hd__ha_1)
+   0.11    1.99 v u_dmem/gen_par_scr[0].u_prim_prince/_6356_/Y (sky130_fd_sc_hd__clkinv_1)
+   0.31    2.30 v u_dmem/gen_par_scr[0].u_prim_prince/_6357_/X (sky130_fd_sc_hd__mux2_1)
+   0.24    2.54 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6359_/Y (sky130_fd_sc_hd__mux2i_2)
+   0.37    2.91 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6360_/X (sky130_fd_sc_hd__xor2_2)
+   0.51    3.42 v u_dmem/gen_par_scr[0].u_prim_prince/_6861_/X (sky130_fd_sc_hd__xnor3_1)
+   0.18    3.60 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6863_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.13    3.73 v u_dmem/gen_par_scr[0].u_prim_prince/_6865_/Y (sky130_fd_sc_hd__o22ai_1)
+   0.37    4.11 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6866_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.19    4.30 v u_dmem/gen_par_scr[0].u_prim_prince/_6876_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.35    4.65 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7034_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.12    4.77 v u_dmem/gen_par_scr[0].u_prim_prince/_7035_/Y (sky130_fd_sc_hd__inv_1)
+   0.21    4.98 v u_dmem/gen_par_scr[0].u_prim_prince/_8736_/COUT (sky130_fd_sc_hd__ha_1)
+   0.22    5.20 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7223_/Y (sky130_fd_sc_hd__o21ai_0)
+   0.18    5.38 v u_dmem/gen_par_scr[0].u_prim_prince/_7225_/Y (sky130_fd_sc_hd__o311ai_2)
+   0.32    5.70 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7226_/X (sky130_fd_sc_hd__xor2_2)
+   0.58    6.28 v u_dmem/gen_par_scr[0].u_prim_prince/_7295_/X (sky130_fd_sc_hd__xnor3_1)
+   0.36    6.64 ^ u_dmem/gen_par_scr[0].u_prim_prince/_8747_/SUM (sky130_fd_sc_hd__ha_1)
+   0.11    6.76 v u_dmem/gen_par_scr[0].u_prim_prince/_7978_/Y (sky130_fd_sc_hd__nand3_1)
+   0.21    6.97 v u_dmem/gen_par_scr[0].u_prim_prince/_7983_/X (sky130_fd_sc_hd__and3_4)
+   1.05    8.02 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7984_/Y (sky130_fd_sc_hd__nor2_4)
+   0.26    8.28 ^ u_dmem/_4429_/X (sky130_fd_sc_hd__xor2_1)
+   0.07    8.35 v u_dmem/_4430_/Y (sky130_fd_sc_hd__a21oi_2)
+   0.77    9.11 ^ u_dmem/_4431_/Y (sky130_fd_sc_hd__a311oi_4)
+   0.24    9.35 ^ load_slew1558/X (sky130_fd_sc_hd__buf_12)
+   0.15    9.50 ^ u_dmem_rdata_bus_blanker/u_blank_and/_132_/X (sky130_fd_sc_hd__and2_0)
+   0.25    9.75 ^ u_tlul_adapter_sram_dmem/_0461_/X (sky130_fd_sc_hd__mux4_2)
+   0.28   10.03 ^ u_tlul_adapter_sram_dmem/_0463_/X (sky130_fd_sc_hd__a22o_4)
+   0.26   10.29 ^ u_tlul_adapter_sram_dmem/u_rspfifo/_52_/X (sky130_fd_sc_hd__a22o_4)
+   0.17   10.46 ^ u_tlul_adapter_sram_dmem/_0348_/X (sky130_fd_sc_hd__o31a_1)
+   0.38   10.84 ^ u_reg/u_socket/gen_dfifo[1].fifo_d/_75_/Y (sky130_fd_sc_hd__nor4bb_4)
+   0.39   11.23 ^ u_reg/u_socket/_306_/X (sky130_fd_sc_hd__mux4_2)
+   0.31   11.54 ^ u_reg/u_socket/fifo_h/_75_/Y (sky130_fd_sc_hd__nor4bb_1)
+   0.13   11.67 ^ output1209/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.67 ^ tl_o[40] (out)
+          11.67   data arrival time
+
+  12.50   12.50   max_delay
+   0.00   12.50   output external delay
+          12.50   data required time
+---------------------------------------------------------
+          12.50   data required time
+         -11.67   data arrival time
+---------------------------------------------------------
+           0.83   slack (MET)
+
+
+Startpoint: u_otbn_core/u_otbn_instruction_fetch/u_insn_fetch_resp_data_intg_flop/q_o[20]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk_i)
+Endpoint: u_imem/gen_par_scr[0].u_prim_prince/data_state_middle_q[16]$_DFFE_PN0P_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_i (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_otbn_core/u_otbn_instruction_fetch/u_insn_fetch_resp_data_intg_flop/q_o[20]$_DFF_PN0_/CLK (sky130_fd_sc_hd__dfrtp_4)
+   1.04    1.04 ^ u_otbn_core/u_otbn_instruction_fetch/u_insn_fetch_resp_data_intg_flop/q_o[20]$_DFF_PN0_/Q (sky130_fd_sc_hd__dfrtp_4)
+   0.28    1.32 v u_otbn_core/u_otbn_decoder/_304_/Y (sky130_fd_sc_hd__clkinv_1)
+   0.33    1.65 v u_otbn_core/u_otbn_decoder/_305_/X (sky130_fd_sc_hd__a211o_4)
+   0.91    2.56 ^ u_otbn_core/u_otbn_decoder/_306_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.26    2.82 ^ load_slew3003/X (sky130_fd_sc_hd__buf_12)
+   0.59    3.41 ^ u_otbn_core/u_otbn_controller/_3260_/Y (sky130_fd_sc_hd__nor4b_4)
+   0.24    3.65 v u_otbn_core/u_otbn_controller/_3261_/Y (sky130_fd_sc_hd__a41oi_4)
+   0.30    3.95 v u_otbn_core/u_otbn_controller/_3264_/X (sky130_fd_sc_hd__a31o_1)
+   0.32    4.26 ^ u_otbn_core/u_otbn_controller/_3276_/Y (sky130_fd_sc_hd__nand4_1)
+   0.51    4.78 ^ u_otbn_core/u_otbn_controller/_3291_/X (sky130_fd_sc_hd__and3_4)
+   0.28    5.06 v u_otbn_core/u_otbn_controller/_3293_/Y (sky130_fd_sc_hd__clkinv_16)
+   0.53    5.59 v u_otbn_core/u_otbn_controller/u_otbn_loop_controller/_1294_/Y (sky130_fd_sc_hd__nand2b_2)
+   0.45    6.04 v u_otbn_core/u_otbn_controller/u_otbn_loop_controller/_1295_/X (sky130_fd_sc_hd__or4_4)
+   0.76    6.80 ^ u_otbn_core/u_otbn_controller/u_otbn_loop_controller/_1296_/Y (sky130_fd_sc_hd__nor3_4)
+   0.26    7.06 ^ max_cap1968/X (sky130_fd_sc_hd__buf_12)
+   0.24    7.30 ^ wire1967/X (sky130_fd_sc_hd__buf_12)
+   0.28    7.58 ^ wire1966/X (sky130_fd_sc_hd__buf_12)
+   0.14    7.73 v u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/_455_/Y (sky130_fd_sc_hd__inv_1)
+   0.72    8.45 ^ u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/_456_/Y (sky130_fd_sc_hd__a21boi_4)
+   0.27    8.72 ^ load_slew1946/X (sky130_fd_sc_hd__buf_12)
+   0.22    8.94 ^ max_cap1945/X (sky130_fd_sc_hd__buf_12)
+   0.09    9.03 v u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/u_stack_wr_ptr/_203_/Y (sky130_fd_sc_hd__nor2b_4)
+   0.36    9.38 ^ u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/u_stack_wr_ptr/_204_/Y (sky130_fd_sc_hd__a22oi_2)
+   0.14    9.52 v u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/u_stack_wr_ptr/_214_/Y (sky130_fd_sc_hd__a211oi_1)
+   0.35    9.87 ^ u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/u_stack_wr_ptr/_219_/Y (sky130_fd_sc_hd__a221oi_1)
+   0.12    9.99 v u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/_493_/Y (sky130_fd_sc_hd__inv_1)
+   0.92   10.92 ^ u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/_981_/SUM (sky130_fd_sc_hd__ha_4)
+   0.37   11.29 ^ load_slew1842/X (sky130_fd_sc_hd__buf_12)
+   0.39   11.68 v u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/_607_/X (sky130_fd_sc_hd__mux2_1)
+   0.21   11.89 ^ u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/_610_/Y (sky130_fd_sc_hd__o22ai_1)
+   0.12   12.00 v u_otbn_core/u_otbn_controller/u_otbn_loop_controller/loop_info_stack/_612_/Y (sky130_fd_sc_hd__o31ai_2)
+   0.18   12.18 v u_otbn_core/u_otbn_instruction_fetch/_0985_/X (sky130_fd_sc_hd__xor2_1)
+   0.50   12.68 ^ u_otbn_core/u_otbn_instruction_fetch/_1035_/Y (sky130_fd_sc_hd__nor4_2)
+   0.61   13.29 v u_otbn_core/u_otbn_instruction_fetch/_1036_/Y (sky130_fd_sc_hd__o211ai_1)
+   0.52   13.81 v u_otbn_core/u_otbn_instruction_fetch/_1046_/X (sky130_fd_sc_hd__or2_4)
+   0.68   14.49 ^ u_otbn_core/u_otbn_instruction_fetch/_1123_/Y (sky130_fd_sc_hd__o211ai_1)
+   0.44   14.93 ^ _1094_/X (sky130_fd_sc_hd__mux2_8)
+   0.17   15.11 v u_imem/gen_par_scr[0].u_prim_prince/_4744_/X (sky130_fd_sc_hd__xor2_1)
+   0.44   15.54 v u_imem/gen_par_scr[0].u_prim_prince/_4746_/X (sky130_fd_sc_hd__or3_4)
+   0.18   15.73 v u_imem/gen_par_scr[0].u_prim_prince/_4747_/X (sky130_fd_sc_hd__and2_4)
+   0.27   16.00 ^ u_imem/gen_par_scr[0].u_prim_prince/_8392_/SUM (sky130_fd_sc_hd__ha_1)
+   0.03   16.03 v u_imem/gen_par_scr[0].u_prim_prince/_4784_/Y (sky130_fd_sc_hd__inv_1)
+   0.57   16.60 v u_imem/gen_par_scr[0].u_prim_prince/_4803_/X (sky130_fd_sc_hd__mux4_2)
+   0.26   16.86 v u_imem/gen_par_scr[0].u_prim_prince/_5247_/X (sky130_fd_sc_hd__xor2_4)
+   0.34   17.20 ^ u_imem/gen_par_scr[0].u_prim_prince/_5250_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.11   17.31 v u_imem/gen_par_scr[0].u_prim_prince/_5513_/Y (sky130_fd_sc_hd__inv_1)
+   0.28   17.60 v u_imem/gen_par_scr[0].u_prim_prince/_8457_/SUM (sky130_fd_sc_hd__ha_1)
+   0.13   17.73 ^ u_imem/gen_par_scr[0].u_prim_prince/_5272_/Y (sky130_fd_sc_hd__mux2i_1)
+   0.13   17.86 v u_imem/gen_par_scr[0].u_prim_prince/_5285_/Y (sky130_fd_sc_hd__mux2i_1)
+   0.26   18.12 ^ u_imem/gen_par_scr[0].u_prim_prince/_5286_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.53   18.65 v u_imem/gen_par_scr[0].u_prim_prince/_5669_/X (sky130_fd_sc_hd__xnor3_1)
+   0.11   18.76 ^ u_imem/gen_par_scr[0].u_prim_prince/_5670_/Y (sky130_fd_sc_hd__inv_1)
+   0.19   18.95 ^ u_imem/gen_par_scr[0].u_prim_prince/_8527_/COUT (sky130_fd_sc_hd__ha_1)
+   0.04   19.00 v u_imem/gen_par_scr[0].u_prim_prince/_5767_/Y (sky130_fd_sc_hd__inv_1)
+   0.49   19.49 v u_imem/gen_par_scr[0].u_prim_prince/_5768_/X (sky130_fd_sc_hd__mux4_2)
+   0.40   19.89 ^ u_imem/gen_par_scr[0].u_prim_prince/_5774_/Y (sky130_fd_sc_hd__xnor2_1)
+   0.37   20.26 ^ u_imem/gen_par_scr[0].u_prim_prince/_5966_/X (sky130_fd_sc_hd__xor2_2)
+   0.30   20.56 v u_imem/gen_par_scr[0].u_prim_prince/_8575_/SUM (sky130_fd_sc_hd__ha_1)
+   0.28   20.84 v u_imem/gen_par_scr[0].u_prim_prince/_7436_/X (sky130_fd_sc_hd__mux2_1)
+   0.09   20.94 ^ u_imem/gen_par_scr[0].u_prim_prince/_7437_/Y (sky130_fd_sc_hd__nor2_1)
+   0.06   20.99 v u_imem/gen_par_scr[0].u_prim_prince/_7438_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.30   21.29 v u_imem/gen_par_scr[0].u_prim_prince/_7439_/X (sky130_fd_sc_hd__mux2_1)
+   0.00   21.29 v u_imem/gen_par_scr[0].u_prim_prince/data_state_middle_q[16]$_DFFE_PN0P_/D (sky130_fd_sc_hd__dfrtp_4)
+          21.29   data arrival time
+
+  12.50   12.50   clock clk_i (rise edge)
+   0.00   12.50   clock network delay (ideal)
+   0.00   12.50   clock reconvergence pessimism
+          12.50 ^ u_imem/gen_par_scr[0].u_prim_prince/data_state_middle_q[16]$_DFFE_PN0P_/CLK (sky130_fd_sc_hd__dfrtp_4)
+  -0.08   12.42   library setup time
+          12.42   data required time
+---------------------------------------------------------
+          12.42   data required time
+         -21.29   data arrival time
+---------------------------------------------------------
+          -8.87   slack (VIOLATED)
+
+
+
+second setup failed
+set clk: 18.867924528301888
+first setup failed
+Startpoint: u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk_i)
+Endpoint: tl_o[40] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_/CLK (sky130_fd_sc_hd__dfrtp_4)
+   0.57    0.57 v u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_/Q (sky130_fd_sc_hd__dfrtp_4)
+   0.86    1.42 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6354_/X (sky130_fd_sc_hd__xnor3_1)
+   0.14    1.56 v u_dmem/gen_par_scr[0].u_prim_prince/_6425_/Y (sky130_fd_sc_hd__inv_2)
+   0.32    1.88 ^ u_dmem/gen_par_scr[0].u_prim_prince/_8635_/SUM (sky130_fd_sc_hd__ha_1)
+   0.11    1.99 v u_dmem/gen_par_scr[0].u_prim_prince/_6356_/Y (sky130_fd_sc_hd__clkinv_1)
+   0.31    2.30 v u_dmem/gen_par_scr[0].u_prim_prince/_6357_/X (sky130_fd_sc_hd__mux2_1)
+   0.24    2.54 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6359_/Y (sky130_fd_sc_hd__mux2i_2)
+   0.37    2.91 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6360_/X (sky130_fd_sc_hd__xor2_2)
+   0.51    3.42 v u_dmem/gen_par_scr[0].u_prim_prince/_6861_/X (sky130_fd_sc_hd__xnor3_1)
+   0.18    3.60 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6863_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.13    3.73 v u_dmem/gen_par_scr[0].u_prim_prince/_6865_/Y (sky130_fd_sc_hd__o22ai_1)
+   0.37    4.11 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6866_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.19    4.30 v u_dmem/gen_par_scr[0].u_prim_prince/_6876_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.35    4.65 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7034_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.12    4.77 v u_dmem/gen_par_scr[0].u_prim_prince/_7035_/Y (sky130_fd_sc_hd__inv_1)
+   0.21    4.98 v u_dmem/gen_par_scr[0].u_prim_prince/_8736_/COUT (sky130_fd_sc_hd__ha_1)
+   0.22    5.20 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7223_/Y (sky130_fd_sc_hd__o21ai_0)
+   0.18    5.38 v u_dmem/gen_par_scr[0].u_prim_prince/_7225_/Y (sky130_fd_sc_hd__o311ai_2)
+   0.32    5.70 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7226_/X (sky130_fd_sc_hd__xor2_2)
+   0.58    6.28 v u_dmem/gen_par_scr[0].u_prim_prince/_7295_/X (sky130_fd_sc_hd__xnor3_1)
+   0.36    6.64 ^ u_dmem/gen_par_scr[0].u_prim_prince/_8747_/SUM (sky130_fd_sc_hd__ha_1)
+   0.11    6.76 v u_dmem/gen_par_scr[0].u_prim_prince/_7978_/Y (sky130_fd_sc_hd__nand3_1)
+   0.21    6.97 v u_dmem/gen_par_scr[0].u_prim_prince/_7983_/X (sky130_fd_sc_hd__and3_4)
+   1.05    8.02 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7984_/Y (sky130_fd_sc_hd__nor2_4)
+   0.26    8.28 ^ u_dmem/_4429_/X (sky130_fd_sc_hd__xor2_1)
+   0.07    8.35 v u_dmem/_4430_/Y (sky130_fd_sc_hd__a21oi_2)
+   0.77    9.11 ^ u_dmem/_4431_/Y (sky130_fd_sc_hd__a311oi_4)
+   0.24    9.35 ^ load_slew1558/X (sky130_fd_sc_hd__buf_12)
+   0.15    9.50 ^ u_dmem_rdata_bus_blanker/u_blank_and/_132_/X (sky130_fd_sc_hd__and2_0)
+   0.25    9.75 ^ u_tlul_adapter_sram_dmem/_0461_/X (sky130_fd_sc_hd__mux4_2)
+   0.28   10.03 ^ u_tlul_adapter_sram_dmem/_0463_/X (sky130_fd_sc_hd__a22o_4)
+   0.26   10.29 ^ u_tlul_adapter_sram_dmem/u_rspfifo/_52_/X (sky130_fd_sc_hd__a22o_4)
+   0.17   10.46 ^ u_tlul_adapter_sram_dmem/_0348_/X (sky130_fd_sc_hd__o31a_1)
+   0.38   10.84 ^ u_reg/u_socket/gen_dfifo[1].fifo_d/_75_/Y (sky130_fd_sc_hd__nor4bb_4)
+   0.39   11.23 ^ u_reg/u_socket/_306_/X (sky130_fd_sc_hd__mux4_2)
+   0.31   11.54 ^ u_reg/u_socket/fifo_h/_75_/Y (sky130_fd_sc_hd__nor4bb_1)
+   0.13   11.67 ^ output1209/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.67 ^ tl_o[40] (out)
+          11.67   data arrival time
+
+  18.87   18.87   max_delay
+   0.00   18.87   output external delay
+          18.87   data required time
+---------------------------------------------------------
+          18.87   data required time
+         -11.67   data arrival time
+---------------------------------------------------------
+           7.20   slack (MET)
+
+
+Startpoint: u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_
+            (rising edge-triggered flip-flop clocked by clk_i)
+Endpoint: u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_i (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_/CLK (sky130_fd_sc_hd__dfstp_4)
+   0.72    0.72 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_/Q (sky130_fd_sc_hd__dfstp_4)
+   0.26    0.98 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07488_/X (sky130_fd_sc_hd__xor2_4)
+   0.13    1.12 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07489_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    1.28 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07491_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.15    1.43 v rebuffer276/X (sky130_fd_sc_hd__buf_12)
+   0.26    1.69 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07616_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    1.85 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07617_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    2.01 ^ rebuffer78/X (sky130_fd_sc_hd__buf_8)
+   0.08    2.09 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07618_/Y (sky130_fd_sc_hd__inv_1)
+   0.39    2.48 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_13324_/COUT (sky130_fd_sc_hd__fa_2)
+   0.14    2.62 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08606_/Y (sky130_fd_sc_hd__nor2b_1)
+   0.23    2.86 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08608_/X (sky130_fd_sc_hd__o31a_1)
+   0.10    2.96 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08616_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.20    3.15 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08618_/X (sky130_fd_sc_hd__a21bo_1)
+   0.26    3.41 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08625_/Y (sky130_fd_sc_hd__a211oi_2)
+   0.15    3.56 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08626_/X (sky130_fd_sc_hd__a211o_4)
+   0.07    3.63 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08633_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.22    3.85 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08639_/Y (sky130_fd_sc_hd__o211ai_1)
+   0.12    3.97 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08640_/Y (sky130_fd_sc_hd__nand2_2)
+   0.26    4.24 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08657_/Y (sky130_fd_sc_hd__o41ai_2)
+   0.13    4.37 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08658_/X (sky130_fd_sc_hd__xor2_1)
+   0.15    4.52 v rebuffer319/X (sky130_fd_sc_hd__buf_2)
+   0.38    4.90 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_13326_/COUT (sky130_fd_sc_hd__fa_2)
+   0.22    5.12 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12452_/X (sky130_fd_sc_hd__a21o_4)
+   0.13    5.24 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12453_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.09    5.33 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12484_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.24    5.57 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12492_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.14    5.71 ^ rebuffer248/X (sky130_fd_sc_hd__buf_6)
+   0.04    5.75 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12600_/Y (sky130_fd_sc_hd__nor3_4)
+   0.22    5.97 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12625_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.07    6.05 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12705_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.15    6.20 v rebuffer1567/X (sky130_fd_sc_hd__buf_6)
+   0.14    6.33 v rebuffer71/X (sky130_fd_sc_hd__buf_2)
+   0.23    6.56 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12817_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.15    6.71 ^ rebuffer467/X (sky130_fd_sc_hd__buf_6)
+   0.22    6.93 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12818_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.28    7.21 v wire1486/X (sky130_fd_sc_hd__buf_12)
+   0.33    7.54 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/g_in_mux_outer[244].u_mux_bit_and/_4_/X (sky130_fd_sc_hd__and2_4)
+   0.73    8.27 ^ u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/_1409_/Y (sky130_fd_sc_hd__nor4_4)
+   0.14    8.41 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/_1411_/Y (sky130_fd_sc_hd__nand3_4)
+   0.20    8.62 v rebuffer457/X (sky130_fd_sc_hd__buf_12)
+   0.17    8.78 ^ u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_064_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.34    9.12 v u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_065_/X (sky130_fd_sc_hd__xnor3_1)
+   0.38    9.50 v u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_066_/X (sky130_fd_sc_hd__xnor3_1)
+   0.17    9.68 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_intg_mux/g_in_mux_outer[306].u_mux_bit_and/_2_/X (sky130_fd_sc_hd__and2_0)
+   0.50   10.17 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_intg_mux/_229_/X (sky130_fd_sc_hd__or3_4)
+   0.23   10.40 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_127_/X (sky130_fd_sc_hd__xnor3_1)
+   0.25   10.65 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_128_/X (sky130_fd_sc_hd__xnor3_1)
+   0.27   10.92 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_174_/X (sky130_fd_sc_hd__xnor3_1)
+   0.31   11.23 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_263_/SUM (sky130_fd_sc_hd__ha_4)
+   0.20   11.43 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_259_/X (sky130_fd_sc_hd__xor2_4)
+   0.12   11.55 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_260_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.17   11.72 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_261_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.18   11.90 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_262_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.20   12.10 ^ rebuffer18/X (sky130_fd_sc_hd__buf_12)
+   0.22   12.32 ^ u_otbn_core/u_otbn_controller/_3375_/X (sky130_fd_sc_hd__o31a_1)
+   0.13   12.45 v u_otbn_core/u_otbn_controller/_3385_/Y (sky130_fd_sc_hd__a32oi_2)
+   0.11   12.57 ^ u_otbn_core/u_otbn_controller/_3386_/Y (sky130_fd_sc_hd__nand3_4)
+   0.17   12.74 ^ rebuffer120/X (sky130_fd_sc_hd__buf_12)
+   0.15   12.89 v u_otbn_core/u_otbn_controller/_3487_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.08   12.97 ^ u_otbn_core/u_otbn_controller/_4620_/Y (sky130_fd_sc_hd__nand3_2)
+   0.05   13.02 v u_otbn_core/u_otbn_instruction_fetch/_1152_/Y (sky130_fd_sc_hd__nor3_2)
+   0.38   13.39 v u_otbn_core/_0770_/X (sky130_fd_sc_hd__or3_1)
+   0.54   13.93 v u_otbn_core/_0771_/X (sky130_fd_sc_hd__or4_4)
+   0.28   14.21 ^ u_otbn_core/_0784_/Y (sky130_fd_sc_hd__nor4b_4)
+   0.08   14.29 v u_otbn_core/_0785_/Y (sky130_fd_sc_hd__a31oi_2)
+   0.28   14.57 v u_otbn_core/_0788_/X (sky130_fd_sc_hd__or2_1)
+   0.35   14.92 ^ u_otbn_core/u_otbn_controller/_3398_/Y (sky130_fd_sc_hd__nor4bb_2)
+   0.14   15.06 v u_otbn_core/u_otbn_controller/_3400_/Y (sky130_fd_sc_hd__nand2_1)
+   0.26   15.32 ^ u_otbn_core/u_otbn_controller/_3401_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.29   15.61 ^ u_otbn_core/u_otbn_controller/_7573_/X (sky130_fd_sc_hd__and4_4)
+   0.06   15.67 v u_otbn_core/u_otbn_rnd/_28_/Y (sky130_fd_sc_hd__nand2_2)
+   0.11   15.78 ^ u_otbn_core/u_otbn_rnd/_29_/Y (sky130_fd_sc_hd__nor2_4)
+   0.15   15.93 ^ u_otbn_core/_0790_/X (sky130_fd_sc_hd__or2_4)
+   0.04   15.97 v u_otbn_core/_0791_/Y (sky130_fd_sc_hd__inv_2)
+   0.16   16.13 v u_otbn_core/u_otbn_controller/_3402_/Y (sky130_fd_sc_hd__nor4bb_4)
+   0.08   16.21 ^ u_otbn_core/u_otbn_controller/_3405_/Y (sky130_fd_sc_hd__nand3_2)
+   0.05   16.25 v u_otbn_core/u_otbn_controller/_3406_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.32   16.58 v u_otbn_core/u_otbn_controller/_3493_/X (sky130_fd_sc_hd__a32o_4)
+   0.10   16.68 ^ u_otbn_core/u_otbn_controller/_3494_/Y (sky130_fd_sc_hd__nand2_8)
+   0.12   16.79 v u_otbn_core/u_otbn_start_stop_control/_218_/Y (sky130_fd_sc_hd__clkinvlp_4)
+   0.20   16.99 ^ u_otbn_core/u_otbn_start_stop_control/_230_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.12   17.11 v u_otbn_core/u_otbn_start_stop_control/_231_/Y (sky130_fd_sc_hd__nor3_4)
+   0.21   17.32 v load_slew988/X (sky130_fd_sc_hd__buf_12)
+   0.18   17.49 v load_slew987/X (sky130_fd_sc_hd__buf_16)
+   0.15   17.65 v load_slew981/X (sky130_fd_sc_hd__buf_12)
+   0.16   17.81 v load_slew980/X (sky130_fd_sc_hd__buf_12)
+   0.15   17.96 v wire979/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.10 v load_slew978/X (sky130_fd_sc_hd__probec_p_8)
+   0.15   18.25 v load_slew977/X (sky130_fd_sc_hd__buf_12)
+   0.13   18.38 v wire976/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.52 v load_slew975/X (sky130_fd_sc_hd__buf_12)
+   0.15   18.67 v load_slew971/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.81 v max_cap970/X (sky130_fd_sc_hd__buf_8)
+   0.15   18.96 v load_slew969/X (sky130_fd_sc_hd__buf_8)
+   0.15   19.11 v max_cap968/X (sky130_fd_sc_hd__buf_8)
+   0.15   19.25 v load_slew967/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.40 v load_slew966/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.55 v load_slew965/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.70 v load_slew962/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.85 v wire960/X (sky130_fd_sc_hd__buf_12)
+   0.15   20.00 v load_slew959/X (sky130_fd_sc_hd__buf_12)
+   0.15   20.15 v max_cap958/X (sky130_fd_sc_hd__buf_12)
+   0.13   20.27 v load_slew955/X (sky130_fd_sc_hd__buf_12)
+   0.14   20.42 v load_slew954/X (sky130_fd_sc_hd__buf_12)
+   0.14   20.56 v load_slew953/X (sky130_fd_sc_hd__buf_8)
+   0.22   20.78 v u_otbn_core/u_otbn_alu_bignum/_29945_/X (sky130_fd_sc_hd__or2_0)
+   0.31   21.08 v u_otbn_core/u_otbn_mac_bignum/_7304_/X (sky130_fd_sc_hd__mux2_1)
+   0.00   21.08 v u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_/D (sky130_fd_sc_hd__edfxtp_1)
+          21.08   data arrival time
+
+  18.87   18.87   clock clk_i (rise edge)
+   0.00   18.87   clock network delay (ideal)
+   0.00   18.87   clock reconvergence pessimism
+          18.87 ^ u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_/CLK (sky130_fd_sc_hd__edfxtp_1)
+  -0.20   18.66   library setup time
+          18.66   data required time
+---------------------------------------------------------
+          18.66   data required time
+         -21.08   data arrival time
+---------------------------------------------------------
+          -2.42   slack (VIOLATED)
+
+
+
+second setup failed
+set clk: 21.73913043478261
+setup: 0.0
+hold:  0.0
+set clk: 20.408163265306122
+first setup failed
+Startpoint: u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk_i)
+Endpoint: tl_o[40] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_/CLK (sky130_fd_sc_hd__dfrtp_4)
+   0.57    0.57 v u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_/Q (sky130_fd_sc_hd__dfrtp_4)
+   0.86    1.42 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6354_/X (sky130_fd_sc_hd__xnor3_1)
+   0.14    1.56 v u_dmem/gen_par_scr[0].u_prim_prince/_6425_/Y (sky130_fd_sc_hd__inv_2)
+   0.32    1.88 ^ u_dmem/gen_par_scr[0].u_prim_prince/_8635_/SUM (sky130_fd_sc_hd__ha_1)
+   0.11    1.99 v u_dmem/gen_par_scr[0].u_prim_prince/_6356_/Y (sky130_fd_sc_hd__clkinv_1)
+   0.31    2.30 v u_dmem/gen_par_scr[0].u_prim_prince/_6357_/X (sky130_fd_sc_hd__mux2_1)
+   0.24    2.54 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6359_/Y (sky130_fd_sc_hd__mux2i_2)
+   0.37    2.91 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6360_/X (sky130_fd_sc_hd__xor2_2)
+   0.51    3.42 v u_dmem/gen_par_scr[0].u_prim_prince/_6861_/X (sky130_fd_sc_hd__xnor3_1)
+   0.18    3.60 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6863_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.13    3.73 v u_dmem/gen_par_scr[0].u_prim_prince/_6865_/Y (sky130_fd_sc_hd__o22ai_1)
+   0.37    4.11 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6866_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.19    4.30 v u_dmem/gen_par_scr[0].u_prim_prince/_6876_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.35    4.65 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7034_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.12    4.77 v u_dmem/gen_par_scr[0].u_prim_prince/_7035_/Y (sky130_fd_sc_hd__inv_1)
+   0.21    4.98 v u_dmem/gen_par_scr[0].u_prim_prince/_8736_/COUT (sky130_fd_sc_hd__ha_1)
+   0.22    5.20 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7223_/Y (sky130_fd_sc_hd__o21ai_0)
+   0.18    5.38 v u_dmem/gen_par_scr[0].u_prim_prince/_7225_/Y (sky130_fd_sc_hd__o311ai_2)
+   0.32    5.70 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7226_/X (sky130_fd_sc_hd__xor2_2)
+   0.58    6.28 v u_dmem/gen_par_scr[0].u_prim_prince/_7295_/X (sky130_fd_sc_hd__xnor3_1)
+   0.36    6.64 ^ u_dmem/gen_par_scr[0].u_prim_prince/_8747_/SUM (sky130_fd_sc_hd__ha_1)
+   0.11    6.76 v u_dmem/gen_par_scr[0].u_prim_prince/_7978_/Y (sky130_fd_sc_hd__nand3_1)
+   0.21    6.97 v u_dmem/gen_par_scr[0].u_prim_prince/_7983_/X (sky130_fd_sc_hd__and3_4)
+   1.05    8.02 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7984_/Y (sky130_fd_sc_hd__nor2_4)
+   0.26    8.28 ^ u_dmem/_4429_/X (sky130_fd_sc_hd__xor2_1)
+   0.07    8.35 v u_dmem/_4430_/Y (sky130_fd_sc_hd__a21oi_2)
+   0.77    9.11 ^ u_dmem/_4431_/Y (sky130_fd_sc_hd__a311oi_4)
+   0.24    9.35 ^ load_slew1558/X (sky130_fd_sc_hd__buf_12)
+   0.15    9.50 ^ u_dmem_rdata_bus_blanker/u_blank_and/_132_/X (sky130_fd_sc_hd__and2_0)
+   0.25    9.75 ^ u_tlul_adapter_sram_dmem/_0461_/X (sky130_fd_sc_hd__mux4_2)
+   0.28   10.03 ^ u_tlul_adapter_sram_dmem/_0463_/X (sky130_fd_sc_hd__a22o_4)
+   0.26   10.29 ^ u_tlul_adapter_sram_dmem/u_rspfifo/_52_/X (sky130_fd_sc_hd__a22o_4)
+   0.17   10.46 ^ u_tlul_adapter_sram_dmem/_0348_/X (sky130_fd_sc_hd__o31a_1)
+   0.38   10.84 ^ u_reg/u_socket/gen_dfifo[1].fifo_d/_75_/Y (sky130_fd_sc_hd__nor4bb_4)
+   0.39   11.23 ^ u_reg/u_socket/_306_/X (sky130_fd_sc_hd__mux4_2)
+   0.31   11.54 ^ u_reg/u_socket/fifo_h/_75_/Y (sky130_fd_sc_hd__nor4bb_1)
+   0.13   11.67 ^ output1209/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.67 ^ tl_o[40] (out)
+          11.67   data arrival time
+
+  20.41   20.41   max_delay
+   0.00   20.41   output external delay
+          20.41   data required time
+---------------------------------------------------------
+          20.41   data required time
+         -11.67   data arrival time
+---------------------------------------------------------
+           8.74   slack (MET)
+
+
+Startpoint: u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_
+            (rising edge-triggered flip-flop clocked by clk_i)
+Endpoint: u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_i (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_/CLK (sky130_fd_sc_hd__dfstp_4)
+   0.72    0.72 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_/Q (sky130_fd_sc_hd__dfstp_4)
+   0.26    0.98 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07488_/X (sky130_fd_sc_hd__xor2_4)
+   0.13    1.12 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07489_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    1.28 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07491_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.15    1.43 v rebuffer276/X (sky130_fd_sc_hd__buf_12)
+   0.26    1.69 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07616_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    1.85 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07617_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    2.01 ^ rebuffer78/X (sky130_fd_sc_hd__buf_8)
+   0.08    2.09 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07618_/Y (sky130_fd_sc_hd__inv_1)
+   0.39    2.48 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_13324_/COUT (sky130_fd_sc_hd__fa_2)
+   0.14    2.62 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08606_/Y (sky130_fd_sc_hd__nor2b_1)
+   0.23    2.86 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08608_/X (sky130_fd_sc_hd__o31a_1)
+   0.10    2.96 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08616_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.20    3.15 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08618_/X (sky130_fd_sc_hd__a21bo_1)
+   0.26    3.41 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08625_/Y (sky130_fd_sc_hd__a211oi_2)
+   0.15    3.56 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08626_/X (sky130_fd_sc_hd__a211o_4)
+   0.07    3.63 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08633_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.22    3.85 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08639_/Y (sky130_fd_sc_hd__o211ai_1)
+   0.12    3.97 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08640_/Y (sky130_fd_sc_hd__nand2_2)
+   0.26    4.24 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08657_/Y (sky130_fd_sc_hd__o41ai_2)
+   0.13    4.37 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08658_/X (sky130_fd_sc_hd__xor2_1)
+   0.15    4.52 v rebuffer319/X (sky130_fd_sc_hd__buf_2)
+   0.38    4.90 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_13326_/COUT (sky130_fd_sc_hd__fa_2)
+   0.22    5.12 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12452_/X (sky130_fd_sc_hd__a21o_4)
+   0.13    5.24 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12453_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.09    5.33 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12484_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.24    5.57 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12492_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.14    5.71 ^ rebuffer248/X (sky130_fd_sc_hd__buf_6)
+   0.04    5.75 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12600_/Y (sky130_fd_sc_hd__nor3_4)
+   0.22    5.97 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12625_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.07    6.05 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12705_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.15    6.20 v rebuffer1567/X (sky130_fd_sc_hd__buf_6)
+   0.14    6.33 v rebuffer71/X (sky130_fd_sc_hd__buf_2)
+   0.23    6.56 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12817_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.15    6.71 ^ rebuffer467/X (sky130_fd_sc_hd__buf_6)
+   0.22    6.93 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12818_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.28    7.21 v wire1486/X (sky130_fd_sc_hd__buf_12)
+   0.33    7.54 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/g_in_mux_outer[244].u_mux_bit_and/_4_/X (sky130_fd_sc_hd__and2_4)
+   0.73    8.27 ^ u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/_1409_/Y (sky130_fd_sc_hd__nor4_4)
+   0.14    8.41 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/_1411_/Y (sky130_fd_sc_hd__nand3_4)
+   0.20    8.62 v rebuffer457/X (sky130_fd_sc_hd__buf_12)
+   0.17    8.78 ^ u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_064_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.34    9.12 v u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_065_/X (sky130_fd_sc_hd__xnor3_1)
+   0.38    9.50 v u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_066_/X (sky130_fd_sc_hd__xnor3_1)
+   0.17    9.68 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_intg_mux/g_in_mux_outer[306].u_mux_bit_and/_2_/X (sky130_fd_sc_hd__and2_0)
+   0.50   10.17 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_intg_mux/_229_/X (sky130_fd_sc_hd__or3_4)
+   0.23   10.40 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_127_/X (sky130_fd_sc_hd__xnor3_1)
+   0.25   10.65 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_128_/X (sky130_fd_sc_hd__xnor3_1)
+   0.27   10.92 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_174_/X (sky130_fd_sc_hd__xnor3_1)
+   0.31   11.23 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_263_/SUM (sky130_fd_sc_hd__ha_4)
+   0.20   11.43 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_259_/X (sky130_fd_sc_hd__xor2_4)
+   0.12   11.55 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_260_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.17   11.72 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_261_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.18   11.90 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_262_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.20   12.10 ^ rebuffer18/X (sky130_fd_sc_hd__buf_12)
+   0.22   12.32 ^ u_otbn_core/u_otbn_controller/_3375_/X (sky130_fd_sc_hd__o31a_1)
+   0.13   12.45 v u_otbn_core/u_otbn_controller/_3385_/Y (sky130_fd_sc_hd__a32oi_2)
+   0.11   12.57 ^ u_otbn_core/u_otbn_controller/_3386_/Y (sky130_fd_sc_hd__nand3_4)
+   0.17   12.74 ^ rebuffer120/X (sky130_fd_sc_hd__buf_12)
+   0.15   12.89 v u_otbn_core/u_otbn_controller/_3487_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.08   12.97 ^ u_otbn_core/u_otbn_controller/_4620_/Y (sky130_fd_sc_hd__nand3_2)
+   0.05   13.02 v u_otbn_core/u_otbn_instruction_fetch/_1152_/Y (sky130_fd_sc_hd__nor3_2)
+   0.38   13.39 v u_otbn_core/_0770_/X (sky130_fd_sc_hd__or3_1)
+   0.54   13.93 v u_otbn_core/_0771_/X (sky130_fd_sc_hd__or4_4)
+   0.28   14.21 ^ u_otbn_core/_0784_/Y (sky130_fd_sc_hd__nor4b_4)
+   0.08   14.29 v u_otbn_core/_0785_/Y (sky130_fd_sc_hd__a31oi_2)
+   0.28   14.57 v u_otbn_core/_0788_/X (sky130_fd_sc_hd__or2_1)
+   0.35   14.92 ^ u_otbn_core/u_otbn_controller/_3398_/Y (sky130_fd_sc_hd__nor4bb_2)
+   0.14   15.06 v u_otbn_core/u_otbn_controller/_3400_/Y (sky130_fd_sc_hd__nand2_1)
+   0.26   15.32 ^ u_otbn_core/u_otbn_controller/_3401_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.29   15.61 ^ u_otbn_core/u_otbn_controller/_7573_/X (sky130_fd_sc_hd__and4_4)
+   0.06   15.67 v u_otbn_core/u_otbn_rnd/_28_/Y (sky130_fd_sc_hd__nand2_2)
+   0.11   15.78 ^ u_otbn_core/u_otbn_rnd/_29_/Y (sky130_fd_sc_hd__nor2_4)
+   0.15   15.93 ^ u_otbn_core/_0790_/X (sky130_fd_sc_hd__or2_4)
+   0.04   15.97 v u_otbn_core/_0791_/Y (sky130_fd_sc_hd__inv_2)
+   0.16   16.13 v u_otbn_core/u_otbn_controller/_3402_/Y (sky130_fd_sc_hd__nor4bb_4)
+   0.08   16.21 ^ u_otbn_core/u_otbn_controller/_3405_/Y (sky130_fd_sc_hd__nand3_2)
+   0.05   16.25 v u_otbn_core/u_otbn_controller/_3406_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.32   16.58 v u_otbn_core/u_otbn_controller/_3493_/X (sky130_fd_sc_hd__a32o_4)
+   0.10   16.68 ^ u_otbn_core/u_otbn_controller/_3494_/Y (sky130_fd_sc_hd__nand2_8)
+   0.12   16.79 v u_otbn_core/u_otbn_start_stop_control/_218_/Y (sky130_fd_sc_hd__clkinvlp_4)
+   0.20   16.99 ^ u_otbn_core/u_otbn_start_stop_control/_230_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.12   17.11 v u_otbn_core/u_otbn_start_stop_control/_231_/Y (sky130_fd_sc_hd__nor3_4)
+   0.21   17.32 v load_slew988/X (sky130_fd_sc_hd__buf_12)
+   0.18   17.49 v load_slew987/X (sky130_fd_sc_hd__buf_16)
+   0.15   17.65 v load_slew981/X (sky130_fd_sc_hd__buf_12)
+   0.16   17.81 v load_slew980/X (sky130_fd_sc_hd__buf_12)
+   0.15   17.96 v wire979/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.10 v load_slew978/X (sky130_fd_sc_hd__probec_p_8)
+   0.15   18.25 v load_slew977/X (sky130_fd_sc_hd__buf_12)
+   0.13   18.38 v wire976/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.52 v load_slew975/X (sky130_fd_sc_hd__buf_12)
+   0.15   18.67 v load_slew971/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.81 v max_cap970/X (sky130_fd_sc_hd__buf_8)
+   0.15   18.96 v load_slew969/X (sky130_fd_sc_hd__buf_8)
+   0.15   19.11 v max_cap968/X (sky130_fd_sc_hd__buf_8)
+   0.15   19.25 v load_slew967/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.40 v load_slew966/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.55 v load_slew965/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.70 v load_slew962/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.85 v wire960/X (sky130_fd_sc_hd__buf_12)
+   0.15   20.00 v load_slew959/X (sky130_fd_sc_hd__buf_12)
+   0.15   20.15 v max_cap958/X (sky130_fd_sc_hd__buf_12)
+   0.13   20.27 v load_slew955/X (sky130_fd_sc_hd__buf_12)
+   0.14   20.42 v load_slew954/X (sky130_fd_sc_hd__buf_12)
+   0.14   20.56 v load_slew953/X (sky130_fd_sc_hd__buf_8)
+   0.22   20.78 v u_otbn_core/u_otbn_alu_bignum/_29945_/X (sky130_fd_sc_hd__or2_0)
+   0.31   21.08 v u_otbn_core/u_otbn_mac_bignum/_7304_/X (sky130_fd_sc_hd__mux2_1)
+   0.00   21.08 v u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_/D (sky130_fd_sc_hd__edfxtp_1)
+          21.08   data arrival time
+
+  20.41   20.41   clock clk_i (rise edge)
+   0.00   20.41   clock network delay (ideal)
+   0.00   20.41   clock reconvergence pessimism
+          20.41 ^ u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_/CLK (sky130_fd_sc_hd__edfxtp_1)
+  -0.20   20.20   library setup time
+          20.20   data required time
+---------------------------------------------------------
+          20.20   data required time
+         -21.08   data arrival time
+---------------------------------------------------------
+          -0.88   slack (VIOLATED)
+
+
+
+second setup failed
+set clk: 21.27659574468085
+first setup failed
+Startpoint: u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk_i)
+Endpoint: tl_o[40] (output port)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_/CLK (sky130_fd_sc_hd__dfrtp_4)
+   0.57    0.57 v u_dmem/gen_par_scr[0].u_prim_prince/data_state_middle_q[13]$_DFFE_PN0P_/Q (sky130_fd_sc_hd__dfrtp_4)
+   0.86    1.42 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6354_/X (sky130_fd_sc_hd__xnor3_1)
+   0.14    1.56 v u_dmem/gen_par_scr[0].u_prim_prince/_6425_/Y (sky130_fd_sc_hd__inv_2)
+   0.32    1.88 ^ u_dmem/gen_par_scr[0].u_prim_prince/_8635_/SUM (sky130_fd_sc_hd__ha_1)
+   0.11    1.99 v u_dmem/gen_par_scr[0].u_prim_prince/_6356_/Y (sky130_fd_sc_hd__clkinv_1)
+   0.31    2.30 v u_dmem/gen_par_scr[0].u_prim_prince/_6357_/X (sky130_fd_sc_hd__mux2_1)
+   0.24    2.54 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6359_/Y (sky130_fd_sc_hd__mux2i_2)
+   0.37    2.91 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6360_/X (sky130_fd_sc_hd__xor2_2)
+   0.51    3.42 v u_dmem/gen_par_scr[0].u_prim_prince/_6861_/X (sky130_fd_sc_hd__xnor3_1)
+   0.18    3.60 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6863_/Y (sky130_fd_sc_hd__a21oi_1)
+   0.13    3.73 v u_dmem/gen_par_scr[0].u_prim_prince/_6865_/Y (sky130_fd_sc_hd__o22ai_1)
+   0.37    4.11 ^ u_dmem/gen_par_scr[0].u_prim_prince/_6866_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.19    4.30 v u_dmem/gen_par_scr[0].u_prim_prince/_6876_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.35    4.65 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7034_/Y (sky130_fd_sc_hd__xnor2_2)
+   0.12    4.77 v u_dmem/gen_par_scr[0].u_prim_prince/_7035_/Y (sky130_fd_sc_hd__inv_1)
+   0.21    4.98 v u_dmem/gen_par_scr[0].u_prim_prince/_8736_/COUT (sky130_fd_sc_hd__ha_1)
+   0.22    5.20 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7223_/Y (sky130_fd_sc_hd__o21ai_0)
+   0.18    5.38 v u_dmem/gen_par_scr[0].u_prim_prince/_7225_/Y (sky130_fd_sc_hd__o311ai_2)
+   0.32    5.70 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7226_/X (sky130_fd_sc_hd__xor2_2)
+   0.58    6.28 v u_dmem/gen_par_scr[0].u_prim_prince/_7295_/X (sky130_fd_sc_hd__xnor3_1)
+   0.36    6.64 ^ u_dmem/gen_par_scr[0].u_prim_prince/_8747_/SUM (sky130_fd_sc_hd__ha_1)
+   0.11    6.76 v u_dmem/gen_par_scr[0].u_prim_prince/_7978_/Y (sky130_fd_sc_hd__nand3_1)
+   0.21    6.97 v u_dmem/gen_par_scr[0].u_prim_prince/_7983_/X (sky130_fd_sc_hd__and3_4)
+   1.05    8.02 ^ u_dmem/gen_par_scr[0].u_prim_prince/_7984_/Y (sky130_fd_sc_hd__nor2_4)
+   0.26    8.28 ^ u_dmem/_4429_/X (sky130_fd_sc_hd__xor2_1)
+   0.07    8.35 v u_dmem/_4430_/Y (sky130_fd_sc_hd__a21oi_2)
+   0.77    9.11 ^ u_dmem/_4431_/Y (sky130_fd_sc_hd__a311oi_4)
+   0.24    9.35 ^ load_slew1558/X (sky130_fd_sc_hd__buf_12)
+   0.15    9.50 ^ u_dmem_rdata_bus_blanker/u_blank_and/_132_/X (sky130_fd_sc_hd__and2_0)
+   0.25    9.75 ^ u_tlul_adapter_sram_dmem/_0461_/X (sky130_fd_sc_hd__mux4_2)
+   0.28   10.03 ^ u_tlul_adapter_sram_dmem/_0463_/X (sky130_fd_sc_hd__a22o_4)
+   0.26   10.29 ^ u_tlul_adapter_sram_dmem/u_rspfifo/_52_/X (sky130_fd_sc_hd__a22o_4)
+   0.17   10.46 ^ u_tlul_adapter_sram_dmem/_0348_/X (sky130_fd_sc_hd__o31a_1)
+   0.38   10.84 ^ u_reg/u_socket/gen_dfifo[1].fifo_d/_75_/Y (sky130_fd_sc_hd__nor4bb_4)
+   0.39   11.23 ^ u_reg/u_socket/_306_/X (sky130_fd_sc_hd__mux4_2)
+   0.31   11.54 ^ u_reg/u_socket/fifo_h/_75_/Y (sky130_fd_sc_hd__nor4bb_1)
+   0.13   11.67 ^ output1209/X (sky130_fd_sc_hd__buf_1)
+   0.00   11.67 ^ tl_o[40] (out)
+          11.67   data arrival time
+
+  21.28   21.28   max_delay
+   0.00   21.28   output external delay
+          21.28   data required time
+---------------------------------------------------------
+          21.28   data required time
+         -11.67   data arrival time
+---------------------------------------------------------
+           9.61   slack (MET)
+
+
+Startpoint: u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_
+            (rising edge-triggered flip-flop clocked by clk_i)
+Endpoint: u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk_i)
+Path Group: clk_i
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_i (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_/CLK (sky130_fd_sc_hd__dfstp_4)
+   0.72    0.72 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/xoshiro_q[39]$_DFFE_PN1P_/Q (sky130_fd_sc_hd__dfstp_4)
+   0.26    0.98 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07488_/X (sky130_fd_sc_hd__xor2_4)
+   0.13    1.12 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07489_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    1.28 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07491_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.15    1.43 v rebuffer276/X (sky130_fd_sc_hd__buf_12)
+   0.26    1.69 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07616_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    1.85 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07617_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.16    2.01 ^ rebuffer78/X (sky130_fd_sc_hd__buf_8)
+   0.08    2.09 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_07618_/Y (sky130_fd_sc_hd__inv_1)
+   0.39    2.48 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_13324_/COUT (sky130_fd_sc_hd__fa_2)
+   0.14    2.62 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08606_/Y (sky130_fd_sc_hd__nor2b_1)
+   0.23    2.86 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08608_/X (sky130_fd_sc_hd__o31a_1)
+   0.10    2.96 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08616_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.20    3.15 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08618_/X (sky130_fd_sc_hd__a21bo_1)
+   0.26    3.41 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08625_/Y (sky130_fd_sc_hd__a211oi_2)
+   0.15    3.56 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08626_/X (sky130_fd_sc_hd__a211o_4)
+   0.07    3.63 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08633_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.22    3.85 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08639_/Y (sky130_fd_sc_hd__o211ai_1)
+   0.12    3.97 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08640_/Y (sky130_fd_sc_hd__nand2_2)
+   0.26    4.24 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08657_/Y (sky130_fd_sc_hd__o41ai_2)
+   0.13    4.37 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_08658_/X (sky130_fd_sc_hd__xor2_1)
+   0.15    4.52 v rebuffer319/X (sky130_fd_sc_hd__buf_2)
+   0.38    4.90 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_13326_/COUT (sky130_fd_sc_hd__fa_2)
+   0.22    5.12 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12452_/X (sky130_fd_sc_hd__a21o_4)
+   0.13    5.24 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12453_/Y (sky130_fd_sc_hd__a21oi_4)
+   0.09    5.33 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12484_/Y (sky130_fd_sc_hd__o21ai_2)
+   0.24    5.57 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12492_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.14    5.71 ^ rebuffer248/X (sky130_fd_sc_hd__buf_6)
+   0.04    5.75 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12600_/Y (sky130_fd_sc_hd__nor3_4)
+   0.22    5.97 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12625_/Y (sky130_fd_sc_hd__o21ai_4)
+   0.07    6.05 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12705_/Y (sky130_fd_sc_hd__o31ai_4)
+   0.15    6.20 v rebuffer1567/X (sky130_fd_sc_hd__buf_6)
+   0.14    6.33 v rebuffer71/X (sky130_fd_sc_hd__buf_2)
+   0.23    6.56 ^ u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12817_/Y (sky130_fd_sc_hd__a211oi_4)
+   0.15    6.71 ^ rebuffer467/X (sky130_fd_sc_hd__buf_6)
+   0.22    6.93 v u_otbn_core/u_otbn_rnd/u_xoshiro256pp/_12818_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.28    7.21 v wire1486/X (sky130_fd_sc_hd__buf_12)
+   0.33    7.54 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/g_in_mux_outer[244].u_mux_bit_and/_4_/X (sky130_fd_sc_hd__and2_4)
+   0.73    8.27 ^ u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/_1409_/Y (sky130_fd_sc_hd__nor4_4)
+   0.14    8.41 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_no_intg_mux/_1411_/Y (sky130_fd_sc_hd__nand3_4)
+   0.20    8.62 v rebuffer457/X (sky130_fd_sc_hd__buf_12)
+   0.17    8.78 ^ u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_064_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.34    9.12 v u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_065_/X (sky130_fd_sc_hd__xnor3_1)
+   0.38    9.50 v u_otbn_core/u_otbn_alu_bignum/g_rdata_enc[7].i_secded_enc/_066_/X (sky130_fd_sc_hd__xnor3_1)
+   0.17    9.68 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_intg_mux/g_in_mux_outer[306].u_mux_bit_and/_2_/X (sky130_fd_sc_hd__and2_0)
+   0.50   10.17 v u_otbn_core/u_otbn_alu_bignum/u_ispr_rdata_intg_mux/_229_/X (sky130_fd_sc_hd__or3_4)
+   0.23   10.40 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_127_/X (sky130_fd_sc_hd__xnor3_1)
+   0.25   10.65 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_128_/X (sky130_fd_sc_hd__xnor3_1)
+   0.27   10.92 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_174_/X (sky130_fd_sc_hd__xnor3_1)
+   0.31   11.23 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_263_/SUM (sky130_fd_sc_hd__ha_4)
+   0.20   11.43 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_259_/X (sky130_fd_sc_hd__xor2_4)
+   0.12   11.55 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_260_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.17   11.72 v u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_261_/Y (sky130_fd_sc_hd__xnor2_4)
+   0.18   11.90 ^ u_otbn_core/u_otbn_controller/g_ispr_rdata_dec[7].i_secded_dec/_262_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.20   12.10 ^ rebuffer18/X (sky130_fd_sc_hd__buf_12)
+   0.22   12.32 ^ u_otbn_core/u_otbn_controller/_3375_/X (sky130_fd_sc_hd__o31a_1)
+   0.13   12.45 v u_otbn_core/u_otbn_controller/_3385_/Y (sky130_fd_sc_hd__a32oi_2)
+   0.11   12.57 ^ u_otbn_core/u_otbn_controller/_3386_/Y (sky130_fd_sc_hd__nand3_4)
+   0.17   12.74 ^ rebuffer120/X (sky130_fd_sc_hd__buf_12)
+   0.15   12.89 v u_otbn_core/u_otbn_controller/_3487_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.08   12.97 ^ u_otbn_core/u_otbn_controller/_4620_/Y (sky130_fd_sc_hd__nand3_2)
+   0.05   13.02 v u_otbn_core/u_otbn_instruction_fetch/_1152_/Y (sky130_fd_sc_hd__nor3_2)
+   0.38   13.39 v u_otbn_core/_0770_/X (sky130_fd_sc_hd__or3_1)
+   0.54   13.93 v u_otbn_core/_0771_/X (sky130_fd_sc_hd__or4_4)
+   0.28   14.21 ^ u_otbn_core/_0784_/Y (sky130_fd_sc_hd__nor4b_4)
+   0.08   14.29 v u_otbn_core/_0785_/Y (sky130_fd_sc_hd__a31oi_2)
+   0.28   14.57 v u_otbn_core/_0788_/X (sky130_fd_sc_hd__or2_1)
+   0.35   14.92 ^ u_otbn_core/u_otbn_controller/_3398_/Y (sky130_fd_sc_hd__nor4bb_2)
+   0.14   15.06 v u_otbn_core/u_otbn_controller/_3400_/Y (sky130_fd_sc_hd__nand2_1)
+   0.26   15.32 ^ u_otbn_core/u_otbn_controller/_3401_/Y (sky130_fd_sc_hd__a2111oi_4)
+   0.29   15.61 ^ u_otbn_core/u_otbn_controller/_7573_/X (sky130_fd_sc_hd__and4_4)
+   0.06   15.67 v u_otbn_core/u_otbn_rnd/_28_/Y (sky130_fd_sc_hd__nand2_2)
+   0.11   15.78 ^ u_otbn_core/u_otbn_rnd/_29_/Y (sky130_fd_sc_hd__nor2_4)
+   0.15   15.93 ^ u_otbn_core/_0790_/X (sky130_fd_sc_hd__or2_4)
+   0.04   15.97 v u_otbn_core/_0791_/Y (sky130_fd_sc_hd__inv_2)
+   0.16   16.13 v u_otbn_core/u_otbn_controller/_3402_/Y (sky130_fd_sc_hd__nor4bb_4)
+   0.08   16.21 ^ u_otbn_core/u_otbn_controller/_3405_/Y (sky130_fd_sc_hd__nand3_2)
+   0.05   16.25 v u_otbn_core/u_otbn_controller/_3406_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.32   16.58 v u_otbn_core/u_otbn_controller/_3493_/X (sky130_fd_sc_hd__a32o_4)
+   0.10   16.68 ^ u_otbn_core/u_otbn_controller/_3494_/Y (sky130_fd_sc_hd__nand2_8)
+   0.12   16.79 v u_otbn_core/u_otbn_start_stop_control/_218_/Y (sky130_fd_sc_hd__clkinvlp_4)
+   0.20   16.99 ^ u_otbn_core/u_otbn_start_stop_control/_230_/Y (sky130_fd_sc_hd__a31oi_4)
+   0.12   17.11 v u_otbn_core/u_otbn_start_stop_control/_231_/Y (sky130_fd_sc_hd__nor3_4)
+   0.21   17.32 v load_slew988/X (sky130_fd_sc_hd__buf_12)
+   0.18   17.49 v load_slew987/X (sky130_fd_sc_hd__buf_16)
+   0.15   17.65 v load_slew981/X (sky130_fd_sc_hd__buf_12)
+   0.16   17.81 v load_slew980/X (sky130_fd_sc_hd__buf_12)
+   0.15   17.96 v wire979/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.10 v load_slew978/X (sky130_fd_sc_hd__probec_p_8)
+   0.15   18.25 v load_slew977/X (sky130_fd_sc_hd__buf_12)
+   0.13   18.38 v wire976/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.52 v load_slew975/X (sky130_fd_sc_hd__buf_12)
+   0.15   18.67 v load_slew971/X (sky130_fd_sc_hd__buf_12)
+   0.14   18.81 v max_cap970/X (sky130_fd_sc_hd__buf_8)
+   0.15   18.96 v load_slew969/X (sky130_fd_sc_hd__buf_8)
+   0.15   19.11 v max_cap968/X (sky130_fd_sc_hd__buf_8)
+   0.15   19.25 v load_slew967/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.40 v load_slew966/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.55 v load_slew965/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.70 v load_slew962/X (sky130_fd_sc_hd__buf_12)
+   0.15   19.85 v wire960/X (sky130_fd_sc_hd__buf_12)
+   0.15   20.00 v load_slew959/X (sky130_fd_sc_hd__buf_12)
+   0.15   20.15 v max_cap958/X (sky130_fd_sc_hd__buf_12)
+   0.13   20.27 v load_slew955/X (sky130_fd_sc_hd__buf_12)
+   0.14   20.42 v load_slew954/X (sky130_fd_sc_hd__buf_12)
+   0.14   20.56 v load_slew953/X (sky130_fd_sc_hd__buf_8)
+   0.22   20.78 v u_otbn_core/u_otbn_alu_bignum/_29945_/X (sky130_fd_sc_hd__or2_0)
+   0.31   21.08 v u_otbn_core/u_otbn_mac_bignum/_7304_/X (sky130_fd_sc_hd__mux2_1)
+   0.00   21.08 v u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_/D (sky130_fd_sc_hd__edfxtp_1)
+          21.08   data arrival time
+
+  21.28   21.28   clock clk_i (rise edge)
+   0.00   21.28   clock network delay (ideal)
+   0.00   21.28   clock reconvergence pessimism
+          21.28 ^ u_otbn_core/u_otbn_mac_bignum/acc_intg_q[306]$_DFFE_PP_/CLK (sky130_fd_sc_hd__edfxtp_1)
+  -0.20   21.07   library setup time
+          21.07   data required time
+---------------------------------------------------------
+          21.07   data required time
+         -21.08   data arrival time
+---------------------------------------------------------
+          -0.01   slack (VIOLATED)
+
+
+
+second setup failed
+set clk: 21.73913043478261
