@@ -262,7 +262,7 @@ bnan:
       value: bxxxxx
 
 
-# bnammv below is used for new bn.mulv instruction proposed by Ruben Niederhagen.
+# bnammv below is used for new bn.mulv instruction
 bnmulv:
   parents:
     - custom5

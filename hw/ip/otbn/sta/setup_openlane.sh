@@ -205,7 +205,7 @@ echo "sv2v: Done"
 # #-------------------------------------------------------------------------
 # # Setup OpenLane environment variables.
 # #-------------------------------------------------------------------------
-# export OPENLANE_ROOT = /home/phamhnh/Documents/git/public/openlane2
+# export OPENLANE_ROOT = ...
 # echo "Set path to openlane installation to OPENLANE_ROOT=$OPENLANE_ROOT"
 # if [ ! -d "$OPENLANE_ROOT" ]; then
 #     echo "OpenLane directory not found at $OPENLANE_ROOT"
