@@ -1,40 +1,28 @@
-<!-- TODO: Replace this by the paper title -->
-# New vector multiplication instruction for OTBN-OpenTitan
+# Improving ML-KEM and ML-DSA on OpenTitan - Efficient Multiplication Vector Instructions for OTBN
 
 ## About this repository
 
-This repository is the artifact of the paper [paper-title] which contains
-changes to the hardware design as well as the Python simulator to support our
-proposed vector multiplication instruction for OTBN. We copied over the changes
-for the KMAC interface and `bn.{addv,subv}(m)`, `bn.shv`, `bn.trn{1,2}` from
-Towards ML-KEM and ML-DSA on OpenTitan.
-
-Our contributions:
-- Replace their vector adders in `BN-ALU` by different adders to improve latency.
-- Our multiplication instruction does not perform modular multiplication with
-Montgomery as in the Towards adder. This is done from the software side.
-- Use different adders in `BN-MAC` to compare resources/latency. 
-
-In the following, we will give a description to guide the readers on how to
-reproduce the results presented in our paper.
+This repository is the artifact of the paper **Improving ML-KEM and ML-DSA on
+OpenTitan - Efficient Multiplication Vector Instructions for OTBN** which
+contains changes to the hardware design as well as the Python simulator to
+support our proposed vector multiplication instructions for OTBN. In the
+following, we will give a description to guide the readers on how to reproduce
+the results presented in our paper.
 
 ## Getting Started
-For setting up software testing environment, please follow the
+For setting up testing environment, please follow the
 [OpenTitan's official guide](https://opentitan.org/book/doc/getting_started/index.html).
 
-In case you are also using Python virtual environment like us, we recommend to
-use Python 3.10.12 and then run:
+In case you are also using Python virtual environment, we recommend using
+Python 3.10. Then run:
 ```
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -U pip "setuptools<66.0.0"
 pip3 install -r python-requirements.txt --require-hashes
 ```
-If you're using a different version than 3.10.12 (either natively or in venv),
-in all bazel tests below, you need to pass `--action_env=PATH` to the bazel
-command before the target.
 
-You also need Verilator with version >=5.022.
+You also need Verilator with version 5.022:
 ```
 export VERILATOR_VERSION=5.022
 
@@ -52,225 +40,172 @@ sudo CC=gcc-11 CXX=g++-11 make install
 export PATH=/tools/verilator/$VERILATOR_VERSION/bin:$PATH
 ``` 
 
-To run ASIC synthesis with OpenLane/OpenRoad in our paper, you need `sv2v` to
-translate SystemVerilog source files to Verilog files. To install `sv2v`, you
-can download the release from [sv2v
-GitHub](https://github.com/zachjs/sv2v/releases/tag/v0.0.13) and move the
-executable to your desired install directory, e.g., `/tools/sv2v/`. Then add
-this to your `PATH`.
-
-## Relevant Files
-We propose 3 approaches for the new vector multiplication instruction:
-
-- Version 1 reuses the multiplier in `BN-MAC` to support either 8 16x16-bit,
-  4 32x32-bit or 1 64x64-bit multiplication(s) in one cycle.
-- Version 2 also reuses the multiplier in `BN-MAC` but with a second accumulator
-  register, called `ACCH`, to further support all 16 16x16-bit multiplications
-  in one cycle.
-- Version 3 is Version 2 but with a conditional subtraction unit added.
-
-In software-related files, Version 1, 2 and 3 are denoted by `BNMULV_VER1`,
-`BNMULV_VER2` and `BNMULV_VER3` respectively, or by `BNMULV_VER = {1,2,3}`.
-In hardware-related files (RTL), all three versions are marked with `BNMULV`,
-while Version 2 is further marked with `BNMULV_ACCH` and Version 3 is Version 2
-with `BNMULV_COND_SUB`.
-
-The encoding and definition of our multiplication is defined in the following
-files:
-- `hw/ip/otbn/data/enc-schemes-bnmulv.yml`: This file contains the encoding for
-  our multiplication.
-- `hw/ip/otbn/data/bignum-insns-ver{1,2,3}.yml`: These files contains the
-  definitions of our multipliation for the corresponding version.
-- `hw/ip/otbn/data/insn-ver{1,2,3}.yml`: These file make sure that the correct
-  `bignum-insns-ver{1,2,3}.yml` is seen by the OTBN assembler.
-- `hw/ip/otbn/dv/otbnsim/sim/insn-ver{1,2,3}.py`: These files contains the
-    Python semantics of the new multiplication.
-
-The assembly codes for ML-KEM and ML-DSA for each `BNMULV_VER` are found in
-`sw/otbn/crypto/{mlkem, mldsa}_ver{1,2,3}` respectively.
-
-Note that if all the files/folders mentioned above are not tagged with `_ver*`,
-they are for the baseline implementations from Towards ML-KEM and ML-DSA on
-OpenTitan paper.
-
-From hardware side, we provide these new RTL modules under
-`hw/ip/otbn/rtl/bn_vec_core/`:
-- `buffer_bit.sv`: Vector Carry Propagate Adder (CPA) with buffer bits added for
-  killing the carries or propagating them to the next vector element. This
-  module can do addition and subtraction.
-- `brent_kung_adder_256.sv`: Vector Brent-Kung Adder.
-- `sklansky_adder_256.sv`: Vector Sklansky Adder.
-- `kogge_stone_adder_256.sv`: Vector Kogge-Stone Adder.
-  <!-- TODO: mention `_double.sv` files if we don't merge it with normal version. -->
+To run ASIC synthesis with OpenRoad in our paper, you need `sv2v` to
+translate SystemVerilog source files to Verilog files, which can be downloaded
+at [sv2v GitHub](https://github.com/zachjs/sv2v/releases/tag/v0.0.13). Then you
+need to move the executable to your desired install directory, e.g.,
+`/tools/sv2v/` and add it to your `PATH`.
 
 ## Software
-### Benchmarking software
-Software benchmarking of ML-KEM and ML-DSA are done with `otbn_sim_py_test`
-bazel rule, which feeds a same random input generated in Python to both Python
-reference implementation (by Giacomo Pope) and OTBN implementation, then
-compares their results. For each `otbn_sim_py_test` target, it can be run for
-`ITERATIONS` number of iterations, which is found in
-`sw/otbn/crypto/tests/{mlkem,mldsa}/{kyberpy,dilithiumpy}_bench_otbn/bench_{kyber,dilithium}.py`.
-In the same file, you can change `NPROC` to define the number of threads. The
-results obtained here can be found in the paper at **Table ?** and **Table ?**.
-<!-- TODO: Add ML-KEM/ML-DSA performance table -->
 
-Now to run the test, execute the following command:
+In order to get the software testing environment working properly, please run the following command:
+```
+./bazelisk test //sw/otbn/crypto/tests:sha3_shake_test
+```
+This will trigger Bazel to load the docker container for Bazel-ORFS flow, which
+needs Python 3.13. Then this test will fail due to Python 3.13 is not compatible
+with software flow. Then you need to change Python version in `third_party/python/python.MODULE.bazel` to 3.10, instead of 3.13. Now, software tests can be run without errors.
+
+### Benchmarking software (Table 4, 5 and 6)
+
+Software benchmarking of ML-KEM and ML-DSA are done with `otbn_sim_py_test`
+Bazel rule, which feeds a same random input generated in Python to both Python
+reference implementation (by Giacomo Pope, for
+[ML-KEM](https://github.com/GiacomoPope/kyber-py) and
+[ML-DSA](https://github.com/GiacomoPope/dilithium-py)) and OTBN implementation,
+then compares their results. For each `otbn_sim_py_test` target, it can be run
+for `ITERATIONS` number of iterations with `N_PROC` number of threads, which is
+found in
+`sw/otbn/crypto/tests/{mlkem,mldsa}/{kyberpy,dilithiumpy}_bench_otbn/bench_{kyber,dilithium}.py`.
+
+There are four software versions for ML-KEM and ML-DSA:
+- `ver0_base`: base implementations with KMAC interface and without ISE from
+  [Towards ML-KEM and ML-DSA on
+  OpenTitan](https://eprint.iacr.org/2024/1192.pdf).
+- `ver0`: implementations with KMAC interface and with ISE (multi-cycle
+  multiplication approach) from [Towards ML-KEM and ML-DSA on
+  OpenTitan](https://eprint.iacr.org/2024/1192.pdf).
+- `ver1`: our implementations with Variant 1 (OTBNV1) of the new multiplication vector instruction.
+- `ver2`: our implementations with Variant 2 (OTBNV2) of the new multiplication vector instruction.
+- `ver3`: our implementations with Variant 3 (OTBNV3) of the new multiplication vector instruction.
+
+The results obtained in the following commands are the software benchmark of
+ML-KEM and ML-DSA in Table 6 in our paper:
 
 For ML-DSA:
 ```
-./bazelisk.sh test --test_timeout=10000 --cache_test_results=no --sandbox_writable_path="/home/dev/src/"
-//sw/otbn/crypto/tests/mldsa:mldsa{44,65,87}_{keypair,sign,verify}_bench{_ver1,ver2,ver3}
+./bazelisk.sh test --test_timeout=10000 --cache_test_results=no 
+--action_env=PATH --sandbox_writable_path="path/to/this/repo" 
+//sw/otbn/crypto/tests/mldsa:mldsa{44,65,87}_{keypair,sign,verify}_bench_{ver0_base,ver0,ver1,ver2,ver3}
 ```
 
 For ML-KEM:
 ```
-./bazelisk.sh test --test_timeout=10000 --cache_test_results=no --sandbox_writable_path="/home/dev/src/"
-//sw/otbn/crypto/tests/mlkem:mlkem{512,768,1024}_{keypair,encap,decap}_bench{_ver1,ver2,ver3}
+./bazelisk.sh test --test_timeout=10000 --cache_test_results=no 
+--action_env=PATH --sandbox_writable_path="path/to/this/repo" 
+//sw/otbn/crypto/tests/mlkem:mlkem{512,768,1024}_{keypair,encap,decap}_bench_{ver0_base,ver0,ver1,ver2,ver3}
 ```
 
-Without passing in the tag `ver*`, you are benchmarking the baseline
-implementations.
+The commands above will log the results to a DB file (`mldsa_bench.db` and
+`mlkem_bench.db`). We also provide a script to parse the results in the DB
+files, in which numbers for NTT, INTT, (pair-)pointwise and ciphertext packing
+can be found. In the followings, `start` is the start row of your benchmarked
+target in the DB and `end` is the end row of your benchmarked target in the DB.
+
+```
+util/get_benchmark.py -f mldsa_bench.db -o mldsa_eval.txt -i start end --scheme mldsa
+util/get_benchmark.py -f mlkem_bench.db -o mlkem_eval.txt -i start end --scheme mldsa
+```
 
 ### Running fixed-input tests
-We also provide a fixed-input test with `otbn_sim_test` rule. To run these test,
-execute the following command.
 
-For ML-DSA with new multiplication instruction:
+We also provide fixed-input tests for fast testing with `otbn_sim_test` rule. To run these test,
+execute the following commands:
+
+For ML-DSA:
 ```
 ./bazelisk.sh test --test_output=streamed --cache_test_results=no
-//sw/otbn/crypto/tests/mldsa:mldsa{44,65,87}_{keypair,sign,verify}_test_ver{1,2,3}
+--action_env=PATH --sandbox_writable_path="path/to/this/repo"
+//sw/otbn/crypto/tests/mldsa:mldsa{44,65,87}_{keypair,sign,verify}_test_{ver0_base,ver0,ver1,ver2,ver3}
 ```
 
-For baseline ML-DSA:
+For ML-KEM:
 ```
 ./bazelisk.sh test --test_output=streamed --cache_test_results=no
-//sw/otbn/crypto/tests/mldsa:dilithium{2,3,5}_{keypair,sign,verify}_test
-```
-
-For ML-KEM with new multiplication instruction:
-```
-./bazelisk.sh test --test_output=streamed --cache_test_results=no
-//sw/otbn/crypto/tests/mlkem:mlkem{512,768,1024}_{keypair,encap,decap}_test_ver{1,2,3}
-```
-
-For baseline ML-KEM:
-```
-./bazelisk.sh test --test_output=streamed --cache_test_results=no
-//sw/otbn/crypto/tests/mlkem:kyber{512,768,1024}_mlkem_{keypair,enc,dec}_test
+--action_env=PATH --sandbox_writable_path="path/to/this/repo"
+//sw/otbn/crypto/tests/mlkem:mlkem{512,768,1024}_{keypair,encap,decap}_test_{ver0_base,ver1,ver2,ver3}
 ```
 
 ### Running all software tests
-To run all the tests available for ML-{KEM,DSA}, run:
+
+To run all the tests available for ML-{KEM,DSA}, you can execute the following commands:
 ```
 ./bazelisk.sh test //sw/otbn/crypto/tests/mldsa:*
 ./bazelisk.sh test //sw/otbn/crypto/tests/mlkem:*
 ```
 
+### Obtaining code size (Table 7)
+
+The code size numbers in Table 7 can be obtained with the following command:
+```
+util/get_codesize.py --mlkem --mldsa --compare
+```
+
+In case you want to obtain the code size manually, Bazel binary targets for code
+size are:
+- `otbn_mlkem{512,768,1024}_code_size_{ver0_base,ver0,ver1,ver2,ver3}`
+- `otbn_mldsa{44,65,87}_code_size_{ver0_base,ver0,ver1,ver2,ver3}`
+
+And you need to run the following, for example:
+```
+./bazelisk.sh build //sw/otbn/crypto/tests/mlkem:otbn_mlkem512_code_size_ver1
+size bazel-bin/sw/otbn/crypto/tests/mlkem/otbn_mlkem512_code_size_ver1.elf
+```
 ## Hardware
-### Obtaining hardware synthesis results
-<!-- Synthesis on CW310 with Vivado -->
-<!-- TODO: List fusesoc command -->
-<!-- TODO: List Vivado synth target for CW310 -->
-<!-- TODO: List Vivado command to synthesize the results -->
-<!-- TODO: Mention which tables in the paper correspond to these results -->
 
-<!-- Synthesis using resources.py -->
-<!-- TODO: Show how to use the script -->
-<!-- TODO: Mention which tables in the paper correspond to these results -->
+To obtain ASIC numbers with ORFS flow, please change Python version in
+`third_party/python/python.MODULE.bazel` back to 3.13 if you run software tests
+before this.
 
-<!-- Synthesis with OpenLane/OpenROAD -->
-<!-- TODO: With Sky130 -->
-<!-- TODO: With ASAP7 PDK -->
-<!-- TODO: Mention which tables in the paper correspond to these results -->
-ASIC synthesis with OpenLane/OpenRoad is integrated into our bazel workflow.
-Bazel will download the docker container of OpenLane/OpenRoad and synthesize the
+### Obtaining hardware synthesis results (Table 1, 2 and 3)
+
+ASIC synthesis with OpenRoad is integrated into our Bazel workflow.
+Bazel will download the docker container of OpenRoad and synthesize the
 design. In order to run this flow, you need to be able to run `docker` without
 root permission. This can be done by:
 ```
  sudo gpasswd -a $USER docker
 ```
 Then you may have to restart your PC for this to take effect. After this, you're
-set to run our ASIC flow with:
-```
-./bazelisk.sh build //hw/ip/otbn:otbn_alu_bignum_VER2_sky130hd_all_results
-```
-<!-- TODO: Update targets -->
+set to run our script to get the results in Table 1, 2 and 3.
 
-<!-- Synthesis with Cadence Genus -->
-<!-- TODO: Mention which tables in the paper correspond to these results -->
+If you want to synthesize the designs with a specific tool (Vivado, Genus or ORFS),
+add `--tool={Vivao,Genus,ORFS}`. If you want to synthesize with all the tools,
+use `--tool=all`. The results are in `reports/FPGA-Vivado`, `reports/ASIC-Genus`
+and `reports/ASIC-ORFS`.
 
-<!-- TODO: Mention how to choose which adder to be used -->
-### Verifying new RTL modules with cocotb
-We provide cocotb tests, which simulate the RTL and compare the result with
-reference Python implementation, for our new modules. In `hw/ip/otbn/rtl/`, run:
+To obtain synthesis numbers for the multiplier (Table 1):
 ```
-pytest test/bnmulv_ver{1,2,3}/TEST_NAME
-```
-<!-- TODO: Merge all bnmulv_ver* folders -->
-
-### Running RTL-ISS tests
-OpenTitan provides an RTL-ISS test for OTBN. This test simulates the OTBN
-`otbn_top_sim` with Verilator while running the Python simulator at the same
-time, and checks if the RTL trace matches that of the ISS for every cycle. There
-are four scripts for this test under `hw/ip/otbn/dv/smoke/`:
-- `run_smoke.sh`: This is given by OpenTitan team to verify their base
-  instructions.
-- `run_smoke_isaext.sh`: This is given by Towards paper team to verify their
-  ISAEXT including `bn.addv(m)`, `bn.subv(m)`, `bn.shv` and `bn.trn{1,2}`.
-- `run_smoke_bnmulv.sh`: This is our script for running RTL-ISS test for all
-  variants of the new multiplication instruction.
-- `run_pqc.sh`: This is our script for running RTL-ISS test for full-scheme
-  ML-KEM and ML-DSA.
-
-For the original script, you can run:
-```
-hw/ip/otbn/dv/smoke/run_smoke.sh
+./gen_tables.py --run_synthesis --tool={all,Vivado,ORFS,Genus} --mul
 ```
 
-An example for running one of the other three scripts is:
+To obtain synthesis numbers for the adders (Table 2):
 ```
-hw/ip/otbn/dv/smoke/run_pqc.sh -v {1,2,3} [-s] [-l] [-t TARGET]
-```
-`-v` specifies the `BNMULV_VER` to simulate the RTL with, `-s` is optional for
-skipping Verilator simulation step (e.g., when you already built it before),
-`-l` for listing all supported bazel targets for this script and `-t` for
-specifying a particular target that you want to test (otherwise, all targets will
-be tested).
-
-For further information, use `-h`:
-```
-hw/ip/otbn/dv/smoke/run_{smoke_isaext,smoke_bnmulv,pqc}.sh -h
+./gen_tables.py --run_synthesis --tool={all,Vivado,ORFS,Genus} --adders
 ```
 
-You can also run the RTL-ISS manually with the following commands:
+To obtain synthesis numbers for BN-ALU, BN-MAC and OTBN (Table 3):
 ```
-# Produce binary file for testing
-hw/ip/otbn/util/otbn_as.py --bnmulv_version_id={0,1,2,3} -o test.o test.s
-hw/ip/otbn/util/otbn_ld.py -o test.elf test.o
-
-# Build Verilator simulation with fusesoc
-fusesoc --core-root=. run --target=sim --setup --build --flag bnmulv_ver{1,2,3} \
---mapping=lowrisc:prim_generic:all:0.1 lowrisc:ip:otbn_top_sim
-
-# Start the simulation
-./build/lowrisc_ip_otbn_top_sim_0.1/sim-verilator/Votbn_top_sim --load-elf=test.elf
+./gen_tables.py --run_synthesis --tool={all,Vivado,ORFS,Genus} --otbn_sub
+./gen_tables.py --run_synthesis --tool={all,Vivado,ORFS,Genus} --otbn
 ```
 
-Note that `--flag bnmulv_ver{1,2,3}` can be removed if you want to simulate the
-baseline OTBN. Also note that the default adder chosen for `BN-ALU` is our
-buffer-bit adder. To switch to baseline adder, add `--flag old_adder` in the
-above command.
-<!-- TODO: mention flags for different adders -->
+### Verifying new RTL modules with cocotb and pytest
 
-If you want to run the full-scheme ML-{KEM,DSA} test manually, you need to
-build the binaries from `otbn_binary` targets defined in
-`sw/otbn/crypto/tests/{mlkem,mldsa}/BUILD` as follows for example:
+We provide cocotb tests, which simulate the RTL with Verilator and compare the
+result with reference Python implementation, for our new modules.
+There are three test `TARGET`:
+- `test/test_vector_adder_pytest.py`: test all vectorized adders mentioned in our paper.
+- `test/test_non_vector_adder_pytest.py`: test all non-vectorized adders mentioned in our paper.
+- `test/test_unified_mul_pytest.py`: test our vectorized multiplier.
+
+In `hw/ip/otbn/rtl/`, run:
 ```
-./bazelisk.sh build --copt="-DRTL_ISS_TEST" //sw/otbn/crypto/tests/mlkem:otbn_mlkem512_keypair_test
+pytest TARGET
 ```
 
-### Running Top Earlgrey Chip-level Tests
+### Running Top Earlgrey chip-level tests
+
 We also provide chip-level tests for ML-KEM and ML-DSA on `top_earlgrey`. Ibex
 will run C-reference implementations of
 [Kyber](https://github.com/pq-crystals/kyber) and
@@ -279,47 +214,58 @@ will run C-reference implementations of
 ML-DSA with the same inputs. The results read from OTBN will then be compared
 with those of the reference ones. This test can either be run with Verilator
 simulation or with our provided bitstreams for CW310.
-<!-- TODO: Generate bitstreams for CW340 -->
+
 #### With Verilator
-For ML-DSA:
-```
-./bazelisk.sh test --test_output=streamed --test_timeout=10000 \
---copt="-DBNMULV_VER={1,2,3}" --copt="-DDILITHIUM_MODE={2,3,5}" \
-//sw/device/tests:otbn_mldsa_test_sim_verilator_ver{1,2,3}
-```
 
 For ML-DSA:
 ```
-./bazelisk.sh test --test_output=streamed --test_timeout=10000 \
---copt="-DBNMULV_VER={1,2,3}" --copt="-DKYBER_K={2,3,4}" \
+./bazelisk.sh test --test_output=streamed --test_timeout=10000 --action_env=PATH 
+--copt="-DBNMULV_VER={1,2,3}" --copt="-DDILITHIUM_MODE={2,3,5}" 
 //sw/device/tests:otbn_mldsa_test_sim_verilator_ver{1,2,3}
 ```
+
+For ML-KEM:
+```
+./bazelisk.sh test --test_output=streamed --test_timeout=10000 --action_env=PATH
+--copt="-DBNMULV_VER={1,2,3}" --copt="-DKYBER_K={2,3,4}" 
+//sw/device/tests:otbn_mlkem_test_sim_verilator_ver{1,2,3}
+```
+
 Note that the version in `sim_verilator_ver*` must match the
 `--copt="-DBNMULV_VER*`. 
 
 #### With FPGA
-For setting up the FPGA (CW310/CW340), please see [OpenTitan's guide](https://opentitan.org/book/doc/getting_started/setup_fpga.html#connecting-chipwhisperer-fpga-and-hyperdebug-boards-to-your-pc).
-<!-- TODO: Mention setting up --interface -->
-To load the btistream onto the FPGA, run:
+
+For setting up the FPGA board ChipWhisperer CW310, please see [OpenTitan's
+guide](https://opentitan.org/book/doc/getting_started/setup_fpga.html#connecting-chipwhisperer-fpga-and-hyperdebug-boards-to-your-pc).
+
+We provide bitstreams for the two hardware variants OTBNV1 and OTBNV2 in the
+paper. In both variants, buffer-bit adder is set as the adder in both BN-ALU and
+BN-MAC.
+
+To load the bitstream onto the FPGA, run:
 ```
-./bazelisk.sh run //sw/host/opentitantool -- fpga load-bitstream \
-hw/top_earlgrey/bitstream_{cw310,cw340}/bnmulv_ver{1,2,3}/lowrisc_systems_chip_earlgrey_{cw310,cw340}_0.1.bit
+./bazelisk.sh run //sw/host/opentitantool -- fpga load-bitstream 
+hw/top_earlgrey/bitstream_cw310/bnmulv_ver{1,2,3}/lowrisc_systems_chip_earlgrey_cw310_0.1.bit
 ```
+
 To run ML-KEM chip-level tests with this bitstream:
 ```
-./bazelisk.sh test --define bitstream=skip --test_output=streamed \
---copt="-DKYBER_K={2,3,4}" --copt="-DBNMULV_VER={1,2,3}" \
-//sw/device/tests:otbn_mlkem_test_fpga_{cw310,cw340}_test_rom_ver{1,2,3}
+./bazelisk.sh test --define bitstream=skip --test_output=streamed --action_env=PATH
+--copt="-DKYBER_K={2,3,4}" --copt="-DBNMULV_VER={1,2,3}" 
+//sw/device/tests:otbn_mlkem_test_fpga_cw310_test_rom_ver{1,2,3}
 ```
-To run ML-KEM chip-level tests with this bitstream:
+
+To run ML-DSA chip-level tests with this bitstream:
 ```
-./bazelisk.sh test --define bitstream=skip --test_output=streamed \
---copt="-DDILITHIUM_MODE={2,3,5}" --copt="-DBNMULV_VER={1,2,3}" \
-//sw/device/tests:otbn_mldsa_test_fpga_{cw310,cw340}_test_rom_ver{1,2,3}
+./bazelisk.sh test --define bitstream=skip --test_output=streamed --action_env=PATH
+--copt="-DDILITHIUM_MODE={2,3,5}" --copt="-DBNMULV_VER={1,2,3}" 
+//sw/device/tests:otbn_mldsa_test_fpga_cw310_test_rom_ver{1,2,3}
 ```
+
 Note that by loading the bitstream onto the FPGA before running the tests, the
 version in the tag `_fpga_cw310_test_rom_ver*` does not have to match that in
 `--copt`. These two must only match if we pass `--define bitstream=vivado`
 instead of `--define bitstream=skip` to build the bitstream directly in the
-bazel test command (which means the bitstream does not have to be pre-loaded onto
+Bazel test command (which means the bitstream does not have to be pre-loaded onto
 the FPGA).
