@@ -3,9 +3,8 @@
 import subprocess
 import re
 import sys
+import csv
 import argparse
-from pathlib import Path
-from datetime import datetime
 from tabulate import tabulate
 
 OUTDIR_ORFS = "reports/ASIC-ORFS"
@@ -157,93 +156,32 @@ def extract_all(top, flag_group, tools):
 def report(data, tools):
     """Put collected data to a table in LaTex.
     """
-    headers = ["top\\_module"]
+    headers = ["topmodule"]
     floatfmt= [""]
 
     if 'vivado' in tools:
         headers += ["LUT", "DSP", "CARRY4", "FF", "BRAM", "Fmax"]
         floatfmt += ["g", "g", "g", "g", "g", "g"]
     if 'genus' in tools:
-        headers += ["area", "Fmax"]
+        headers += ["areaGenus", "FmaxGenus"]
         floatfmt += [".3f", "g"]
     if 'orfs' in tools:
-        headers += ["area", "Fmax"]
+        headers += ["areaORFS", "FmaxORFS"]
         floatfmt += [".3f", "g"]
 
-    latex_table = tabulate(data, headers, tablefmt="latex_raw",
-                            floatfmt=floatfmt, missingval="{---}")
-
-    print("""
-    \\documentclass{standalone}
-    \\usepackage{booktabs}
-
-    \\begin{document}
-    """)
-
-    print(latex_table)
-    print("\\end{document}")
-    print()
-
-
-def latex_print(data, filename):
-    """Export a .tex file of \DefineVar{}{}
-    """
-    # check if file exists, otherwise create one
-    filepath = Path(filename)
-    if filepath.exists():
-        print(f"INFO: {filename} exists and new data will be overwritten")
-    else:
-        print(f"INFO: {filename} does not exist and will be created")
-        filepath.touch(exist_ok=True)
-
-    lines = (
-        "%------------------- W A R N I N G: A U T O - G E N E R A T E D   F I L E !! "
-        "-------------------%\n"
-        "% PLEASE DO NOT HAND-EDIT THIS FILE. IT HAS BEEN AUTO-GENERATED WITH THE FOLLOWING "
-        "COMMAND:\n"
-        "%\n"
-        "% util/gen_synth.py --output_latex --latex_filename=synth.tex\n"
-        "%\n"
-        f"% Generated on {datetime.now().date()}.\n\n"
+    latex_table = tabulate(
+        data,
+        headers,
+        tablefmt="latex_raw",
+        floatfmt=floatfmt,
+        missingval="{---}"
     )
 
-    len_data = len(data)
-    for i in range(len_data):
-        for j in range(1, 11):
-            if data[i][j] is not None:
-                data_split = str(data[i][j]).split('.')
-                if data_split[1] == '0':
-                    data[i][j] = int(data[i][j])
-            else:
-                data[i][j] = "---"
+    print(latex_table)
 
-    for i in range(len_data):
-        module = data[i][0]
-        module = module.replace('\\_', '-')
-        lut = module + '-LUT'
-        dsp = module + '-DSP'
-        carry4 = module + '-CARRY4'
-        ff = module + '-FF'
-        bram = module + '-BRAM'
-        fmax = module + '-fmax'
-        genus_area = module + '-genus-area'
-        genus_fmax = module + '-genus-fmax'
-        orfs_area = module + '-orfs-area'
-        orfs_fmax = module + '-orfs-fmax'
-        lines += f"\\DefineVar{{{lut}}}{{{data[i][1]}}}\n"
-        lines += f"\\DefineVar{{{dsp}}}{{{data[i][2]}}}\n"
-        lines += f"\\DefineVar{{{carry4}}}{{{data[i][3]}}}\n"
-        lines += f"\\DefineVar{{{ff}}}{{{data[i][4]}}}\n"
-        lines += f"\\DefineVar{{{bram}}}{{{data[i][5]}}}\n"
-        lines += f"\\DefineVar{{{fmax}}}{{{data[i][6]}}}\n"
-        lines += f"\\DefineVar{{{genus_area}}}{{{data[i][7]}}}\n"
-        lines += f"\\DefineVar{{{genus_fmax}}}{{{data[i][8]}}}\n"
-        lines += f"\\DefineVar{{{orfs_area}}}{{{data[i][9]}}}\n"
-        lines += f"\\DefineVar{{{orfs_fmax}}}{{{data[i][10]}}}\n"
-        lines += "\n"
-
-    with filepath.open("w") as f:
-        f.write(lines)
+    # Write results to a CSV file
+    writer = csv.writer(sys.stdout)
+    writer.writerows([headers] + data)
 
 
 def run_synthesis(top, tool, outdir, flags=None):
@@ -277,8 +215,13 @@ def run_synthesis(top, tool, outdir, flags=None):
         ]
         for pdk in pdks:
             target = f"//hw/ip/otbn:{top}{flags}_{pdk}{'_all' if flags else ''}_results"
-            outname = f"bazel-bin/hw/ip/otbn/{top}{flags}_{pdk}_stats"
-            cmd = f"bazel build {target} && mkdir -p {outdir} && cp -f {outname} {outdir}"
+            outname = f"bazel-bin/hw/ip/otbn/{top}{flags}_{pdk}"
+            cmd = (
+                f"bazel build {target} && mkdir -p {outdir} && chmod u+w {OUTDIR_ORFS}/* && "
+                f"cp -f {outname}_stats {outdir} && "
+                f"cp -f {outname}_reports {outdir} && "
+                f"cp -f {outname}_fsearch {outdir}"
+            )
     else:
         print(f"ERROR: Unsupported tool {tool}")
         return 1
@@ -342,27 +285,14 @@ def main():
         default=None,
         help="Top-level hardware module to be synthesized."
     )
-    parser.add_argument(
-        '--output_latex',
-        action="store_true",
-        help=("If given, read all generated reports and output in a LaTex-formatted variables\n"
-              "Must be used with only --latex_filename.")
-    )
-    parser.add_argument(
-        '--latex_filename',
-        type=str,
-        metavar="LATEX_FILENAME",
-        help=("Output file of --output_latex option. If file does not exist, it will be created\n"
-              "Must be given with full path")
-    )
 
     args = parser.parse_args()
 
     if not args.top_module and not args.adders and not args.mul and not args.otbn \
-        and not args.otbn_sub and not args.output_latex:
+        and not args.otbn_sub:
         print(
             "ERROR: Please give one of the arugments: --top_module, --adders, --mul, --otbn, "
-            ", --otbn_sub, or --output_latex"
+            ", --otbn_sub"
         )
         return 1
 
@@ -370,17 +300,13 @@ def main():
         print("ERROR: --flag is only used with --top_module.")
         return 1
 
-    # Abort if --output_latex is given without --latex_filename
-    if args.output_latex and not args.latex_filename:
-        print('ERROR: --output_latex must be used with --latex_filename')
-        return 1
-
     print(f"run_synthesis: {args.run_synthesis}")
     print(f"top_module: {args.top_module}")
 
     ADDERS = [
         "ref_add",
-        "towards_alu_adder", "towards_mac_adder",
+        "towards_alu_adder",
+        "towards_mac_adder",
         "buffer_bit",
         "brent_kung_256",
         "brent_kung",
@@ -410,7 +336,7 @@ def main():
             ("otbn_bignum_mul", None, None),
             ("otbn_mul",        None, ["towards"]),
             ("unified_mul",     None, None),
-            ("unified_mul",     "wallace", ["wallace"])
+            ("unified_mul",     "WALLACE", ["wallace"])
         ]
     elif args.adders:
         modules = [(top_module, None, None) for top_module in ADDERS]
@@ -428,21 +354,6 @@ def main():
         tools = ['vivado', 'genus', 'orfs']
     else:
         tools = [args.tool.lower()]
-
-    if args.output_latex:
-        modules = [(top_module, None, None) for top_module in ADDERS]
-        modules.insert(4, ("csa_carry4", None, ["carry4"]))
-        modules += [
-            ("otbn_bignum_mul", None, None),
-            ("otbn_mul",        None, ["towards"]),
-            ("unified_mul",     None, None),
-            ("unified_mul",     "wallace", ["wallace"])
-        ]
-        modules += [
-            (top_module, flag_group, flag)
-            for top_module in ["otbn_mac_bignum", "otbn_alu_bignum"] for flag_group, flag in FLAGS
-        ]
-        modules += [("otbn", flag_group, flag) for flag_group, flag in FLAGS]
 
     if args.run_synthesis:
         for top_module, flag_group, flag in modules:
@@ -463,13 +374,6 @@ def main():
     ]
 
     report(data, tools)
-
-    if args.output_latex:
-        data = [
-            extract_all(top_module, flag_group, tools) for top_module, flag_group, flag in modules
-        ]
-        latex_print(data, args.latex_filename)
-
     return 0
 
 
