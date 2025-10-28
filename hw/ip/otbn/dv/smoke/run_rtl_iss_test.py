@@ -151,8 +151,8 @@ def main() -> int:
         metavar="BNMULV_VER",
         default=0,
         help=(
-            "Specify the version of BNMULV for Verilator simulation and tests. This must be given.\n"
-            " Supported versions are:\n"
+            "<Required> Specify the version of BNMULV for Verilator simulation and tests.\n"
+            "Supported versions are:\n"
             "- 0: Baseline design from paper: Towards ML-KEM and ML-DSA on OpenTitan\n"
             "- 1: BNMULV without ACCH\n"
             "- 2: BNMULV with ACCH\n"
