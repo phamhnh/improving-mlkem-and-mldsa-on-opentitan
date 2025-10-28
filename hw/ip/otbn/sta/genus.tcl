@@ -38,17 +38,6 @@ check_design -multiple_driver ${TOP_MODULE}
 
 write_db ${REPORT_DIR}/test.db
 
-# reset_design
-# reset_db / .library
-# #reset_db init_lib_search_path
-# #reset_db lef_library
-# #
-# #read_db /tmp/test.db
-# 
-# set status [catch { read_db /tmp/test.db } result_variable]
-# set status [catch { read_db /tmp/test.db } result_variable]
-
-
 ############################################
 # Perform binary search for Fmax
 ############################################
@@ -56,16 +45,12 @@ write_db ${REPORT_DIR}/test.db
 proc set_timing_paths {clk clk_period} {
   global REPORT_DIR
 
-#  reset_db lef_library
   reset_design
 
   reset_db / .library
-#  reset_db lef_library
 
-#  read_db /tmp/test.db
   catch { read_db ${REPORT_DIR}/test.db }
   read_db ${REPORT_DIR}/test.db
-
 
   if {[llength [get_ports -quiet $clk]] > 0} {
     # Create clock to attach it to a clock buffer.

@@ -17,28 +17,27 @@ if {$argc == 0 || [lindex $argv 0] in {"-h" "--help"}} {
     exit 0
 }
 
-
 set top_module ""
 
 for {set i 0} {$i < $argc} {incr i} {
-    set arg [lindex $argv $i]
-    switch -- $arg {
-        --top_module {
-            incr i
-            set top_module [lindex $argv $i]
-        }
-        --start_freq {
-            incr i
-            set start_f [lindex $argv $i]
-        }
-        --outdir {
-            incr i
-            set outdir [lindex $argv $i]
-        }
-        default {
-            puts "Unknown option: $arg"
-        }
+  set arg [lindex $argv $i]
+  switch -- $arg {
+    --top_module {
+      incr i
+      set top_module [lindex $argv $i]
     }
+    --start_freq {
+      incr i
+      set start_f [lindex $argv $i]
+    }
+    --outdir {
+      incr i
+      set outdir [lindex $argv $i]
+    }
+    default {
+      puts "Unknown option: $arg"
+    }
+  }
 }
 
 set file_utilization $outdir/utilization.txt
@@ -92,14 +91,12 @@ source lowrisc_ip_otbn_0.1.tcl
 source rounding.tcl
 source timing.tcl
 
-
 synth_design -mode out_of_context -top $top_module
 
 opt_design
 set ACTIVE_STEP opt_design
  
 write_checkpoint -force $outdir/synth.dcp
-
 
 # Set clock port name
 set clk "clk_i"
@@ -125,7 +122,6 @@ report_timing_summary -file $file_timing_summary
 
 report_clocks -file $file_clocks
 
-
 set f [open ${outdir}/summary.txt w]
 
 puts "Fmax: $max_f MHz"
@@ -137,4 +133,3 @@ puts "================================================\n"
 puts "Maximum Achievable Frequency: $max_f MHz"
 puts "Clock Period: $best_period ns"
 puts "\n================================================\n"
-

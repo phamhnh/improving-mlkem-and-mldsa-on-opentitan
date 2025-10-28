@@ -27,9 +27,10 @@ filegroup(
 
 genrule(
     name = "openroad_combined_tcl",
-    srcs = [":openroad.tcl",
-      ":rounding.tcl",
-      ":timing.tcl"
+    srcs = [
+        ":openroad.tcl",
+        ":rounding.tcl",
+        ":timing.tcl"
     ],
     outs = ["openroad_combined.tcl"],
     cmd  = "cat $(location rounding.tcl) $(location timing.tcl) $(location openroad.tcl) > $@",

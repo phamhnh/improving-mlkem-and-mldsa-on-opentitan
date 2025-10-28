@@ -9,7 +9,6 @@ proc write_both {file_handle message} {
 }
 
 proc set_timing_paths {clk clk_period} {
-#  read_db $::env(CHECKPOINT)
   global f_search
 
   write_both $f_search "set clk: $clk_period"
@@ -31,34 +30,6 @@ proc set_timing_paths {clk clk_period} {
   # -datapath_only
 }
 
-#proc set_timing_paths {clk clk_period} {
-#  # Inputs excluding the clock port
-#  set in_ports  [get_ports -quiet -filter "direction == in && name != $clk"]
-#  
-#  # All outputs (safe to include clock since direction==out)
-#  set out_ports [all_outputs]
-#  
-#  # If clock port exists, create the clock
-#  if {[llength [get_ports -quiet $clk]] > 0} {
-#      create_clock -name $clk -period $clk_period [get_ports $clk]
-#  
-#      # I/O delays relative to this clock
-#      set_input_delay  -max 0 -clock [get_clocks $clk] $in_ports
-#      set_input_delay  -min 0 -clock [get_clocks $clk] $in_ports
-#      set_output_delay -max 0 -clock [get_clocks $clk] $out_ports
-#      set_output_delay -min 0 -clock [get_clocks $clk] $out_ports
-#  }
-#  #else {
-#      # Virtual clock if no physical pin
-# #     create_clock -name VIRTUAL_CLK -period $clk_period
-# # }
-#  
-#  # Pure combinational in->out constrained to one period
-##  if {[llength $in_ports] > 0 && [llength $out_ports] > 0} {
-#      set_max_delay $clk_period -from $in_ports -to $out_ports -reset_path
-##  }
-#}
-
 proc get_tns {which} {
   if {[llength [info commands sta::total_negative_slack]]} {
     return [sta::total_negative_slack $which]
@@ -72,14 +43,6 @@ proc get_tns {which} {
 }
 
 proc place_and_route {} {
-#  estimate_parasitics -placement
-#
-#  repair_timing -setup
-#  repair_timing -setup
-#
-#  global_route
-#  detailed_route
-
   global f_search
 
   repair_timing -setup -max_buffer_percent 50 -max_utilization 85
@@ -122,42 +85,6 @@ proc place_and_route {} {
 
   write_both $f_search "setup: $tns_setup"
   write_both $f_search "hold:  $tns_hold"
- 
-#  # Setup repair loop
-#  set max_buf 20
-#  while {1} {
-#    repair_timing -setup -setup_margin 0.05 -max_buffer_percent $max_buf
-#    set tns_setup [get_tns -max]
-#  
-#    if {$tns_setup >= 0.0} {
-#      puts "Setup violations fixed with max_buffer_percent=$max_buf"
-#      break
-#    }
-#  
-#    set max_buf [expr {$max_buf + 5}]
-#    if {$max_buf > 40} {
-#      puts "ERROR: Could not fix setup violations within buffer limit!"
-#      break
-#    }
-#  }
-#  
-#  # Hold repair loop
-#  set max_buf 20
-#  while {1} {
-#    repair_timing -hold -hold_margin 0.05 -max_buffer_percent $max_buf
-#    set tns_hold [get_tns -min]
-#  
-#    if {$tns_hold >= 0.0} {
-#      puts "Hold violations fixed with max_buffer_percent=$max_buf"
-#      break
-#    }
-#  
-#    set max_buf [expr {$max_buf + 5}]
-#    if {$max_buf > 40} {
-#      puts "ERROR: Could not fix hold violations within buffer limit!"
-#      break
-#    }
-#  }
 }
 
 proc get_slack {} {
@@ -178,9 +105,6 @@ proc get_slack {} {
   return $slack
 }
 
-#source rounding.tcl
-#source timing.tcl
-
 if { [info exists ::env(PROCESS)] && $::env(PROCESS) eq "7" } {
     # do something for asap7
     puts "PROCESS is asap7 $::env(PROCESS)"
@@ -195,14 +119,8 @@ if { [info exists ::env(PROCESS)] && $::env(PROCESS) eq "7" } {
     set unit "ns"
 }
 
-# global_route
-# detailed_route
-# #write_db $::env(CHECKPOINT)
-
 # Set clock port name
 set clk "clk_i"
-
-#repair_timing -verbose -setup_margin 0.05 -repair_tns 0 -skip_last_gasp -match_cell_footprint
 
 set_timing_paths $clk [ expr {$scale_factor/$start_f} ]
 
@@ -216,7 +134,6 @@ set max_f [timing::get_max_freq $clk $start_f $scale_factor]
 set_timing_paths $clk [ expr {$scale_factor/$max_f} ]
 
 close $f_search
-
 
 # Open output file
 set f [open $::env(REPORTS) w]
@@ -237,18 +154,14 @@ write_both $f $data
 
 close $f
 
-
 # Open output file
 set f [open $::env(OUTPUT) w]
-
 
 write_both $f "name: $::env(DESIGN_NAME)"
 
 set max_period [ expr {$scale_factor/$max_f} ]
 
 write_both $f "Fmax: $max_f MHz ($max_period $unit)"
-
-
 
 set paths [find_timing_paths -path_delay max ]
 set path [lindex $paths 0]
@@ -262,7 +175,6 @@ set required [get_property $end_point required]
 
 write_both $f "required: $required"
 
-
 set instance_count [llength [get_cells *]]
 write_both $f "instances: $instance_count"
 
@@ -274,4 +186,3 @@ write_both $f "utilization: $util"
 
 close $f
 puts "Results written to: $::env(OUTPUT)"
-

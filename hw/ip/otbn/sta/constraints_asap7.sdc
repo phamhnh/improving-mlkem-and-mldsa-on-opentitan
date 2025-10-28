@@ -25,7 +25,7 @@ if {[llength [get_ports -quiet $clk_port_name]] > 0} {
   group_path -name in2reg -from $non_clk_inputs -to [all_registers]
   group_path -name reg2out -from [all_registers] -to [all_outputs]
   group_path -name reg2reg -from [all_registers] -to [all_registers]
-_
+}
 
 set non_clk_inputs [all_inputs -no_clocks]
 

@@ -19,66 +19,66 @@ proc timing::get_max_freq { clk start_f scale_factor } {
   
   # Binary search for max frequency
   while {1} {
-      set mid_f [rounding::round_largest_error $mid_f]
-  
-      if {($mid_f == $slow_f) || ($mid_f == $fast_f)} {
-        break
+    set mid_f [rounding::round_largest_error $mid_f]
+
+    if {($mid_f == $slow_f) || ($mid_f == $fast_f)} {
+      break
+    }
+
+    puts "\n\n***********************************************"
+    puts "***********************************************"
+    puts "Slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] $unit)"
+    puts "Fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] $unit)"
+    puts "Testing clock period: $mid_f MHz (Frequency: [expr {$scale_factor/$mid_f}] $unit)"
+    puts "***********************************************"
+    puts "***********************************************\n\n"
+
+    # Apply new clock constraint
+    set_timing_paths $clk [ expr {$scale_factor/$mid_f} ]
+
+    place_and_route
+
+    set slack [ get_slack ]
+
+    puts "\n\n***********************************************"
+    puts "***********************************************"
+    puts "Slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] $unit)"
+    puts "Fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] $unit)"
+    puts "Tested clock period: $mid_f MHz (Frequency: [expr {$scale_factor/$mid_f}] $unit)"
+    puts "***********************************************"
+    puts "Slack: $slack $unit"
+
+    if {$slack >= 0} {
+      if {$mid_f > $best_f} {
+        set best_f $mid_f
+        set max_freq $best_f
       }
 
-      puts "\n\n***********************************************"
-      puts "***********************************************"
-      puts "Slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] $unit)"
-      puts "Fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] $unit)"
-      puts "Testing clock period: $mid_f MHz (Frequency: [expr {$scale_factor/$mid_f}] $unit)"
-      puts "***********************************************"
-      puts "***********************************************\n\n"
-  
-      # Apply new clock constraint
-      set_timing_paths $clk [ expr {$scale_factor/$mid_f} ]
-  
-      place_and_route
-  
-      set slack [ get_slack ]
-  
-      puts "\n\n***********************************************"
-      puts "***********************************************"
-      puts "Slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] $unit)"
-      puts "Fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] $unit)"
-      puts "Tested clock period: $mid_f MHz (Frequency: [expr {$scale_factor/$mid_f}] $unit)"
-      puts "***********************************************"
-      puts "Slack: $slack $unit"
+      set slow_f $mid_f
+    } else {
+      set fast_f $mid_f
+    }
 
-      if {$slack >= 0} {
-        if {$mid_f > $best_f} {
-          set best_f $mid_f
-          set max_freq $best_f
-        }
-  
-        set slow_f $mid_f
-      } else {
-        set fast_f $mid_f
-      }
-  
-      puts "New best frequency: $best_f MHz (period: [expr {$scale_factor/$best_f}] $unit)"
-      puts "New slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] $unit)"
-      puts "New fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] $unit)"
-      puts "***********************************************"
-      puts "***********************************************\n\n"
-  
- 
-      if {$fast_f == -1} {
-         set mid_f [expr {2*$mid_f}]
-      } elseif {$slow_f == -1} {
-         set mid_f [expr {0.5*$mid_f}]
-      } else {
-        set mid_f [expr {$scale_factor/(($scale_factor/$slow_f + $scale_factor/$fast_f) / 2.0)}]
-      }
+    puts "New best frequency: $best_f MHz (period: [expr {$scale_factor/$best_f}] $unit)"
+    puts "New slow frequency: $slow_f MHz (period: [expr {$scale_factor/$slow_f}] $unit)"
+    puts "New fast frequency: $fast_f MHz (period: [expr {$scale_factor/$fast_f}] $unit)"
+    puts "***********************************************"
+    puts "***********************************************\n\n"
 
-      if {($mid_f < $start_f)} {
-global f_search
-close $f_search
-         exit 1
-      }
+
+    if {$fast_f == -1} {
+        set mid_f [expr {2*$mid_f}]
+    } elseif {$slow_f == -1} {
+        set mid_f [expr {0.5*$mid_f}]
+    } else {
+      set mid_f [expr {$scale_factor/(($scale_factor/$slow_f + $scale_factor/$fast_f) / 2.0)}]
+    }
+
+    if {($mid_f < $start_f)} {
+      global f_search
+      close $f_search
+      exit 1
+    }
   }
   
   set best_period [expr {$scale_factor/$max_freq}]
