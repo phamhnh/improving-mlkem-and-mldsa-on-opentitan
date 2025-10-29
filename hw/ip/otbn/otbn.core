@@ -236,7 +236,6 @@ targets:
     toplevel: otbn
     tools:
       vivado:
-#        part: "xc7a200tfbg676-3" # license-free device
         part: "xc7k160tfbg676-1" # CW310 with K410T
       genus:
         genus_script: "genus.tcl"
@@ -246,7 +245,6 @@ targets:
      default_tool : openlane
      filesets : [files_rtl_core, files_rtl_top]
      toplevel: otbn
-
 
   syn:
     <<: *default_target
@@ -276,81 +274,3 @@ targets:
     tools:
       vivado:
         part: "xc7k410tfbg676-1" # CW310 with K410T
-
-#  syn_asic:
-#    <<: *default_target
-#    parameters:
-#      - SYNTHESIS_MEMORY_BLACK_BOXING=true
-#      - kmac        ? (TOWARDS_KMAC=true)
-#      - towards     ? (TOWARDS_KMAC=true)
-#      - towards     ? (TOWARDS_BASE=true)
-#      - towards     ? (TOWARDS_MAC=true)
-#      - towards     ? (TOWARDS_ADDER=true)
-#      - bnmulv_ver1 ? (TOWARDS_KMAC=true)
-#      - bnmulv_ver1 ? (TOWARDS_BASE=true)
-#      - bnmulv_ver1 ? (BNMULV=true)
-#      - bnmulv_ver2 ? (TOWARDS_KMAC=true)
-#      - bnmulv_ver2 ? (TOWARDS_BASE=true)
-#      - bnmulv_ver2 ? (BNMULV=true)
-#      - bnmulv_ver2 ? (BNMULV_ACCH=true)
-#      - bnmulv_ver3 ? (TOWARDS_KMAC=true)
-#      - bnmulv_ver3 ? (TOWARDS_BASE=true)
-#      - bnmulv_ver3 ? (BNMULV=true)
-#      - bnmulv_ver3 ? (BNMULV_ACCH=true)
-#      - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
-#    tools:
-#      genus:
-#        script_dir: "../../../hw/ip/otbn/sta"
-#        genus_script: "genus.tcl"
-#        jobs: "8"
-
-  syn_bn_alu:
-    filesets:
-      - tool_verilator ? (files_verilator_waiver)
-      - tool_ascentlint ? (files_ascentlint_waiver)
-      - files_rtl_core
-      - files_rtl_top
-    toplevel: otbn_alu_bignum
-    default_tool: icarus
-    parameters:
-      - SYNTHESIS=true
-      - TOWARDS_KMAC=true
-      - MAC_ADDER
-      - ALU_ADDER
-      - old_mac ? (TOWARDS_MAC=true)
-      - old_adder ? (TOWARDS_ADDER=true)
-      - bnmulv_ver1 ? (TOWARDS_BASE=true)
-      - bnmulv_ver1 ? (BNMULV=true)
-      - bnmulv_ver2 ? (BNMULV=true)
-      - bnmulv_ver2 ? (BNMULV_ACCH=true)
-      - bnmulv_ver3 ? (BNMULV=true)
-      - bnmulv_ver3 ? (BNMULV_ACCH=true)
-      - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
-    tools:
-      vivado:
-        part: "xc7k160tfbg676-1" # CW310 with K410T
-
-  syn_bn_mac:
-    filesets:
-      - tool_verilator ? (files_verilator_waiver)
-      - tool_ascentlint ? (files_ascentlint_waiver)
-      - files_rtl_core
-      - files_rtl_top
-    toplevel: otbn_mac_bignum
-    default_tool: icarus
-    parameters:
-      - SYNTHESIS=true
-      - TOWARDS_KMAC=true
-      - MAC_ADDER
-      - ALU_ADDER
-      - old_mac ? (TOWARDS_MAC=true)
-      - old_adder ? (TOWARDS_ADDER=true)
-      - bnmulv_ver1 ? (BNMULV=true)
-      - bnmulv_ver2 ? (BNMULV=true)
-      - bnmulv_ver2 ? (BNMULV_ACCH=true)
-      - bnmulv_ver3 ? (BNMULV=true)
-      - bnmulv_ver3 ? (BNMULV_ACCH=true)
-      - bnmulv_ver3 ? (BNMULV_COND_SUB=true)
-    tools:
-      vivado:
-        part: "xc7k160tfbg676-1" # CW310 with K410T
