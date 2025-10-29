@@ -11,18 +11,8 @@ filegroup(
 )
 
 filegroup(
-    name = "constraints_noclk_asap7",
-    srcs = ["constraints_noclk_asap7.sdc"],
-)
-
-filegroup(
     name = "constraints_sky130hd",
     srcs = ["constraints_sky130hd.sdc"],
-)
-
-filegroup(
-    name = "constraints_noclk_sky130hd",
-    srcs = ["constraints_noclk_sky130hd.sdc"],
 )
 
 genrule(

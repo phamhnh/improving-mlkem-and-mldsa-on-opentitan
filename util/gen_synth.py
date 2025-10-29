@@ -214,7 +214,7 @@ def run_synthesis(top, tool, outdir, flags=None):
             # 'asap7'
         ]
         for pdk in pdks:
-            target = f"//hw/ip/otbn:{top}{flags}_{pdk}{'_all' if flags else ''}_results"
+            target = f"//hw/ip/otbn:{top}{flags}_{pdk}_results"
             outname = f"bazel-bin/hw/ip/otbn/{top}{flags}_{pdk}"
             cmd = (
                 f"bazel build {target} && mkdir -p {outdir} && chmod u+w {OUTDIR_ORFS}/* && "

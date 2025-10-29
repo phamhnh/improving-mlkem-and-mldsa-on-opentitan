@@ -24,6 +24,7 @@ CORE_Set = provider(
         "top_module": "Name of the top module.",
         "src": "SRC_set of source elements.",
         "defines": "A list of defines.",
-#        "start_f": "Starting frequency for Fmax search."
+        "start_f": "Starting frequency for Fmax search."
     },
 )
+

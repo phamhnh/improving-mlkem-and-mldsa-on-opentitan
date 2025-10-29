@@ -36,7 +36,7 @@ filegroup(
 # List of PKDs
 PDKS = [
     "sky130hd",
-#    "asap7",
+#    "asap7",     # Add asap7 here if neeed.
 ]
 
 # List of top modules to be synthesized.
@@ -45,12 +45,6 @@ TOP_MODULES = [
     "otbn_alu_bignum",
     "otbn_mac_bignum"
 ]
-
-## List of adders used in the design.
-#MULTIPLIERS = ["unified_mul", "otbn_bignum_mul", "otbn_mul"]
-#
-## List of adders used in the design.
-#ADDERS = ["buffer_bit", "brent_kung", "sklansky", "kogge_stone"]
 
 MULTIPLIERS = [
    ("otbn_bignum_mul", [None]),
@@ -72,17 +66,6 @@ ADDERS = [
 ]
 
 ARITH = MULTIPLIERS + ADDERS
-
-# # Manually established minimum clock period on sky130hd.
-# CLOCK_PERIOD = {
-#   "buffer_bit":  "4.3",
-#   "brent_kung":  "4.1",
-#   "sklansky":    "4.0",
-#   "kogge_stone": "5.1",
-#   "otbn_mul": "10.5",
-#   "unified_mul": "10.5",
-#   "otbn_bignum_mul": "10.5"
-# }
 
 # List of different versions for our design.
 VARIANT = [
@@ -110,7 +93,7 @@ ARITH_CORES = [
             ],
       defines = defines
     ),
-#    start_f = 10.0
+    start_f = 100.0
   )
   for top_module, variants in ARITH for defines in variants
 ]
@@ -130,7 +113,7 @@ OTBN_CORES = [
                  ],
       defines = defines
     ),
-#    start_f = 10.0
+    start_f = 30.0
   )
   for top_module in TOP_MODULES for variant, defines in VARIANT
 ]
@@ -244,13 +227,12 @@ STAGE_ARGS = {
             "{}_{}_stats".format(core.name, pdk),
             "{}_{}_reports".format(core.name, pdk),
             "{}_{}_fsearch".format(core.name, pdk),
-	    #"{}_{}_checkpoint.db".format(core.name, pdk),
         ],
         arguments = {
             "OUTPUT": "$(location :{}_{}_stats)".format(core.name, pdk),
             "REPORTS": "$(location :{}_{}_reports)".format(core.name, pdk),
             "FSEARCH": "$(location :{}_{}_fsearch)".format(core.name, pdk),
-	    #"CHECKPOINT": "$(location :{}_{}_checkpoint.db)".format(core.name, pdk),
+            "STARTF": "{}".format(core.start_f),
         },
         script = "//hw/ip/otbn/sta:openroad_combined_tcl",
     )

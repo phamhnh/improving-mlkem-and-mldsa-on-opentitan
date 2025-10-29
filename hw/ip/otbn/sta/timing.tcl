@@ -67,14 +67,14 @@ proc timing::get_max_freq { clk start_f scale_factor } {
 
 
     if {$fast_f == -1} {
-        set mid_f [expr {2*$mid_f}]
+        set mid_f [expr {2 * $mid_f}]
     } elseif {$slow_f == -1} {
-        set mid_f [expr {0.5*$mid_f}]
+        set mid_f [expr {$mid_f / 2.0}]
     } else {
       set mid_f [expr {$scale_factor/(($scale_factor/$slow_f + $scale_factor/$fast_f) / 2.0)}]
     }
 
-    if {($mid_f < $start_f)} {
+    if {($mid_f < 1.0)} {
       global f_search
       close $f_search
       exit 1

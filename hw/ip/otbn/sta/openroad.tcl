@@ -108,13 +108,13 @@ proc get_slack {} {
 if { [info exists ::env(PROCESS)] && $::env(PROCESS) eq "7" } {
     # do something for asap7
     puts "PROCESS is asap7 $::env(PROCESS)"
-    set start_f 200.0
+    set start_f $::env(STARTF)
     set scale_factor 1000000.0
     set unit "ps"
 } else {
     # do something else
     puts "PROCESS is not asap7 $::env(PROCESS)"
-    set start_f 10.0
+    set start_f $::env(STARTF)
     set scale_factor 1000.0
     set unit "ns"
 }
