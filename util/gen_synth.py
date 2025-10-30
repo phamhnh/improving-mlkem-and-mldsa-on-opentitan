@@ -217,10 +217,15 @@ def run_synthesis(top, tool, outdir, flags=None):
             target = f"//hw/ip/otbn:{top}{flags}_{pdk}_results"
             outname = f"bazel-bin/hw/ip/otbn/{top}{flags}_{pdk}"
             cmd = (
+                # Apply patch for third_party/python/python.MODULE.bazel before running ORFS
+                "git restore third_party/python/python.MODULE.bazel && "
+                "git apply aux/python_orfs.patch && "
                 f"bazel build {target} && mkdir -p {outdir} && chmod u+w {OUTDIR_ORFS}/* && "
                 f"cp -f {outname}_stats {outdir} && "
                 f"cp -f {outname}_reports {outdir} && "
-                f"cp -f {outname}_fsearch {outdir}"
+                f"cp -f {outname}_fsearch {outdir} && "
+                # Restore third_party/python/python.MODULE.bazel when done
+                "git restore third_party/python/python.MODULE.bazel"
             )
     else:
         print(f"ERROR: Unsupported tool {tool}")
