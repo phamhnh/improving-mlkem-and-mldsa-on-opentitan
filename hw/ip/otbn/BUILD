@@ -93,7 +93,7 @@ ARITH_CORES = [
             ],
       defines = defines
     ),
-    start_f = 100.0
+    start_f = 10.0
   )
   for top_module, variants in ARITH for defines in variants
 ]
@@ -113,7 +113,7 @@ OTBN_CORES = [
                  ],
       defines = defines
     ),
-    start_f = 30.0
+    start_f = 10.0
   )
   for top_module in TOP_MODULES for variant, defines in VARIANT
 ]
@@ -270,5 +270,10 @@ filegroup(
         ":" + "{}_{}_results".format("_".join([sub, variant]) if variant else sub, pdk)
         for pdk in PDKS for variant, defines in VARIANT for sub in ["otbn_mac_bignum", "otbn_alu_bignum"]
     ],
+)
+
+filegroup(
+    name = "all",
+    srcs = ["all_adders", "all_multipliers", "all_otbn_sub", "all_otbn"]
 )
 
