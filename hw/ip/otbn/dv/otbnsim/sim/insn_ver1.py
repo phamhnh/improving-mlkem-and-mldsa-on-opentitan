@@ -776,15 +776,15 @@ class BNADDV(OTBNInsn):
         result = 0
 
         for i in range(256 // size - 1, -1, -1):
-            ai = OTBNInsn.from_2s_complement(extract_sub_word(a, size, i), size)
-            bi = OTBNInsn.from_2s_complement(extract_sub_word(b, size, i), size)
+            ai = extract_sub_word(a, size, i)
+            bi = extract_sub_word(b, size, i)
             resulti = ai + bi
             if red:
                 resulti = cmod_single(resulti, mod_val)
             if DEBUG_ARITH:
                 eprint(f"addvm {ai} + {bi} = {ai + bi} = {resulti}")
             result <<= size
-            result |= (OTBNInsn.to_2s_complement(resulti, size) & ((1 << size) - 1))
+            result |= (resulti & ((1 << size) - 1))
 
         result = result & ((1 << 256) - 1)
         state.wdrs.get_reg(self.wrd).write_unsigned(result)
@@ -1054,15 +1054,15 @@ class BNSUBV(OTBNInsn):
         result = 0
 
         for i in range(256 // size - 1, -1, -1):
-            ai = OTBNInsn.from_2s_complement(extract_sub_word(a, size, i), size)
-            bi = OTBNInsn.from_2s_complement(extract_sub_word(b, size, i), size)
+            ai = extract_sub_word(a, size, i)
+            bi = extract_sub_word(b, size, i)
             resulti = ai - bi
             if red:
                 resulti = cmod_single(resulti, mod_val)
             if DEBUG_ARITH:
                 eprint(f"subvm {ai} - {bi} = {ai - bi} = {resulti}")
             result <<= size
-            result |= (OTBNInsn.to_2s_complement(resulti, size) & ((1 << size) - 1))
+            result |= (resulti & ((1 << size) - 1))
 
         result &= ((1 << 256) - 1)
         state.wdrs.get_reg(self.wrd).write_unsigned(result)
