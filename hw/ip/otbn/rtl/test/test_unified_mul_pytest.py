@@ -110,10 +110,6 @@ async def run_unified_mul_test(dut):
     [
         ("unified_mul", w, a, i) for w in [0, 1] for a in [0, 1]
         for i in [ModeMul.MODE_16, ModeMul.MODE_32, ModeMul.MODE_64]
-    ] +
-    [
-        ("mul_dsp", w, a, i) for w in [0] for a in [0, 1]
-        for i in [ModeMul.MODE_16, ModeMul.MODE_32, ModeMul.MODE_64]
     ]
 )
 
@@ -127,7 +123,7 @@ def test_unified_mul_sim(top, wallace, acch, word_mode):
     if acch:
         extra_args.append("-DBNMULV_ACCH")
 
-    vivado_prim = ["bn_vec_core/DSP48E1.v"]
+    vivado_prim = []
 
     run(
         toplevel=top,

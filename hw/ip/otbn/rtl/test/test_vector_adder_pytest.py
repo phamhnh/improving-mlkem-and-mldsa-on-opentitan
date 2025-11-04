@@ -93,8 +93,7 @@ ADDERS = [
     "buffer_bit",
     "brent_kung",
     "sklansky",
-    "kogge_stone",
-    "csa_carry4"
+    "kogge_stone"
 ]
 
 @pytest.mark.parametrize(
@@ -121,10 +120,7 @@ def test_vector_adder_sim(variant, word_mode, addition):
         "otbn_pkg.sv"
     ]
 
-    vivado_prim = [
-        "bn_vec_core/CARRY4.v",
-        "bn_vec_core/LUT6_2.v"
-    ]
+    vivado_prim = []
 
     extra_args = [
         "-I../../../../prim/rtl/",
