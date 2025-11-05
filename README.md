@@ -146,7 +146,11 @@ of Verilator](https://verilator.org/guide/latest/install.html).
 
 ### 4. Installing hardware synthesis tools
 
-For ASIC synthesis with Cadence Genus or FPGA synthesis with Vivado, you need a paid license.
+You need to install Cadence Genus or
+[Vivado](https://www.xilinx.com/support/download.html) if you want to run
+synthesis with these tools. Please note that a paid
+license is required for Cadence Genus synthesis, as well as for bitstream
+generation for the CW310-K410T in Vivado.
 
 ### 5. Installing Docker
 
@@ -280,7 +284,7 @@ util/get_codesize.py --mlkem --mldsa --compare
 
 ## Hardware
 
-### 1. ASIC Synthesis (Tables 1–3)
+### 1. Hardware synthesis (Tables 1–3)
 
 We provide a script that can run synthesis for either Vivado, ORFS or Cadence
 Genus. You can specify synthesis tools using:
@@ -288,6 +292,7 @@ Genus. You can specify synthesis tools using:
 ```
 --tool={Vivado,Genus,ORFS,all}
 ```
+Note that **you do not need a Vivado paid license** for synthesis in this section.
 
 Synthesis results are stored under:
 
@@ -351,7 +356,7 @@ pytest TARGET
 
 ---
 
-### 3. RTL–ISS Tests
+### 3. RTL–ISS tests
 
 The RTL-ISS test simulates OTBN's RTL, runs an OTBN program binary on it and
 compares results with standalone-Python-simulator (ISS) results for every cycle.
@@ -390,7 +395,9 @@ information, use `-h`.
 These tests compare OTBN’s results with reference implementations of
 [**pq-crystals**](https://pq-crystals.org/)
 [Kyber](https://github.com/pq-crystals/kyber) and
-[Dilithium](https://github.com/pq-crystals/dilithium) running on Ibex.
+[Dilithium](https://github.com/pq-crystals/dilithium) running on Ibex. For
+Dilithium signing on Ibex, we need to use the [lowram
+implementation](https://github.com/dop-amin/dilithium/tree/lowram).
 
 #### 🔸 With Verilator
 
@@ -417,19 +424,25 @@ These tests can take several hours.
 
 #### 🔸 With FPGA (CW310)
 
-Please follow [OpenTitan’s FPGA setup
-guide](https://opentitan.org/book/doc/getting_started/setup_fpga.html#connecting-chipwhisperer-fpga-and-hyperdebug-boards-to-your-pc)
-for setting up your CW310 board.
+Before proceeding, please refer to [OpenTitan’s FPGA setup
+guide](https://opentitan.org/book/doc/getting_started/setup_fpga.html#fpga-setup)
+for instructions on setting up your CW310-K410T board and for general guidance
+on running chip-level tests.
 
 We provide bitstreams for OTBNV1, OTBNV2 and OTBNV3 with `buffer_bit` as adders
 in both BN-ALU and BN-MAC in
-`hw/top_earlgrey/bitstream_cw310/bnmulv_ver{1,2,3}`.
+`hw/top_earlgrey/bitstream_cw310/bnmulv_ver{1,2,3}`. For the following steps,
+we assume you have a configuration file at `~/.config/opentitantool/config` with
+the following content:
+```bash
+--interface=cw310
+```
 
 **Load bitstream:**
 
 ```bash
 ./bazelisk.sh run //sw/host/opentitantool -- fpga load-bitstream
-hw/top_earlgrey/bitstream_cw310/bnmulv_ver{1,2,3}/lowrisc_systems_chip_earlgrey_cw310_0.1.bit
+/absolute/path/to/hw/top_earlgrey/bitstream_cw310/bnmulv_ver{1,2,3}/lowrisc_systems_chip_earlgrey_cw310_0.1.bit
 ```
 
 **Run ML-KEM tests:**
@@ -448,7 +461,24 @@ hw/top_earlgrey/bitstream_cw310/bnmulv_ver{1,2,3}/lowrisc_systems_chip_earlgrey_
 //sw/device/tests:otbn_mldsa_test_fpga_cw310_test_rom_ver{1,2,3}
 ```
 
-> 💡 When preloading the bitstream, the test version suffix (`_ver*`) and `--copt` version do **not** need to match, unless you are building the bitstream on the fly with `--define bitstream=vivado`.
+> 💡 When preloading the bitstream, the test version suffix (`_ver*`) and
+> `--copt` version do **not** need to match, unless you are building the
+> bitstream on the fly with `--define bitstream=vivado`.
+
+**Build bitstream:**
+
+In case you want to build the bitstream yourself, you need **a paid Vivado
+license** and then do:
+
+```bash
+./bazelisk.sh build //hw/bitstream/vivado:fpga_cw310_test_rom_ver{1,2,3}
+```
+
+The bitstream can be found in
+
+```bash
+bazel-bin/hw/bitstream/vivado/build.fpga_cw310_ver{1,2,3}/lowrisc_systems_chip_earlgrey_cw310_0.1/synth-vivado
+```
 
 ---
 
