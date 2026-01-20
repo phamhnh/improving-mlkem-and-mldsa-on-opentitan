@@ -16,6 +16,8 @@ This README provides a step-by-step guide to reproduce all results presented in
 the paper, including **software benchmarks**, **hardware synthesis**, and **FPGA
 experiments**.
 
+> ⚠️ This repository has been archived and moved to the **PQC-OpenTitan** organization:
+> https://github.com/PQC-OpenTitan/improving-ml-kem-and-ml-dsa-on-opentitan
 ---
 
 ## Structure of The Code
